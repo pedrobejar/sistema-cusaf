@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Gestión CUSAF - Suscripción de Contrato</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <style>
+    :root {
+      --primary: #2E7D32;
+      --primary-light: #81C784;
+      --primary-dark: #1B5E20;
+      --secondary: #4CAF50;
+      --accent: #8BC34A;
+      --warning: #FFC107;
+      --danger: #F44336;
+      --gray: #757575;
+      --light-gray: #F5F5F5;
+      --white: #FFFFFF;
+      --dark: #212121;
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+    }
+
+    body {
+      background-color: #f9f9f9;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar mejorado */
+    .sidebar {
+      width: 280px;
+      background: linear-gradient(180deg, var(--primary-dark), var(--primary));
+      color: var(--white);
+      padding: 20px 0;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+    }
+
+    .sidebar-header {
+      padding: 0 20px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .sidebar-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .sidebar-header i {
+      font-size: 24px;
+    }
+
+    .nav-menu {
+      list-style: none;
+    }
+    
+    .nav-item {
+      margin-bottom: 5px;
+    }
+    
+    .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: all 0.3s;
+      gap: 10px;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .nav-link i {
+      width: 20px;
+      text-align: center;
+    }
+
+    .nav-link i {
+      width: 24px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      background-color: #f5f7fa;
+    }
+
+    /* Header mejorado */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .page-title {
+      font-size: 26px;
+      color: var(--primary-dark);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .page-title i {
+      color: var(--primary);
+    }
+
+    /* Progress Steps mejorado */
+    .process-steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      position: relative;
+      padding: 0 40px;
+    }
+
+    .process-steps::before {
+      content: "";
+      position: absolute;
+      top: 20px;
+      left: 60px;
+      right: 60px;
+      height: 3px;
+      background-color: #e0e0e0;
+      z-index: 1;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      flex: 1;
+    }
+
+    .step-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--white);
+      border: 3px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      color: var(--gray);
+      font-size: 16px;
+      transition: var(--transition);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .step.active .step-icon {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: var(--white);
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(46, 125, 50, 0.3);
+    }
+
+    .step.completed .step-icon {
+      background-color: var(--secondary);
+      border-color: var(--secondary);
+      color: var(--white);
+    }
+
+    .step-title {
+      font-size: 13px;
+      color: var(--gray);
+      text-align: center;
+      font-weight: 500;
+      max-width: 100px;
+    }
+
+    .step.active .step-title {
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    /* Card moderna */
+    .card {
+      background-color: var(--white);
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 24px;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--white);
+    }
+
+    .card-title {
+      font-size: 18px;
+      color: var(--primary-dark);
+      margin: 0;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-body {
+      padding: 24px;
+    }
+
+    /* Tabs modernas */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+
+    .tab-item {
+      padding: 14px 24px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: var(--transition);
+      white-space: nowrap;
+      font-size: 15px;
+      color: var(--gray);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-item:hover {
+      color: var(--primary);
+    }
+
+    .tab-item.active {
+      border-bottom-color: var(--primary);
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    /* Documentos - Diseño profesional */
+    .documents-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .document-card {
+      background-color: var(--white);
+      border-radius: 10px;
+      box-shadow: var(--card-shadow);
+      padding: 20px;
+      transition: var(--transition);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .document-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .document-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .document-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary-dark);
+      flex: 1;
+    }
+
+    .document-status {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 12px;
+    }
+
+    .status-complete {
+      background-color: rgba(76, 175, 80, 0.1);
+      color: var(--secondary);
+    }
+
+    .status-pending {
+      background-color: rgba(255, 193, 7, 0.1);
+      color: var(--warning);
+    }
+
+    .status-error {
+      background-color: rgba(244, 67, 54, 0.1);
+      color: var(--danger);
+    }
+
+    .document-description {
+      font-size: 14px;
+      color: var(--gray);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    /* Upload Area - Diseño profesional */
+    .upload-area {
+      border: 2px dashed #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+      background-color: rgba(0, 0, 0, 0.01);
+    }
+
+    .upload-area:hover {
+      border-color: var(--primary-light);
+      background-color: rgba(129, 199, 132, 0.05);
+    }
+
+    .upload-area.active {
+      border-color: var(--primary);
+      background-color: rgba(129, 199, 132, 0.1);
+    }
+
+    .upload-icon {
+      font-size: 40px;
+      color: var(--primary-light);
+      margin-bottom: 10px;
+      transition: var(--transition);
+    }
+
+    .upload-area:hover .upload-icon {
+      color: var(--primary);
+      transform: translateY(-5px);
+    }
+
+    .upload-text {
+      font-size: 14px;
+      color: var(--gray);
+      margin-bottom: 8px;
+    }
+
+    .upload-hint {
+      font-size: 12px;
+      color: var(--gray);
+      opacity: 0.8;
+    }
+
+    .file-input {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* File Info - Diseño profesional */
+    .file-info {
+      display: flex;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.02);
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 12px;
+    }
+
+    .file-icon {
+      font-size: 24px;
+      color: var(--primary);
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+
+    .file-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .file-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--dark);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+
+    .file-size {
+      font-size: 12px;
+      color: var(--gray);
+    }
+
+    .file-actions {
+      display: flex;
+      margin-left: 12px;
+    }
+
+    .file-action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--gray);
+    }
+
+    .file-action-btn:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .file-action-btn.view:hover {
+      color: var(--primary);
+    }
+
+    .file-action-btn.delete:hover {
+      color: var(--danger);
+    }
+
+    /* Verification */
+    .verification-toggle {
+      display: flex;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .toggle-label {
+      font-size: 14px;
+      color: var(--gray);
+      margin-right: 12px;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 42px;
+      height: 22px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: var(--transition);
+      border-radius: 34px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: var(--transition);
+      border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+      background-color: var(--secondary);
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(20px);
+    }
+
+    /* Progress Bar - Diseño profesional */
+    .progress-container {
+      margin: 24px 0;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .progress-title {
+      font-weight: 500;
+      color: var(--dark);
+      font-size: 14px;
+    }
+
+    .progress-percent {
+      font-weight: 600;
+      color: var(--primary-dark);
+      font-size: 14px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background-color: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-light), var(--primary));
+      transition: width 0.5s ease, background-color 0.3s;
+      border-radius: 4px;
+    }
+
+    /* Alertas mejoradas */
+    .alert {
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .alert i {
+      font-size: 20px;
+      margin-top: 2px;
+    }
+
+    .alert-info {
+      background-color: #e3f2fd;
+      color: #0d47a1;
+      border-left: 4px solid #2196f3;
+    }
+
+    .alert-warning {
+      background-color: #fff8e1;
+      color: #ff8f00;
+      border-left: 4px solid #ffc107;
+    }
+
+    /* Botones mejorados */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      gap: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn i {
+      font-size: 16px;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: var(--white);
+      color: var(--primary-dark);
+      border: 1px solid #e0e0e0;
+    }
+
+    .btn-secondary:hover {
+      background-color: #f5f5f5;
+      border-color: var(--primary-light);
+      color: var(--primary-dark);
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .documents-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .container {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+      }
+      
+      .main-content {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .process-steps {
+        flex-wrap: wrap;
+        padding: 0;
+      }
+      
+      .step {
+        flex: 0 0 33.333%;
+        margin-bottom: 20px;
+      }
+      
+      .process-steps::before {
+        display: none;
+      }
+      
+      .page-title {
+        font-size: 22px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .step {
+        flex: 0 0 50%;
+      }
+      
+      .card-body {
+        padding: 16px;
+      }
+      
+      .document-card {
+        padding: 16px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-leaf"></i>
+        <h2>SISTEMA CUSAF</h2>
+      </div>
+      <ul class="nav-menu">
+        <li class="nav-item">
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\inicio.html" class="nav-link">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Inicio</span>
+          </a>
+        </li>
+        <li class="nav-item ">
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\prime.html" class="nav-link">
+            <i class="fas fa-map-marked-alt"></i>
+            <span>Registro Áreas Potenciales</span>
+          </a>
+        </li>
+                
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\beneficiarios.html" class="nav-link active" onclick="toggleSubmenu('beneficiarios-menu')">
+            <i class="fas fa-users"></i>
+            <span>Registro Potenciales Beneficiarios</span>
+          </a>
+                    
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="showSection('listado-section')">
+                <i class="fas fa-list"></i>
+                <span>Listado</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="showSection('reportes-section')">
+                <i class="fas fa-chart-bar"></i>
+                <span>Reportes</span>
+              </a>
+            </li>
+                        
+      
+      </ul>
+    </div>
+    
+    <div class="main-content">
+      <!-- Proceso de etapas -->
+      <div class="card">
+        <div class="card-body">
+          <div class="process-steps">
+            <div class="step completed">
+              <div class="step-icon"><i class="fas fa-male"></i></div>
+              <div class="step-title">Presentación posibles Beneficiarios</div>
+            </div>
+            <div class="step completed">
+              <div class="step-icon"><i class="fas fa-tree"></i></div>
+              <div class="step-title">Trabajo de Campo</div>
+            </div>
+            <div class="step completed">
+              <div class="step-icon"><i class="fas fa-pencil"></i></div>
+              <div class="step-title">Elaboración del informe Tecnico</div>
+            </div>
+            <div class="step completed">
+              <div class="step-icon"><i class="fas fa-check"></i></div>
+              <div class="step-title">Otorgamiento del Derecho</div>
+            </div>
+            <div class="step completed">
+              <div class="step-icon"><i class="fas fa-gavel"></i></div>
+              <div class="step-title">Recursos Administrativos</div>
+            </div>
+            <div class="step active">
+              <div class="step-icon"><i class="fas fa-handshake"></i></div>
+              <div class="step-title">Suscripcion del contrato</div>
+            </div>
+          </div>
+          
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            Proceso de suscripción del contrato luego que la resolución administrativa quede firme o consentida.
+          </div>
+          
+          <div class="legal-reference">
+            <p><strong>Procedimiento:</strong> La ARFFS gestiona mediante diligencias de campo, la suscripción del contrato, para lo cual los beneficiarios deben cumplir los requisitos establecidos.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Formulario principal -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Suscripción de Contrato de Cesión en Uso</h3>
+        </div>
+        <div class="card-body">
+          <form id="contractSigningForm">
+            <!-- Sección 1: Información del contrato -->
+            <div class="form-section">
+              <div class="section-header" )">
+                <h3><i class="fas fa-file-signature"></i> Datos del Contrato</h3>
+              
+              </div>
+              
+              <div class="contract-details">
+                <div class="detail-row">
+                  <div class="detail-label">Resolución administrativa:</div>
+                  <div class="detail-value">RES-2023-01234</div>
+                </div>
+                <div class="detail-row">
+                  <div class="detail-label">Fecha de resolución:</div>
+                  <div class="detail-value">15/10/2023</div>
+                </div>
+                <div class="detail-row">
+                  <div class="detail-label">Número de contrato:</div>
+                  <div class="detail-value">
+                    <input type="text" class="form-control" style="width: 200px; display: inline-block;" placeholder="Código según metodología SERFOR">
+                    <button type="button" class="btn btn-secondary btn-sm" style="margin-left: 10px;">Código SERFOR</button>
+                  </div>
+                </div>
+                <div class="detail-row">
+                  <div class="detail-label">Fecha de suscripción:</div>
+                  <div class="detail-value">
+                    <input type="date" class="form-control" style="width: 200px; display: inline-block;">
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+       
+            
+            <!-- Sección 3: Requisitos de suscripción -->
+            <div class="form-section">
+              <div class="section-header" )">
+                <h3><i class="fas fa-clipboard-check"></i> Verificación de Requisitos</h3>
+              
+              </div>
+              
+              <div class="section-content" id="requirementsSection">
+                <div class="form-group">
+                  <label class="form-label" style="display: flex; align-items: flex-start;">
+                    <input type="checkbox" style="margin-right: 10px; margin-top: 3px;">
+                    <span><strong>a.</strong> Mostrar el DNI (original y copia)</span>
+                  </label>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label" style="display: flex; align-items: flex-start;">
+                    <input type="checkbox" style="margin-right: 10px; margin-top: 3px;">
+                    <span><strong>b.</strong> Compromiso de respeto y mantenimiento de los bosques existentes (Anexo N° 02)</span>
+                  </label>
+                 
+                </div>
+              </div>
+            </div>
+            
+            <!-- Sección 4: Documentación del contrato -->
+            <div class="form-section">
+              <div class="section-header" )">
+                <h3><i class="fas fa-file-contract"></i> Documentación del Contrato</h3>
+                
+              </div>
+              
+              <div class="section-content" id="contractDocumentsSection">
+                <div class="form-group">
+                  <label class="form-label">Contrato firmado (escaneado)</label>
+                  <div class="file-upload" id="contractUpload">
+                    <i class="fas fa-file-pdf"></i>
+                    <p>Arrastre y suelte el contrato firmado o haga clic para cargarlo</p>
+                    <input type="file" id="contractInput" accept=".pdf" hidden>
+                  </div>
+                </div>
+                
+       
+              </div>
+            </div>
+            
+            <!-- Sección 5: Envío a SERFOR y OSINFOR -->
+            <div class="form-section">
+			
+			 <div class="section-header" )">
+              <h3 class="form-section-title"><i class="fas fa-paper-plane"></i> Remisión a Autoridades</h3>
+              
+              </div>
+			  
+			  
+              <div class="form-group">
+                <label class="form-label">Fecha de envío a SERFOR y OSINFOR</label>
+                <input type="date" class="form-control" style="width: 200px;">
+                <p class="text-sm" style="color: var(--gray); margin-top: 5px;">Plazo máximo: 5 días hábiles desde la suscripción</p>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Registro en Catastro Nacional Forestal</label>
+                <select class="form-control" style="width: 200px;">
+                  <option value="">Seleccione estado</option>
+                  <option value="pendiente">Pendiente</option>
+                  <option value="registrado">Registrado</option>
+                </select>
+              </div>
+            </div>
+            
+            <!-- Botones de acción -->
+            <div class="form-row" style="margin-top: 30px;">
+              <div class="form-col" style="text-align: left;">
+                <a href="potencialesbeneficiarios_recursos.html">
+                  <button type="button" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Anterior
+                  </button>
+                </a>
+              </div>
+              
+              <div class="form-col" style="text-align: right;">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-save"></i> Guardar y Finalizar Proceso
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Función para mostrar/ocultar secciones
+    function toggleSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      const header = event.currentTarget;
+      
+      if (section.style.display === 'none' || !section.style.display) {
+        section.style.display = 'block';
+        header.classList.remove('collapsed');
+      } else {
+        section.style.display = 'none';
+        header.classList.add('collapsed');
+      }
+    }
+    
+    // Inicializar secciones
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mostrar todas las secciones por defecto
+      document.querySelectorAll('.section-content').forEach(section => {
+        section.style.display = 'block';
+      });
+      
+      // Configurar eventos para la carga de archivos
+      setupFileUpload('commitmentUpload', 'commitmentInput');
+      setupFileUpload('contractUpload', 'contractInput');
+      setupFileUpload('actaUpload', 'actaInput');
+    });
+    
+    // Configurar área de carga de archivos
+    function setupFileUpload(uploadAreaId, inputId) {
+      const uploadArea = document.getElementById(uploadAreaId);
+      const fileInput = document.getElementById(inputId);
+      
+      uploadArea.addEventListener('click', () => fileInput.click());
+      
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'var(--primary)';
+        uploadArea.style.backgroundColor = 'var(--light)';
+      });
+      
+      uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.borderColor = '#ddd';
+        uploadArea.style.backgroundColor = 'transparent';
+      });
+      
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = '#ddd';
+        uploadArea.style.backgroundColor = 'transparent';
+        
+        if (e.dataTransfer.files.length) {
+          fileInput.files = e.dataTransfer.files;
+          handleFileUpload(fileInput.files, uploadAreaId);
+        }
+      });
+      
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) {
+          handleFileUpload(fileInput.files, uploadAreaId);
+        }
+      });
+    }
+    
+    // Manejar archivos cargados
+    function handleFileUpload(files, uploadAreaId) {
+      const uploadArea = document.getElementById(uploadAreaId);
+      
+      // Cambiar el estilo del área de carga
+      uploadArea.innerHTML = `
+        <i class="fas fa-check-circle" style="color: var(--secondary); font-size: 28px;"></i>
+        <p>${files[0].name}</p>
+        <p class="text-sm" style="color: var(--secondary);">Archivo cargado correctamente</p>
+      `;
+      
+      // Actualizar estado de la sección si es necesario
+      if (uploadAreaId === 'commitmentUpload') {
+        const checkbox = document.querySelector('#requirementsSection input[type="checkbox"]:nth-of-type(2)');
+        checkbox.checked = true;
+        
+        const statusElement = document.querySelector(`[onclick="toggleSection('requirementsSection')"] .status-badge`);
+        statusElement.textContent = 'Completado';
+        statusElement.classList.remove('status-pending');
+        statusElement.classList.add('status-completed');
+      }
+      
+      if (uploadAreaId === 'contractUpload' || uploadAreaId === 'actaUpload') {
+        const statusElement = document.querySelector(`[onclick="toggleSection('contractDocumentsSection')"] .status-badge`);
+        statusElement.textContent = 'Completado';
+        statusElement.classList.remove('status-pending');
+        statusElement.classList.add('status-completed');
+      }
+    }
+    
+    // Validación del formulario
+    document.getElementById('contractSigningForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Aquí iría la lógica para enviar el formulario
+      alert('Proceso de suscripción de contrato completado. Se procederá a la remisión a SERFOR y OSINFOR.');
+      window.location.href = 'potencialesbeneficiarios_finalizado.html';
+    });
+  </script>
+</body>
+</html>

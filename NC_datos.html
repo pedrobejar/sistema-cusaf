@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>formulario nvocusaf</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+	  
+    <style>
+	
+   :root {
+      --primary: #2E7D32;
+      --secondary: #4CAF50;
+      --light: #E8F5E9;
+      --dark: #1B5E20;
+      --accent: #8BC34A;
+      --warning: #FFC107;
+      --danger: #F44336;
+      --gray: #757575;
+      --light-gray: #F5F5F5;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f0f2f5;
+    }
+    
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background-color: var(--dark);
+      color: white;
+      padding-top: 20px;
+    }
+    
+    .sidebar-header {
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .sidebar-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .nav-menu {
+      list-style: none;
+    }
+    
+    .nav-item {
+      margin-bottom: 5px;
+    }
+    
+    .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: all 0.3s;
+      gap: 10px;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .nav-link i {
+      width: 20px;
+      text-align: center;
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .page-title {
+      font-size: 24px;
+      color: var(--dark);
+    }
+    
+    .breadcrumb {
+      display: flex;
+      list-style: none;
+      background-color: #fff;
+      padding: 8px 16px;
+      border-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .breadcrumb-item {
+      display: flex;
+      align-items: center;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+      content: "/";
+      padding: 0 8px;
+      color: var(--gray);
+    }
+    
+    .breadcrumb-item a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    
+    .breadcrumb-item.active {
+      color: var(--gray);
+    }
+    
+    /* Cards */
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .card-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .card-title {
+      font-size: 18px;
+      color: var(--dark);
+      margin: 0;
+    }
+    
+    .card-body {
+      padding: 20px;
+    }
+    
+    /* Forms */
+    .form-group {
+      margin-bottom: 15px;
+    }
+	
+	.process-steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 25px;
+      position: relative;
+    }
+    
+    .process-steps::before {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #ddd;
+      z-index: 1;
+    }
+    
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      flex: 1;
+    }
+    
+    .step-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: white;
+      border: 2px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      color: var(--gray);
+      font-weight: bold;
+    }
+    
+    .step.active .step-icon {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+    
+    .step.completed .step-icon {
+      background-color: var(--secondary);
+      border-color: var(--secondary);
+      color: white;
+    }
+    
+    .step-title {
+      font-size: 12px;
+      color: var(--gray);
+      text-align: center;
+    }
+    
+    .step.active .step-title {
+      color: var(--primary);
+      font-weight: 500;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+    }
+    
+    .form-select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      background-color: white;
+    }
+    
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-right: -10px;
+      margin-left: -10px;
+    }
+    
+    .form-col {
+      padding-right: 10px;
+      padding-left: 10px;
+      flex: 1;
+    }
+    
+    .form-col-6 {
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+    
+    .form-col-4 {
+      flex: 0 0 33.33%;
+      max-width: 33.33%;
+    }
+    
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      text-decoration: none;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--dark);
+    }
+    
+    .btn-secondary {
+      background-color: var(--gray);
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #616161;
+    }
+    
+    .btn-success {
+      background-color: var(--secondary);
+      color: white;
+    }
+    
+    .btn-warning {
+      background-color: var(--warning);
+      color: white;
+    }
+    
+    .btn-danger {
+      background-color: var(--danger);
+      color: white;
+    }
+    
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+    
+    .tab-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+    
+    .tab-item.active {
+      border-bottom-color: var(--primary);
+      color: var(--primary);
+      font-weight: 500;
+    }
+    
+    /* File Upload */
+    .file-upload {
+      display: flex;
+      align-items: center;
+    }
+    
+    .file-upload-btn {
+      margin-right: 10px;
+    }
+    
+    .file-name {
+      font-size: 14px;
+      color: var(--gray);
+    }
+    
+    /* Map Container */
+    .map-container {
+      height: 300px;
+      background-color: #eee;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray);
+      margin-bottom: 15px;
+    }
+    
+    /* Tables */
+    .table-responsive {
+      overflow-x: auto;
+    }
+    
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .table th, .table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .table thead th {
+      background-color: var(--light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .table tbody tr:hover {
+      background-color: rgba(0,0,0,0.02);
+    }
+    
+    /* Action buttons */
+    .action-btns {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    /* Floating button */
+    .floating-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background-color: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: all 0.3s;
+      z-index: 100;
+    }
+    
+    .floating-btn:hover {
+      background-color: var(--dark);
+      transform: scale(1.05);
+    }
+    
+    .floating-btn i {
+      font-size: 24px;
+    }
+    
+    /* Tooltip */
+    .floating-btn .tooltip {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background-color: rgba(0,0,0,0.8);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      white-space: nowrap;
+    }
+    
+    .floating-btn:hover .tooltip {
+      opacity: 1;
+    }
+        
+        h1 {
+            text-align: center;
+           
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="radio"],
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        .inline-radio {
+            display: inline-block;
+            margin-right: 15px;
+        }
+        
+		 /* File upload */
+    .file-upload {
+      border: 2px dashed #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .file-upload:hover {
+      border-color: var(--primary);
+    }
+    
+    .file-upload i {
+      font-size: 28px;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    
+    .file-upload p {
+      margin: 0;
+      color: var(--gray);
+    }
+		
+		  /* Document list */
+    .document-list {
+      list-style: none;
+    }
+    
+    .document-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .document-icon {
+      margin-right: 15px;
+      color: var(--primary);
+    }
+    
+    .document-name {
+      flex: 1;
+    }
+    
+    .document-actions button {
+      margin-left: 8px;
+    }
+		
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .signatures {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .signature-box {
+            border-top: 1px solid #000;
+            padding-top: 5px;
+            text-align: center;
+        }
+        .coord-table input {
+            width: 100%;
+        }
+        .coordinate-group {
+            display: flex;
+            gap: 10px;
+        }
+        .coordinate-group input {
+            flex: 1;
+        }
+        button {
+            background-color: #2c5282;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #1a365d;
+        }
+        .action-btn {
+            background-color: #4CAF50;
+            margin-left: 5px;
+        }
+        .action-btn.delete {
+            background-color: #f44336;
+        }
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+        .col {
+            flex: 1;
+        }
+        #map-container {
+            height: 400px;
+            width: 100%;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .vertex-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .vertex-table-container {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+        .vertex-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            button {
+                display: none;
+            }
+	
+        }
+		
+		 /* Contract terms */
+    .terms-list {
+      list-style-type: none;
+      margin-bottom: 20px;
+    }
+    
+    .terms-item {
+      margin-bottom: 10px;
+      padding-left: 25px;
+      position: relative;
+    }
+    
+    .terms-item::before {
+      content: "•";
+      color: var(--primary);
+      font-size: 20px;
+      position: absolute;
+      left: 5px;
+      top: -2px;
+    }
+    
+    /* Contract status */
+    .contract-status {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    
+    .status-draft {
+      background-color: #E3F2FD;
+      color: #0D47A1;
+    }
+    
+    .status-signed {
+      background-color: #E8F5E9;
+      color: var(--dark);
+    }
+    
+    .status-pending {
+      background-color: #FFF3E0;
+      color: #E65100;
+    }
+    
+    /* Contract actions */
+    .contract-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+      <div class="sidebar">
+        <div class="sidebar-header">
+          <i class="fas fa-leaf"></i>
+          <h3>SISTEMA CUSAF</h3>
+        </div>
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\inicio.html" class="nav-link">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Inicio</span>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\prime.html" class="nav-link">
+              <i class="fas fa-map-marked-alt"></i>
+              <span>Registro Áreas Potenciales</span>
+            </a>
+          </li>
+                  
+            <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\beneficiarios.html" class="nav-link active" onclick="toggleSubmenu('beneficiarios-menu')">
+              <i class="fas fa-users"></i>
+              <span>Registro Potenciales Beneficiarios</span>
+            </a>
+                      
+              <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('listado-section')">
+                  <i class="fas fa-list"></i>
+                  <span>Listado</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('reportes-section')">
+                  <i class="fas fa-chart-bar"></i>
+                  <span>Reportes</span>
+                </a>
+              </li>
+                          
+        
+        </ul>
+      </div>
+	
+	<div class="main-content">
+          
+	    <div class="card">
+        <div class="card-body">
+          <div class="process-steps">
+            <div class="step active">
+              <div class="step-icon">1</div>
+              <div class="step-title">Área</div>
+            </div>
+            <div class="step active">
+              <div class="step-icon">2</div>
+              <div class="step-title">Datos Generales</div>
+            </div>
+           
+          
+			 
+          </div>
+          
+        
+        </div>
+      </div>
+	  
+     <!-- Datos Generales Tab -->
+      <div class="tab-content" id="datos-generales">
+        <div class="card">
+         
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Número de resolución administrativa</label>
+                  <input type="text" class="form-control" id="numero-expediente" placeholder="Ingrese numeo del doc">
+                </div>
+              </div>
+              <div class="form-col-6">
+                <div class="form-group">
+                  <div class="form-group">
+                    <label class="form-label">Fecha de Registro</label>
+                    <input type="date" class="form-control" id="fecha-solicitud">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">ARFFS</label>
+                  <select class="form-select" id="distrito" >
+                    <option value="">Seleccionar Gore</option>
+                    <option value="">Gore San Martin</option>
+                    <option value="san-martin">Gore cajamarca</option>
+                    <option value="loreto">Gore Ucayaly</option>
+                    <option value="">Gore Huanuco</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Área de Intervencion<ólabel>
+                  <select class="form-select" id="tipo-zona">
+                    <option value="">Seleccionar tipo</option>
+                    <option value="produccion">Moyobamba central</option>
+                    <option value="tratamiento">Moyobamba Sur</option>
+                    <option value="recuperacion">Moyobamba Norte</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+   
+            
+            <div class="form-group">
+              <label class="form-label">Descripción del Area</label>
+              <textarea class="form-control" id="descripcion" rows="4" placeholder="Describa el Area"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="area_predio">Área (ha):</label>
+              <input type="number" id="area_predio" name="area_predio" step="0.01">
+          </div>
+            
+          <div class="form-group">
+              <label class="form-label">Documento Resolución Administrativa.</label>
+              <div class="file-upload" id="contractUploadArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Arrastre y suelte la resolución administrativa o haga clic para cargarlo</p>
+                <input type="file" id="contractInput" accept=".pdf" hidden>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="action-btns">
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\NC_ubicacion.html"><button class="btn btn-secondary" id="backToUbicacion">Anterior</button></a>
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\NC_estado.html"><button class="btn btn-primary" id="nextToEstado">Guardar y Continuar</button></a>
+        </div>
+      </div>  
+
+
+      
+        </div>
+    </div>
+<script>
+
+    // Función para mostrar/ocultar secciones
+    function toggleSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      const icon = event.currentTarget.querySelector('.fa-chevron-down');
+      
+      if (section.style.display === 'block') {
+        section.style.display = 'none';
+        icon.classList.remove('fa-chevron-up');
+        icon.classList.add('fa-chevron-down');
+      } else {
+        section.style.display = 'block';
+        icon.classList.remove('fa-chevron-down');
+        icon.classList.add('fa-chevron-up');
+      }
+    }
+    
+    // Inicializar secciones visibles
+    document.addEventListener('DOMContentLoaded', function() {
+      // Configurar eventos para la carga de documentos
+      setupFileUpload('contractUploadArea', 'contractInput');
+      
+      // Configurar pads de firma (simulado)
+      setupSignaturePad('officialSignaturePad');
+      setupSignaturePad('beneficiarySignaturePad');
+    });
+    
+    // Configurar área de carga de archivos
+    function setupFileUpload(uploadAreaId, inputId) {
+      const uploadArea = document.getElementById(uploadAreaId);
+      const fileInput = document.getElementById(inputId);
+      
+      uploadArea.addEventListener('click', () => fileInput.click());
+      
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'var(--primary)';
+        uploadArea.style.backgroundColor = 'var(--light)';
+      });
+      
+      uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.borderColor = '#ddd';
+        uploadArea.style.backgroundColor = 'transparent';
+      });
+      
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = '#ddd';
+        uploadArea.style.backgroundColor = 'transparent';
+        
+        if (e.dataTransfer.files.length) {
+          fileInput.files = e.dataTransfer.files;
+          handleContractFile(fileInput.files[0]);
+        }
+      });
+      
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) {
+          handleContractFile(fileInput.files[0]);
+        }
+      });
+    }
+    
+    // Manejar archivo de contrato cargado
+    function handleContractFile(file) {
+      if (file.type !== 'application/pdf') {
+        alert('Por favor, suba un archivo PDF.');
+        return;
+      }
+      
+      const uploadArea = document.getElementById('contractUploadArea');
+      uploadArea.innerHTML = `
+        <i class="fas fa-file-pdf" style="color: #F44336; font-size: 28px;"></i>
+        <p>${file.name}</p>
+        <p style="color: var(--secondary); font-weight: 500;">Contrato cargado correctamente</p>
+      `;
+      
+      // Actualizar estado del contrato
+      const statusElement = document.querySelector('.contract-status');
+      statusElement.textContent = 'Firmado';
+      statusElement.classList.remove('status-pending');
+      statusElement.classList.add('status-signed');
+    }
+    
+    // Configurar pad de firma (simulado)
+    function setupSignaturePad(padId) {
+      const pad = document.getElementById(padId);
+      const clearBtn = pad.querySelector('.signature-clear');
+      
+      let isDrawing = false;
+      let lastX = 0;
+      let lastY = 0;
+      
+      // Crear canvas para firma
+      const canvas = document.createElement('canvas');
+      canvas.width = pad.offsetWidth;
+      canvas.height = pad.offsetHeight;
+      canvas.style.position = 'absolute';
+      canvas.style.top = '0';
+      canvas.style.left = '0';
+      pad.appendChild(canvas);
+      
+      const ctx = canvas.getContext('2d');
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      
+      // Eventos para dibujar
+      canvas.addEventListener('mousedown', startDrawing);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', stopDrawing);
+      canvas.addEventListener('mouseout', stopDrawing);
+      
+      // Evento para limpiar
+      clearBtn.addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      });
+      
+      function startDrawing(e) {
+        isDrawing = true;
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+      }
+      
+      function draw(e) {
+        if (!isDrawing) return;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+      }
+      
+      function stopDrawing() {
+        isDrawing = false;
+      }
+    }
+	</script>
+   
+</body>
+</html>

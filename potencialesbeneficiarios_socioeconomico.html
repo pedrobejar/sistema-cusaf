@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Gestión CUSAF - Formulario de Solicitud</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <!-- Leaflet para mapas -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    :root {
+      --primary: #2E7D32;
+      --secondary: #4CAF50;
+      --light: #E8F5E9;
+      --dark: #1B5E20;
+      --accent: #8BC34A;
+      --warning: #FFC107;
+      --danger: #F44336;
+      --gray: #757575;
+      --light-gray: #F5F5F5;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f0f2f5;
+    }
+    
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background-color: var(--dark);
+      color: white;
+      padding-top: 20px;
+    }
+    
+    .sidebar-header {
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .sidebar-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .nav-menu {
+      list-style: none;
+    }
+    
+    .nav-item {
+      margin-bottom: 5px;
+    }
+    
+    .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: all 0.3s;
+      gap: 10px;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .nav-link i {
+      width: 20px;
+      text-align: center;
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .page-title {
+      font-size: 24px;
+      color: var(--dark);
+    }
+    
+    .breadcrumb {
+      display: flex;
+      list-style: none;
+      background-color: #fff;
+      padding: 8px 16px;
+      border-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .breadcrumb-item {
+      display: flex;
+      align-items: center;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+      content: "/";
+      padding: 0 8px;
+      color: var(--gray);
+    }
+    
+    .breadcrumb-item a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    
+    .breadcrumb-item.active {
+      color: var(--gray);
+    }
+    
+    /* Cards */
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .card-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .card-title {
+      font-size: 18px;
+      color: var(--dark);
+      margin: 0;
+    }
+    
+    .card-body {
+      padding: 20px;
+    }
+    
+    /* Forms */
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+    }
+    
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-right: -10px;
+      margin-left: -10px;
+    }
+    
+    .form-col {
+      padding-right: 10px;
+      padding-left: 10px;
+      flex: 1;
+    }
+    
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      text-decoration: none;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--dark);
+    }
+    
+    .btn-secondary {
+      background-color: var(--gray);
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #616161;
+    }
+    
+    .btn-success {
+      background-color: var(--secondary);
+      color: white;
+    }
+    
+    .btn-warning {
+      background-color: var(--warning);
+      color: white;
+    }
+    
+    .btn-danger {
+      background-color: var(--danger);
+      color: white;
+    }
+    
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+    
+    .tab-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+    
+    .tab-item.active {
+      border-bottom-color: var(--primary);
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+    
+  .process-steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 25px;
+      position: relative;
+    }
+    
+    .process-steps::before {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #ddd;
+      z-index: 1;
+    }
+    
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      flex: 1;
+    }
+    
+    .step-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: white;
+      border: 2px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      color: var(--gray);
+      font-weight: bold;
+    }
+    
+    .step.active .step-icon {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+    
+    .step.completed .step-icon {
+      background-color: var(--secondary);
+      border-color: var(--secondary);
+      color: white;
+    }
+    
+    .step-title {
+      font-size: 12px;
+      color: var(--gray);
+      text-align: center;
+    }
+    
+    .step.active .step-title {
+      color: var(--primary);
+      font-weight: 500;
+    }
+    /* Map container */
+    .map-container {
+      height: 400px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      position: relative;
+      z-index: 0;
+      border: 1px solid #ddd;
+    }
+    
+    .map-actions {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 1000;
+      display: flex;
+      gap: 5px;
+    }
+    
+    .map-actions button {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 14px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .map-actions button:hover {
+      background-color: var(--light);
+    }
+
+    /* Marker styles */
+    .leaflet-marker-icon {
+      background: none !important;
+      border: none !important;
+    }
+    
+    .marker-pin {
+      width: 30px;
+      height: 30px;
+      border-radius: 50% 50% 50% 0;
+      background: var(--primary);
+      position: relative;
+      transform: rotate(-45deg);
+    }
+
+    .marker-pin::after {
+      content: '';
+      width: 24px;
+      height: 24px;
+      margin: 3px 0 0 3px;
+      background: #fff;
+      position: absolute;
+      border-radius: 50%;
+    }
+     .alert-info {
+      background-color: #E3F2FD;
+      color: #0D47A1;
+      border-left: 4px solid #2196F3;
+	  
+    /* Coordenadas status */
+    .coordinates-status {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .coordinates-status.valid {
+      color: var(--secondary);
+    }
+
+    .coordinates-status.invalid {
+      color: var(--danger);
+    }
+
+    /* Actividades section */
+    .activities-section {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      border: 1px solid #eee;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .activities-section h4 {
+      color: var(--dark);
+      margin-bottom: 15px;
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .activities-section h4 i {
+      color: var(--primary);
+    }
+
+    /* Species list */
+    .species-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .species-item {
+      background-color: var(--light-gray);
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .species-item i {
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .add-species {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .add-species input {
+      flex: 1;
+    }
+
+    .add-species button {
+      padding: 10px 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-leaf"></i>
+        <h3>SISTEMA CUSAF</h3>
+      </div>
+      <ul class="nav-menu">
+        <li class="nav-item">
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\inicio.html" class="nav-link">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Inicio</span>
+          </a>
+        </li>
+        <li class="nav-item ">
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\prime.html" class="nav-link">
+            <i class="fas fa-map-marked-alt"></i>
+            <span>Registro Áreas Potenciales</span>
+          </a>
+        </li>
+                
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\beneficiarios.html" class="nav-link active" onclick="toggleSubmenu('beneficiarios-menu')">
+            <i class="fas fa-users"></i>
+            <span>Registro Potenciales Beneficiarios</span>
+          </a>
+                    
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="showSection('listado-section')">
+                <i class="fas fa-list"></i>
+                <span>Listado</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="showSection('reportes-section')">
+                <i class="fas fa-chart-bar"></i>
+                <span>Reportes</span>
+              </a>
+            </li>
+                        
+      
+      </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="page-header">
+        
+      </div>
+      
+      <div class="card">
+        <div class="card-body">
+          <div class="process-steps">
+            <div class="step active">
+              <div class="step-icon"><i class="fas fa-male"></i></div>
+              <div class="step-title">Presentación posibles Beneficiarios</div>
+            </div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-tree"></i></div>
+              <div class="step-title">Trabajo de Campo</div>
+            </div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-pencil"></i></div>
+              <div class="step-title">Elaboración del informe Tecnico</div>
+            </div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-check"></i></div>
+              <div class="step-title">Otorgamiento del Derecho</div>
+            </div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-gavel"></i></div>
+              <div class="step-title">Recursos Administrativos</div>
+            </div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-handshake"></i></div>
+              <div class="step-title">Suscripcion del contrato</div>
+            </div>
+          </div>
+          
+         <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            Complete toda la informacion solicitada. Los campos marcados con(*)son obligatorios.
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-body">
+          <div class="tabs">
+            <a href="beneficiarios.html"><div class="tab-item active"><i class="fas fa-user"></i> Datos Generales</div></a>
+            <div class="tab-item active"><i class="fas fa-money-bill-wave"></i> Datos Socioeconómicos</div>
+            <a href="potencialesbeneficiarios_datosagricolas.html"><div class="tab-item"><i class="fas fa-tractor"></i> Datos Agrícola-Pecuaria</div></a>
+            <a href="potencialesbeneficiarios_division.html"><div class="tab-item"><i class="fas fa-map-marked-alt"></i> División del Área</div></a>
+            <a href="potencialesbeneficiarios_documentos.html"><div class="tab-item"><i class="fas fa-file-alt"></i> Documentos-Requisitos</div></a>
+          </div>
+          
+                   <div id="socioeconomic-data" class="tab-content active">
+            <form id="socioeconomic-form">
+              <!-- Sección 1: Información básica socioeconómica -->
+			   <div class="form-group">
+                <label class="required">Nombre de la Unidad Productiva (si aplica):</label>
+                <input type="text" name="nombre_unidad" placeholder="Ej. Finca 'Los Alamos'">
+            </div>
+            
+            <div class="form-group">
+                <label class="required">Tipo de Productor:</label>
+                <select name="tipo_productor" required onchange="toggleOtherField(this, 'otro_tipo_productor')">
+                    <option value="">Seleccione...</option>
+                    <option value="Agricultor">Agricultor</option>
+                    <option value="Ganadero">Ganadero</option>
+                    <option value="Agroindustrial">Agroindustrial</option>
+                    <option value="Piscicultor">Piscicultor</option>
+                    <option value="Apicultor">Apicultor</option>
+                    <option value="Forestal">Forestal</option>
+                    <option value="otro">Otro</option>
+                </select>
+                <div id="otro_tipo_productor" class="other-field">
+                    <label>Especifique otro tipo:</label>
+                    <input type="text" name="otro_tipo_productor_text">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="required">Tipo de Tenencia:</label>
+                <select name="tenencia" required onchange="toggleOtherField(this, 'detalle_tenencia')">
+                    <option value="">Seleccione...</option>
+                    <option value="Propio con título">Propio con título</option>
+                    <option value="Propio sin título">Propio sin título</option>
+                    <option value="Arrendado">Arrendado</option>
+                    <option value="Comunero">Comunero</option>
+                    <option value="Asociado">Asociado</option>
+                    <option value="Posesión">Posesión</option>
+                    <option value="Cesión en uso">Cesión en uso</option>
+                    <option value="otro">Otro</option>
+                </select>
+                <div id="detalle_tenencia" class="other-field">
+                    <div class="form-group">
+                        <label>Detalles de tenencia:</label>
+                        <textarea name="detalle_tenencia_text" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Años en la propiedad:</label>
+                        <input type="number" name="anos_propiedad" min="0">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Número de parcelas:</label>
+                <input type="number" name="numero_parcelas" min="1" value="1">
+            </div>
+            
+            <div class="form-group">
+                <label class="required">Ubicación de la(s) parcela(s):</label>
+                <textarea name="ubicacion_parcelas" rows="2" required></textarea>
+            </div>
+            
+            <div class="inline-group">
+                <div class="form-group">
+                    <label class="required">Área Total (ha):</label>
+                    <input type="number" name="area_total" step="0.01" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required">Área Cultivable (ha):</label>
+                    <input type="number" name="area_cultivable" step="0.01" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Área con riego (ha):</label>
+                    <input type="number" name="area_riego" step="0.01" min="0">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Uso actual de la tierra (marque todos los que correspondan):</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" name="uso_agricola" value="1"> Agrícola<br>
+                    <input type="checkbox" name="uso_ganadero" value="1"> Ganadero<br>
+                    <input type="checkbox" name="uso_forestal" value="1"> Forestal<br>
+                    <input type="checkbox" name="uso_descanso" value="1"> Descanso/barbecho<br>
+                    <input type="checkbox" name="uso_otros" value="1" onclick="toggleOtherField(this, 'otros_usos')"> Otros
+                    <div id="otros_usos" class="other-field">
+                        <label>Especifique otros usos:</label>
+                        <textarea name="otros_usos_text" rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="required">Principales Cultivos (seleccione hasta 3):</label>
+                <div class="inline-group">
+                    <div class="form-group">
+                        <select name="cultivo1" required>
+                            <option value="">Cultivo 1...</option>
+                            <!-- Lista completa de cultivos -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="cultivo2">
+                            <option value="">Cultivo 2...</option>
+                            <!-- Lista completa de cultivos -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="cultivo3">
+                            <option value="">Cultivo 3...</option>
+                            <!-- Lista completa de cultivos -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Variedades cultivadas:</label>
+                <textarea name="variedades" rows="2" placeholder="Especifique las variedades de cada cultivo"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Sistemas de producción:</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" name="sistema_tradicional" value="1"> Tradicional<br>
+                    <input type="checkbox" name="sistema_organico" value="1"> Orgánico<br>
+                    <input type="checkbox" name="sistema_convencional" value="1"> Convencional<br>
+                    <input type="checkbox" name="sistema_otro" value="1" onclick="toggleOtherField(this, 'otro_sistema')"> Otro
+                    <div id="otro_sistema" class="other-field">
+                        <label>Especifique otro sistema:</label>
+                        <input type="text" name="otro_sistema_text">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>¿Realiza rotación de cultivos?</label>
+                <select name="rotacion_cultivos" onchange="toggleOtherField(this, 'detalle_rotacion')">
+                    <option value="No">No</option>
+                    <option value="Si">Sí</option>
+                </select>
+                <div id="detalle_rotacion" class="other-field">
+                    <label>Frecuencia y cultivos involucrados:</label>
+                    <textarea name="detalle_rotacion_text" rows="2"></textarea>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Manejo de suelos:</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" name="manejo_abono" value="1"> Abono orgánico<br>
+                    <input type="checkbox" name="manejo_fertilizante" value="1"> Fertilizantes químicos<br>
+                    <input type="checkbox" name="manejo_labranza" value="1"> Labranza mínima<br>
+                    <input type="checkbox" name="manejo_otro" value="1" onclick="toggleOtherField(this, 'otro_manejo')"> Otro
+                    <div id="otro_manejo" class="other-field">
+                        <label>Especifique otro manejo:</label>
+                        <input type="text" name="otro_manejo_text">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Problemas principales en la producción:</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" name="problema_clima" value="1"> Clima<br>
+                    <input type="checkbox" name="problema_plagas" value="1"> Plagas y enfermedades<br>
+                    <input type="checkbox" name="problema_agua" value="1"> Falta de agua<br>
+                    <input type="checkbox" name="problema_mercado" value="1"> Acceso a mercados<br>
+                    <input type="checkbox" name="problema_otro" value="1" onclick="toggleOtherField(this, 'otro_problema')"> Otro
+                    <div id="otro_problema" class="other-field">
+                        <label>Especifique otro problema:</label>
+                        <textarea name="otro_problema_text" rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+			  
+              <div class="form-row">
+                <div class="form-col">
+                  <div class="section-header">
+                    <label class="form-label required">Ocupación principal</label>
+                    <input type="text" class="form-control" name="ocupacion_principal" required>
+                  </div>
+                </div>
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label required">Ingreso mensual familiar (S/)</label>
+                    <input type="number" class="form-control" name="ingreso_mensual" min="0" step="100" required>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label required">Fuente principal de ingresos</label>
+                    <select class="form-control" name="fuente_ingresos" required>
+                      <option value="">Seleccione</option>
+                      <option value="agricola">Agrícola</option>
+                      <option value="no_agricola">No agrícola</option>
+                      <option value="mixto">Mixto</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label">¿Tiene otros ingresos?</label>
+                    <select class="form-control" name="otros_ingresos">
+                      <option value="no">No</option>
+                      <option value="si">Sí</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group" id="otros-ingresos-group" style="display: none;">
+                <label class="form-label">Descripción de otros ingresos</label>
+                <textarea class="form-control" name="desc_otros_ingresos" rows="2"></textarea>
+              </div>
+              
+              <!-- Sección 2: Programas y asistencia -->
+              <div class="activities-section">
+                <h4><i class="fas fa-hand-holding-heart"></i> Programas y Asistencia</h4>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">¿Cuenta con programas de financiamiento?</label>
+                      <select class="form-control" name="programas_financiamiento">
+                        <option value="no">No</option>
+                        <option value="si">Sí</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">¿Cuenta con programas de asistencia social?</label>
+                      <select class="form-control" name="asistencia_social">
+                        <option value="no">No</option>
+                        <option value="si">Sí</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">¿Cuenta con programas de asistencia técnica?</label>
+                      <select class="form-control" name="asistencia_tecnica">
+                        <option value="no">No</option>
+                        <option value="si">Sí</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">¿Recibe capacitaciones?</label>
+                      <select class="form-control" name="recibe_capacitaciones">
+                        <option value="no">No</option>
+                        <option value="si">Sí</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group" id="detalle-capacitaciones-group" style="display: none;">
+                  <label class="form-label">Detalle de capacitaciones recibidas</label>
+                  <textarea class="form-control" name="detalle_capacitaciones" rows="2"></textarea>
+                </div>
+              </div>
+              
+              <!-- Sección 3: Situación familiar -->
+              <div class="activities-section">
+                <h4><i class="fas fa-users"></i> Situación Familiar</h4>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Número de hijos</label>
+                      <input type="number" class="form-control" name="numero_hijos" min="0" required>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Hijos en edad escolar - ¿Cuántos estudian?</label>
+                      <input type="number" class="form-control" name="hijos_estudian" min="0">
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label required">¿Quién es el jefe de familia?</label>
+                  <select class="form-control" name="jefe_familia" required>
+                    <option value="">Seleccione</option>
+                    <option value="padre">Padre</option>
+                    <option value="madre">Madre</option>
+                    <option value="ambos">Ambos</option>
+                    <option value="otro_familiar">Otro familiar</option>
+                    <option value="no_aplica">No aplica</option>
+                  </select>
+                </div>
+              </div>
+              
+              <!-- Sección 4: Servicios básicos -->
+              <div class="activities-section">
+                <h4><i class="fas fa-home"></i> Servicios Básicos</h4>
+                
+                <div class="form-group">
+                  <label class="form-label required">Servicios básicos con los que cuenta</label>
+                  <div class="checkbox-group">
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="agua" name="servicios_basicos[]" value="agua">
+                      <label for="agua">Agua potable</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="desague" name="servicios_basicos[]" value="desague">
+                      <label for="desague">Desagüe/alcantarillado</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="luz" name="servicios_basicos[]" value="luz">
+                      <label for="luz">Luz eléctrica</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="internet" name="servicios_basicos[]" value="internet">
+                      <label for="internet">Internet</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="telefono" name="servicios_basicos[]" value="telefono">
+                      <label for="telefono">Teléfono</label>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Detalle adicional sobre servicios básicos</label>
+                  <textarea class="form-control" name="detalle_servicios" rows="2"></textarea>
+                </div>
+              </div>
+              
+              <!-- Sección 5: Asociaciones y sistema financiero -->
+              <div class="activities-section">
+                <h4><i class="fas fa-handshake"></i> Asociaciones y Sistema Financiero</h4>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">¿Pertenece a una asociación y/o cooperativa?</label>
+                      <select class="form-control" name="pertenece_asociacion">
+                        <option value="no">No</option>
+                        <option value="si">Sí</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Si pertenece, especifique el nombre</label>
+                      <input type="text" class="form-control" name="nombre_asociacion">
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">¿Tiene acceso a los sistemas financieros?</label>
+                      <select class="form-control" name="acceso_financiero">
+                        <option value="no">No</option>
+                        <option value="si">Sí</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Tipo de acceso financiero</label>
+                      <select class="form-control" name="tipo_acceso_financiero">
+                        <option value="">Seleccione</option>
+                        <option value="cuenta_ahorros">Cuenta de ahorros</option>
+                        <option value="cuenta_corriente">Cuenta corriente</option>
+                        <option value="credito">Crédito</option>
+                        <option value="otro">Otro</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Sección 6: Producción y comercialización -->
+              <div class="activities-section">
+                <h4><i class="fas fa-shopping-cart"></i> Producción y Comercialización</h4>
+                
+                <div class="form-group">
+                  <label class="form-label">¿Cómo vende su producción?</label>
+                  <select class="form-control" name="forma_venta">
+                    <option value="">Seleccione</option>
+                    <option value="directo_productor">Directo al productor</option>
+                    <option value="intermediario">A través de intermediario</option>
+                    <option value="mercado_local">En mercado local</option>
+                    <option value="ferias">En ferias</option>
+                    <option value="contrato">Por contrato</option>
+                    <option value="otro">Otro</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">¿A quién le vende su producción?</label>
+                  <input type="text" class="form-control" name="comprador_produccion" placeholder="Ej: Mercado local, empresa X, etc.">
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">¿Cuánto de su producción es para consumo propio? (%)</label>
+                  <input type="number" class="form-control" name="porcentaje_consumo_propio" min="0" max="100" step="5">
+                </div>
+              </div>
+              
+              <!-- Sección 7: Salud y subsidios -->
+              <div class="activities-section">
+                <h4><i class="fas fa-heartbeat"></i> Salud y Subsidios</h4>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Tipo de seguro de salud</label>
+                      <select class="form-control" name="seguro_salud" required>
+                        <option value="">Seleccione</option>
+                        <option value="essalud">ESSALUD</option>
+                        <option value="sis">SIS</option>
+                        <option value="privado">Privado</option>
+                        <option value="ninguno">Ninguno</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">¿Recibe subsidios o ayudas del Estado?</label>
+                      <select class="form-control" name="subsidios_estado" required>
+                        <option value="">Seleccione</option>
+                        <option value="si">Sí</option>
+                        <option value="no">No</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Sección 8: Tenencia de tierra -->
+              <div class="activities-section">
+                <h4><i class="fas fa-landmark"></i> Tenencia de Tierra</h4>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Situación actual de tenencia</label>
+                      <select class="form-control" name="tenencia_tierra" required>
+                        <option value="">Seleccione</option>
+                        <option value="titulado">Titulado</option>
+                        <option value="posesion">En posesión</option>
+                        <option value="arrendado">Arrendado</option>
+                        <option value="otro">Otro</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Tiempo de posesión (años)</label>
+                      <input type="number" class="form-control" name="tiempo_posesion" min="0" required>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Sección 9: Comunicación y conocimiento del CUSAF -->
+              <div class="activities-section">
+                <h4><i class="fas fa-comments"></i> Comunicación y Conocimiento del CUSAF</h4>
+                
+                <div class="form-group">
+                  <label class="form-label">Medios de comunicación que utiliza</label>
+                  <div class="species-list" id="medios-comunicacion-list">
+                    <!-- Los elementos se añadirán dinámicamente -->
+                  </div>
+                  <div class="add-species">
+                    <input type="text" id="new-medio" class="form-control" placeholder="Ej: Radio, TV, Internet">
+                    <button type="button" class="btn btn-secondary" onclick="addMedio()">Añadir</button>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">¿Conoce el programa CUSAF?</label>
+                      <select class="form-control" name="conoce_cusaf">
+                        <option value="si">Sí</option>
+                        <option value="no">No</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">¿Cómo se enteró del CUSAF?</label>
+                      <input type="text" class="form-control" name="medio_conocimiento_cusaf" placeholder="Ej: Vecino, radio, municipalidad">
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">¿Qué beneficios espera del CUSAF?</label>
+                  <textarea class="form-control" name="beneficios_esperados" rows="2"></textarea>
+                </div>
+              </div>
+              
+              <!-- Sección 10: Actitudes y financiamiento -->
+              <div class="activities-section">
+                <h4><i class="fas fa-hand-holding-usd"></i> Actitudes y Financiamiento</h4>
+                
+                <div class="form-group">
+                  <label class="form-label">Autoridad de confianza</label>
+                  <select class="form-control" name="autoridad_confianza">
+                    <option value="">Seleccione</option>
+                    <option value="municipalidad">Municipalidad</option>
+                    <option value="comunidad">Comunidad</option>
+                    <option value="organizacion">Organización social</option>
+                    <option value="ninguna">Ninguna</option>
+                  </select>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Actitud frente al financiamiento</label>
+                      <select class="form-control" name="actitud_financiamiento">
+                        <option value="positiva">Positiva (acepta créditos)</option>
+                        <option value="neutral">Neutral</option>
+                        <option value="negativa">Negativa (prefiere no endeudarse)</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Actitud frente al pago por arrendamiento</label>
+                      <select class="form-control" name="actitud_arrendamiento">
+                        <option value="positiva">Positiva (acepta pagar)</option>
+                        <option value="neutral">Neutral</option>
+                        <option value="negativa">Negativa (no acepta pagar)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Inversión en los últimos 12 meses (S/)</label>
+                  <input type="number" class="form-control" name="inversion_12meses" min="0" step="100">
+                </div>
+              </div>
+              
+              <!-- Botones de navegación -->
+              <div class="form-row">
+                <div class="form-col" style="text-align: left;">
+                  <a href="beneficiarios.html"><button type="button" class="btn btn-secondary">Anterior</button></a>
+                </div>
+                <div class="form-col" style="text-align: right;">
+                  <a href="potencialesbeneficiarios_datosagricolas.html"><button type="button" class="btn btn-primary">Guardar y Siguiente</button></a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Mostrar/ocultar campo de otros ingresos según selección
+    document.querySelector('[name="otros_ingresos"]').addEventListener('change', function() {
+      const otrosIngresosGroup = document.getElementById('otros-ingresos-group');
+      otrosIngresosGroup.style.display = this.value === 'si' ? 'block' : 'none';
+    });
+    
+    // Función para añadir medios de comunicación
+    function addMedio() {
+      const medioInput = document.getElementById('new-medio');
+      const medioName = medioInput.value.trim();
+      
+      if (medioName) {
+        const list = document.getElementById('medios-comunicacion-list');
+        const medioItem = document.createElement('div');
+        medioItem.className = 'species-item';
+        medioItem.innerHTML = `
+          <span>${medioName}</span>
+          <i class="fas fa-times" onclick="removeMedio(this)"></i>
+          <input type="hidden" name="medios_comunicacion[]" value="${medioName}">
+        `;
+        list.appendChild(medioItem);
+        medioInput.value = '';
+      }
+    }
+    
+    // Función para eliminar medio de comunicación
+    function removeMedio(element) {
+      element.parentElement.remove();
+    }
+    
+    // Validación del formulario antes de enviar
+    document.getElementById('socioeconomic-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Validar campos requeridos
+      const requiredFields = this.querySelectorAll('[required]');
+      let isValid = true;
+      
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          field.style.borderColor = 'var(--danger)';
+          isValid = false;
+        } else {
+          field.style.borderColor = '';
+        }
+      });
+      
+      if (isValid) {
+        // Aquí iría la lógica para enviar el formulario
+        alert('Formulario validado correctamente. Enviando datos...');
+        // this.submit(); // Descomentar para enviar realmente el formulario
+      } else {
+        alert('Por favor complete todos los campos obligatorios.');
+      }
+    });
+  </script>
+</body>
+</html>

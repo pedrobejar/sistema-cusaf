@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Gestión CUSAF - Informe Técnico</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <style>
+    /* Estilos se mantienen igual que en el original */
+    :root {
+      --primary: #2E7D32;
+      --secondary: #4CAF50;
+      --light: #E8F5E9;
+      --dark: #1B5E20;
+      --accent: #8BC34A;
+      --warning: #FFC107;
+      --danger: #F44336;
+      --gray: #757575;
+      --light-gray: #F5F5F5;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f0f2f5;
+    }
+    
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background-color: var(--dark);
+      color: white;
+      padding-top: 20px;
+    }
+    
+    .sidebar-header {
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .sidebar-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .nav-menu {
+      list-style: none;
+    }
+    
+    .nav-item {
+      margin-bottom: 5px;
+    }
+    
+    .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: all 0.3s;
+      gap: 10px;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .nav-link i {
+      width: 20px;
+      text-align: center;
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .page-title {
+      font-size: 24px;
+      color: var(--dark);
+    }
+    
+    .breadcrumb {
+      display: flex;
+      list-style: none;
+      background-color: #fff;
+      padding: 8px 16px;
+      border-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .breadcrumb-item {
+      display: flex;
+      align-items: center;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+      content: "/";
+      padding: 0 8px;
+      color: var(--gray);
+    }
+    
+    .breadcrumb-item a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    
+    .breadcrumb-item.active {
+      color: var(--gray);
+    }
+    
+    /* Cards */
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .card-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .card-title {
+      font-size: 18px;
+      color: var(--dark);
+      margin: 0;
+    }
+    
+    .card-body {
+      padding: 20px;
+    }
+    
+    /* Forms */
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+    }
+    
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-right: -10px;
+      margin-left: -10px;
+    }
+    
+    .form-col {
+      padding-right: 10px;
+      padding-left: 10px;
+      flex: 1;
+      min-width: 250px;
+    }
+    
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      text-decoration: none;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--dark);
+    }
+    
+    .btn-secondary {
+      background-color: var(--gray);
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #616161;
+    }
+    
+    /* Process Steps */
+    .process-steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 25px;
+      position: relative;
+    }
+    
+    .process-steps::before {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #ddd;
+      z-index: 1;
+    }
+    
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      flex: 1;
+    }
+    
+    .step-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: white;
+      border: 2px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      color: var(--gray);
+      font-weight: bold;
+    }
+    
+    .step.active .step-icon {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+    
+    .step.completed .step-icon {
+      background-color: var(--secondary);
+      border-color: var(--secondary);
+      color: white;
+    }
+    
+    .step-title {
+      font-size: 12px;
+      color: var(--gray);
+      text-align: center;
+    }
+    
+    .step.active .step-title {
+      color: var(--primary);
+      font-weight: 500;
+    }
+    
+    /* File upload */
+    .file-upload {
+      border: 2px dashed #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .file-upload:hover {
+      border-color: var(--primary);
+    }
+    
+    .file-upload i {
+      font-size: 28px;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    
+    .file-upload p {
+      margin: 0;
+      color: var(--gray);
+    }
+    
+    /* Alert messages */
+    .alert {
+      padding: 12px 16px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .alert-info {
+      background-color: #E3F2FD;
+      color: #0D47A1;
+      border-left: 4px solid #2196F3;
+    }
+    
+    /* Map container */
+    .map-container {
+      height: 300px;
+      background-color: #eee;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .map-container::before {
+      content: "Mapa de ubicación";
+      color: var(--gray);
+    }
+    
+    /* Required field marker */
+    .required::after {
+      content: "*";
+      color: var(--danger);
+      margin-left: 4px;
+    }
+    
+    /* Document list */
+    .document-list {
+      list-style: none;
+    }
+    
+    .document-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .document-icon {
+      margin-right: 15px;
+      color: var(--primary);
+    }
+    
+    .document-name {
+      flex: 1;
+    }
+    
+    /* Nuevos estilos para mejor organización */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      background-color: var(--light);
+      border-radius: 6px;
+      margin-bottom: 15px;
+      cursor: pointer;
+    }
+    
+    .section-header h3 {
+      font-size: 16px;
+      color: var(--dark);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .section-header .fas {
+      transition: transform 0.3s;
+    }
+    
+    .section-header.collapsed .fas {
+      transform: rotate(-90deg);
+    }
+    
+    .section-content {
+      padding: 0 15px;
+      margin-bottom: 20px;
+    }
+    
+    .status-badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .status-pending {
+      background-color: #FFF3E0;
+      color: #E65100;
+    }
+    
+    .status-completed {
+      background-color: #E8F5E9;
+      color: #2E7D32;
+    }
+    
+    .form-section {
+      margin-bottom: 30px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+    }
+    
+    .form-section:last-child {
+      border-bottom: none;
+      margin-bottom: 15px;
+    }
+    
+    .form-section-title {
+      font-size: 18px;
+      color: var(--dark);
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--light);
+    }
+    
+    /* Evidence grid */
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+    
+    .evidence-item {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .evidence-thumbnail {
+      height: 100px;
+      background-color: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray);
+    }
+    
+    .evidence-caption {
+      padding: 8px;
+      font-size: 12px;
+      text-align: center;
+      background-color: white;
+    }
+    
+    .evidence-actions {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      display: none;
+    }
+    
+    .evidence-item:hover .evidence-actions {
+      display: block;
+    }
+    
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 12px;
+      margin: 2px;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .form-col {
+        flex: 0 0 100%;
+        margin-bottom: 15px;
+      }
+      
+      .process-steps {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+      }
+      
+      .step {
+        flex: 0 0 30%;
+        margin-bottom: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-leaf"></i>
+        <h3>SISTEMA CUSAF</h3>
+      </div>
+      <ul class="nav-menu">
+        <li class="nav-item">
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\inicio.html" class="nav-link">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Inicio</span>
+          </a>
+        </li>
+        <li class="nav-item ">
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\prime.html" class="nav-link">
+            <i class="fas fa-map-marked-alt"></i>
+            <span>Registro Áreas Potenciales</span>
+          </a>
+        </li>
+                
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\beneficiarios.html" class="nav-link active" onclick="toggleSubmenu('beneficiarios-menu')">
+            <i class="fas fa-users"></i>
+            <span>Registro Potenciales Beneficiarios</span>
+          </a>
+                    
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="showSection('listado-section')">
+                <i class="fas fa-list"></i>
+                <span>Listado</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="showSection('reportes-section')">
+                <i class="fas fa-chart-bar"></i>
+                <span>Reportes</span>
+              </a>
+            </li>
+                        
+      
+      </ul>
+    </div>
+    
+    <div class="main-content">
+      <!-- Proceso de etapas -->
+      <div class="card">
+        <div class="card-body">
+          <div class="process-steps">
+            <div class="step completed">
+              <div class="step-icon"><i class="fas fa-male"></i></div>
+              <div class="step-title">Presentación posibles Beneficiarios</div>
+            </div>
+            <div class="step completed">
+              <div class="step-icon"><i class="fas fa-tree"></i></div>
+              <div class="step-title">Trabajo de Campo</div>
+            </div>
+            <div class="step active">
+              <div class="step-icon"><i class="fas fa-pencil"></i></div>
+              <div class="step-title">Elaboración del informe Tecnico</div>
+            </div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-check"></i></div>
+              <div class="step-title">Otorgamiento del Derecho</div>
+            </div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-gavel"></i></div>
+              <div class="step-title">Recursos Administrativos</div>
+            </div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-handshake"></i></div>
+              <div class="step-title">Suscripción del contrato</div>
+            </div>
+          </div>
+          
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            Complete el informe técnico con los resultados de la elaboración del informe técnico. Los campos marcados con (*) son obligatorios.
+          </div>
+        </div>
+      </div>
+      
+      <!-- Formulario principal -->
+      <div class="card">
+        <div class="section-header" onclick="toggleSection('mapsSection')">
+          <h3><i class="fas fa-file-alt"></i>Elaboracion Informe </h3>
+          
+        </div>
+        <div class="card-body">
+          <form id="technicalReportForm">
+            <!-- Sección 1: Información básica -->
+            <div class="form-section">
+              
+              
+              <div class="form-row">
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label required">Fecha de Elaboración</label>
+                    <input type="date" class="form-control" required>
+                  </div>
+                </div>
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label required">Responsable ARFFS</label>
+                    <input type="text" class="form-control" placeholder="Nombre completo del responsable" required>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label required">Resumen de Acciones</label>
+                <textarea class="form-control" rows="4" placeholder="Describa las acciones desarrolladas en el procedimiento de oficio" required></textarea>
+              </div>
+            </div>
+            
+       
+            
+            <!-- Sección 3: Mapas requeridos -->
+            <div class="form-section">
+              <div class="section-header" onclick="toggleSection('mapsSection')">
+                <h3><i class="fas fa-map"></i> Mapas Requeridos</h3>
+                
+              </div>
+              
+              <div class="section-content" id="mapsSection">
+                <div class="form-group">
+                  <label class="form-label required">Mapa del Área despues del trabajo en campo</label>
+                  <div class="file-upload" id="beneficiaryMapUpload">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <p>Arrastre y suelte el mapa en formato .shp, .kml o .pdf</p>
+                    <p class="text-sm" style="color: var(--gray); margin-top: 5px;">Debe incluir coordenadas UTM y datum WGS 84 del beneficiario</p>
+                    <input type="file" id="beneficiaryMapInput" accept=".shp,.kml,.pdf,.jpg,.png" hidden>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label required">Mapa que comprenda la delimitacion la superficie del sistema agroforestal y bosque natural que lo integre</label>
+                  <div class="file-upload" id="agroforestalMapUpload">
+                    <i class="fas fa-tree"></i>
+                    <p>Arrastre y suelte el mapa en formato .shp, .kml o .pdf</p>
+                    <p class="text-sm" style="color: var(--gray); margin-top: 5px;">Debe incluir delimitación de superficie del sistema agroforestal y bosque natural</p>
+                    <input type="file" id="agroforestalMapInput" accept=".shp,.kml,.pdf,.jpg,.png" hidden>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Previsualización de mapas</label>
+                  <div class="map-container" id="mapPreview">
+                    <!-- Aquí se mostraría una previsualización del mapa cargado -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Sección 4: Documentación complementaria -->
+       
+            
+            <!-- Sección 5: Conclusiones y recomendaciones -->
+            <div class="form-section">
+              <div class="section-header" onclick="toggleSection('mapsSection')">
+                <h3><i class="fas fa-map"></i> Conclusiones y Recomendaciones</h3>
+                
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label required">Conclusiones Técnicas</label>
+                <textarea class="form-control" rows="4" placeholder="Redacte las conclusiones técnicas basadas en la evaluación" required></textarea>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label required">Recomendaciones</label>
+                <textarea class="form-control" rows="4" placeholder="Indique las recomendaciones técnicas para cada caso" required></textarea>
+              </div>
+            </div>
+            
+            <!-- Botones de navegación -->
+            <div class="form-row" style="margin-top: 30px;">
+              <div class="form-col" style="text-align: left;">
+                <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_campo.html">
+                  <button type="button" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Anterior
+                  </button>
+                </a>
+              </div>
+              
+              <div class="form-col" style="text-align: right;">
+                <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_otorgamiento.html">
+                  <button type="button" class="btn btn-primary">
+                    Guardar y Continuar <i class="fas fa-arrow-right"></i>
+                  </button>
+                </a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Función para mostrar/ocultar secciones
+    function toggleSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      const header = event.currentTarget;
+      
+      if (section.style.display === 'none' || !section.style.display) {
+        section.style.display = 'block';
+        header.classList.remove('collapsed');
+      } else {
+        section.style.display = 'none';
+        header.classList.add('collapsed');
+      }
+    }
+    
+    // Inicializar secciones
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mostrar todas las secciones por defecto
+      document.querySelectorAll('.section-content').forEach(section => {
+        section.style.display = 'block';
+      });
+      
+      // Configurar eventos para la carga de archivos
+      setupFileUpload('beneficiaryMapUpload', 'beneficiaryMapInput');
+      setupFileUpload('agroforestalMapUpload', 'agroforestalMapInput');
+      setupFileUpload('documentsUploadArea', 'documentsInput', 'documentsGrid');
+    });
+    
+    // Configurar área de carga de archivos
+    function setupFileUpload(uploadAreaId, inputId, gridId = null) {
+      const uploadArea = document.getElementById(uploadAreaId);
+      const fileInput = document.getElementById(inputId);
+      
+      uploadArea.addEventListener('click', () => fileInput.click());
+      
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'var(--primary)';
+        uploadArea.style.backgroundColor = 'var(--light)';
+      });
+      
+      uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.borderColor = '#ddd';
+        uploadArea.style.backgroundColor = 'transparent';
+      });
+      
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = '#ddd';
+        uploadArea.style.backgroundColor = 'transparent';
+        
+        if (e.dataTransfer.files.length) {
+          fileInput.files = e.dataTransfer.files;
+          handleFiles(fileInput.files, gridId);
+        }
+      });
+      
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) {
+          handleFiles(fileInput.files, gridId);
+        }
+      });
+    }
+    
+    // Manejar archivos cargados
+    function handleFiles(files, gridId) {
+      if (!gridId) {
+        // Para mapas individuales
+        alert(`Archivo "${files[0].name}" cargado correctamente.`);
+        
+        // Actualizar estado de la sección de mapas
+        const statusElement = document.querySelector(`[onclick="toggleSection('mapsSection')"] .status-badge`);
+        statusElement.textContent = 'Completado';
+        statusElement.classList.remove('status-pending');
+        statusElement.classList.add('status-completed');
+        
+        // Mostrar previsualización si es imagen
+        if (files[0].type.startsWith('image/')) {
+          const preview = document.getElementById('mapPreview');
+          preview.innerHTML = '';
+          const img = document.createElement('img');
+          img.src = URL.createObjectURL(files[0]);
+          img.style.maxWidth = '100%';
+          img.style.maxHeight = '100%';
+          preview.appendChild(img);
+        }
+        return;
+      }
+      
+      // Para documentos múltiples
+      const grid = document.getElementById(gridId);
+      grid.innerHTML = '';
+      
+      Array.from(files).forEach(file => {
+        const item = document.createElement('div');
+        item.className = 'evidence-item';
+        
+        const thumbnail = document.createElement('div');
+        thumbnail.className = 'evidence-thumbnail';
+        
+        if (file.type === 'application/pdf') {
+          thumbnail.innerHTML = '<i class="fas fa-file-pdf fa-3x" style="color: #F44336;"></i>';
+        } else if (file.type.includes('word') || file.name.endsWith('.doc') || file.name.endsWith('.docx')) {
+          thumbnail.innerHTML = '<i class="fas fa-file-word fa-3x" style="color: #2B579A;"></i>';
+        } else if (file.type.includes('excel') || file.name.endsWith('.xls') || file.name.endsWith('.xlsx')) {
+          thumbnail.innerHTML = '<i class="fas fa-file-excel fa-3x" style="color: #217346;"></i>';
+        } else if (file.type.startsWith('image/')) {
+          const img = document.createElement('img');
+          img.src = URL.createObjectURL(file);
+          img.style.maxHeight = '100%';
+          img.style.maxWidth = '100%';
+          thumbnail.appendChild(img);
+        } else {
+          thumbnail.innerHTML = '<i class="fas fa-file fa-3x"></i>';
+        }
+        
+        const caption = document.createElement('div');
+        caption.className = 'evidence-caption';
+        caption.textContent = file.name.length > 20 ? file.name.substring(0, 17) + '...' : file.name;
+        
+        const actions = document.createElement('div');
+        actions.className = 'evidence-actions';
+        actions.innerHTML = `
+          <button type="button" class="btn btn-danger btn-sm" onclick="removeEvidence(this)"><i class="fas fa-trash"></i></button>
+        `;
+        
+        item.appendChild(thumbnail);
+        item.appendChild(caption);
+        item.appendChild(actions);
+        grid.appendChild(item);
+      });
+      
+      // Actualizar contador de archivos
+      const statusElement = document.querySelector(`[onclick="toggleSection('documentsSection')"] .status-badge`);
+      statusElement.textContent = `${files.length} archivo(s)`;
+      statusElement.classList.remove('status-pending');
+      statusElement.classList.add('status-completed');
+    }
+    
+    // Eliminar evidencia
+    function removeEvidence(button) {
+      const item = button.closest('.evidence-item');
+      item.remove();
+      
+      // Actualizar contador
+      const grid = document.getElementById('documentsGrid');
+      const count = grid.querySelectorAll('.evidence-item').length;
+      const statusElement = document.querySelector(`[onclick="toggleSection('documentsSection')"] .status-badge`);
+      
+      if (count === 0) {
+        statusElement.textContent = '0 archivos';
+        statusElement.classList.remove('status-completed');
+        statusElement.classList.add('status-pending');
+      } else {
+        statusElement.textContent = `${count} archivo(s)`;
+      }
+    }
+    
+    // Validación del formulario
+    document.getElementById('technicalReportForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Verificar que se hayan cargado los mapas requeridos
+      const beneficiaryMap = document.getElementById('beneficiaryMapInput').files.length;
+      const agroforestalMap = document.getElementById('agroforestalMapInput').files.length;
+      
+      if (!beneficiaryMap || !agroforestalMap) {
+        alert('Debe cargar ambos mapas requeridos antes de enviar el informe.');
+        return;
+      }
+      
+      // Aquí iría la lógica para enviar el formulario
+      alert('Informe técnico completado exitosamente. Procediendo a la siguiente etapa.');
+      window.location.href = 'potencialesbeneficiarios_otorgamiento.html';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,2194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Gestión CUSAF - Potenciales Beneficiarios</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <style>
+    /* ESTILOS ORIGINALES (COMPLETOS) */
+    :root {
+      --primary: #2E7D32;
+      --secondary: #4CAF50;
+      --light: #E8F5E9;
+      --dark: #1B5E20;
+      --accent: #8BC34A;
+      --warning: #FFC107;
+      --danger: #F44336;
+      --gray: #757575;
+      --light-gray: #F5F5F5;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f0f2f5;
+    }
+    
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar mejorado */
+    .sidebar {
+      width: 250px;
+      background-color: var(--dark);
+      color: white;
+      padding-top: 20px;
+      transition: all 0.3s ease;
+    }
+    
+    .sidebar-header {
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .sidebar-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .nav-menu {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .nav-item {
+      position: relative;
+      margin-bottom: 5px;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: all 0.3s;
+      gap: 10px;
+      position: relative;
+    }
+    
+    .nav-link:hover, 
+    .nav-link.active {
+      background-color: var(--dark);
+      color: white;
+    }
+    
+    .nav-link i {
+      width: 20px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    /* Submenu styles mejorados */
+    .submenu {
+      list-style: none;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      background-color: rgba(0,0,0,0.1);
+      padding-left: 0;
+    }
+
+    .submenu.active {
+      max-height: 500px;
+    }
+
+    .submenu .nav-link {
+      padding-left: 45px;
+      font-size: 14px;
+      background-color: transparent;
+    }
+    
+    .submenu .nav-link:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+    
+    .submenu .nav-link.active {
+      background-color: var(--primary);
+    }
+
+    /* Indicador de submenu mejorado */
+    .has-submenu > .nav-link::after {
+      content: "\f078";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      margin-left: auto;
+      font-size: 12px;
+      transition: transform 0.3s ease;
+    }
+
+    .has-submenu.active > .nav-link::after {
+      transform: rotate(180deg);
+    }
+    
+    /* Resto de estilos originales */
+    .download-container {
+      text-align: center;
+      font-family: "Font Awesome 6 Free";
+      color: #10f509;
+     font-size: 14px;
+     border: 2px solid #0c7426;
+    }
+    
+    .download-link {
+      display: inline-block;
+      text-decoration: none;
+      color: #434546;
+      padding: 10px;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+    
+    .download-link:hover {
+      background-color: #e0e0e0;
+    }
+    
+    .icon {
+      width: 30px;
+      height: 35px;
+      background-color: #fff;
+      border: 2px solid #003355;
+      border-radius: 5px;
+      position: relative;
+      margin: 0 auto 10px;
+    }
+    
+    .icon::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 10px;
+      height: 10px;
+      background-color: #003355;
+      clip-path: polygon(100% 0, 0 0, 100% 100%);
+    }
+    
+    .icon::after {
+      content: "DOCX";
+      position: absolute;
+      bottom: 6px;
+      left: 0;
+      right: 0;
+      text-align: height;
+      font-size: 8px;
+      font-weight: bold;
+      color: #003355;
+    }
+    
+    .download-text {
+      font-size: 14px;
+      margin-top: 4px;
+      color: #003355;
+    }
+    
+    .download-arrow {
+      display: block;
+      width: 10px;
+      height: 10px;
+      margin: 5px auto;
+      border: solid #003355;
+      border-width: 0 3px 3px 0;
+      transform: rotate(45deg);
+    }
+    
+    /* NUEVOS ESTILOS PARA PERSONAS CONVIVENCIA */
+    .personas-convivencia-section {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: var(--light-gray);
+      border-radius: 8px;
+      border-left: 4px solid var(--primary);
+      display: none;
+    }
+
+    .personas-convivencia-section h4 {
+      color: var(--dark);
+      margin-bottom: 15px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal .card {
+      width: 500px;
+      max-width: 90%;
+    }
+
+    .modal .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal .card-header button {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--gray);
+    }
+
+    .modal .card-header button:hover {
+      color: var(--dark);
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .page-title {
+      font-size: 24px;
+      color: var(--dark);
+    }
+    
+    .breadcrumb {
+      display: flex;
+      list-style: none;
+      background-color: #fff;
+      padding: 8px 16px;
+      border-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .breadcrumb-item {
+      display: flex;
+      align-items: center;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+      content: "/";
+      padding: 0 8px;
+      color: var(--gray);
+    }
+    
+    .breadcrumb-item a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    
+    .breadcrumb-item.active {
+      color: var(--gray);
+    }
+    
+    /* Cards */
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .card-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .card-title {
+      font-size: 18px;
+      color: var(--dark);
+      margin: 0;
+    }
+    
+    .card-body {
+      padding: 20px;
+    }
+    
+    /* Forms */
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+    }
+    
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-right: -10px;
+      margin-left: -10px;
+    }
+    
+    .form-col {
+      padding-right: 10px;
+      padding-left: 10px;
+      flex: 1;
+    }
+    
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      text-decoration: none;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--dark);
+    }
+    
+    .btn-secondary {
+      background-color: var(--gray);
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #616161;
+    }
+    
+    .btn-success {
+      background-color: var(--secondary);
+      color: white;
+    }
+    
+    .btn-warning {
+      background-color: var(--warning);
+      color: white;
+    }
+    
+    .btn-danger {
+      background-color: var(--danger);
+      color: white;
+    }
+    
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+    
+    .tab-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+    
+    .tab-item.active {
+      border-bottom-color: var(--primary);
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+    
+    .process-steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 25px;
+      position: relative;
+    }
+    
+    .process-steps::before {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #ddd;
+      z-index: 1;
+    }
+    
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      flex: 1;
+    }
+    
+    .step-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: white;
+      border: 2px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      color: var(--gray);
+      font-weight: bold;
+    }
+    
+    .step.active .step-icon {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+    
+    .step.completed .step-icon {
+      background-color: var(--secondary);
+      border-color: var(--secondary);
+      color: white;
+    }
+    
+    .step-title {
+      font-size: 12px;
+      color: var(--gray);
+      text-align: center;
+    }
+    
+    .step.active .step-title {
+      color: var(--primary);
+      font-weight: 500;
+    }
+    
+    /* File upload */
+    .file-upload {
+      border: 2px dashed #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+    }
+    
+    .file-upload:hover {
+      border-color: var(--primary);
+    }
+    
+    .file-upload i {
+      font-size: 28px;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    
+    .file-upload p {
+      margin: 0;
+      color: var(--gray);
+    }
+    
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 15px;
+      background: white;
+      border-top: 1px solid #eee;
+      color: var(--gray);
+      font-size: 14px;
+    }
+    
+    /* Alert messages */
+    .alert {
+      padding: 12px 16px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .alert-info {
+      background-color: #E3F2FD;
+      color: #0D47A1;
+      border-left: 4px solid #2196F3;
+    }
+    
+    .alert-warning {
+      background-color: #FFF8E1;
+      color: #FF6F00;
+      border-left: 4px solid #FFC107;
+    }
+    
+    .alert i {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+    
+    /* Map container */
+    .map-container {
+      height: 300px;
+      background-color: #eee;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .map-container::before {
+      content: "Mapa de ubicación";
+      color: var(--gray);
+    }
+    
+    /* Required field marker */
+    .required::after {
+      content: "*";
+      color: var(--danger);
+      margin-left: 4px;
+    }
+    
+    /* Document list */
+    .document-list {
+      list-style: none;
+    }
+    
+    .document-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .document-icon {
+      margin-right: 15px;
+      color: var(--primary);
+    }
+    
+    .document-name {
+      flex: 1;
+    }
+    
+    .document-actions button {
+      margin-left: 8px;
+    }
+    
+    /* Toggle switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 26px;
+    }
+    
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background-color: var(--primary);
+    }
+    
+    input:focus + .slider {
+      box-shadow: 0 0 1px var(--primary);
+    }
+    
+    input:checked + .slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+
+    /* Conyuge section */
+    .conyuge-section {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: var(--light-gray);
+      border-radius: 8px;
+      border-left: 4px solid var(--primary);
+      display: none;
+    }
+
+    .conyuge-section h4 {
+      color: var(--dark);
+      margin-bottom: 15px;
+    }
+
+    /* NUEVOS ESTILOS (COHERENTES CON EL DISEÑO ORIGINAL) */
+    .content-section {
+      display: none;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    /* Tabla de listado */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    
+    .data-table th, .data-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
+    
+    .data-table th {
+      background-color: var(--light);
+      color: var(--dark);
+      font-weight: 600;
+    }
+    
+    .data-table tr:hover {
+      background-color: rgba(233, 245, 233, 0.5);
+    }
+    
+    .data-table .actions {
+      white-space: nowrap;
+    }
+    
+    .data-table .actions .btn {
+      padding: 5px 10px;
+      font-size: 12px;
+      min-width: 30px;
+    }
+    
+    /* Badges para estados */
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .badge-secondary {
+      background-color: #e0e0e0;
+      color: #424242;
+    }
+    
+    .badge-info {
+      background-color: #bbdefb;
+      color: #0d47a1;
+    }
+    
+    .badge-warning {
+      background-color: #fff8e1;
+      color: #ff6f00;
+    }
+    
+    .badge-success {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+    
+    .badge-danger {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+
+    /* Report cards */
+    .report-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .report-card h3 {
+      color: var(--dark);
+      margin-bottom: 10px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .report-card p {
+      color: var(--gray);
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+    
+    .report-card .stat {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    /* Filtros de reporte */
+    .report-filters {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    /* Paginación */
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--gray);
+    }
+
+    .pagination-info {
+      flex: 1;
+    }
+
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Mensaje cuando no hay datos */
+    .no-data {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--gray);
+    }
+
+    .no-data i {
+      font-size: 48px;
+      margin-bottom: 15px;
+      color: var(--accent);
+    }
+    
+    /* Nuevos estilos para la declaratoria de interés */
+    .file-upload-preview {
+      display: none;
+      margin-top: 10px;
+      padding: 10px;
+      background-color: var(--light-gray);
+      border-radius: 4px;
+      border-left: 3px solid var(--primary);
+    }
+    
+    .file-upload-name {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .file-upload-name span {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .file-upload-name button {
+      margin-left: 10px;
+      background: none;
+      border: none;
+      color: var(--danger);
+      cursor: pointer;
+    }
+    
+    /* Estilo para el botón de RENIEC */
+    .reniec-btn {
+      margin-top: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      display: none;
+    }
+    
+    /* Estilo para campos de discapacidad */
+    .discapacidad-fields {
+      display: none;
+      margin-top: 10px;
+      padding: 10px;
+      background-color: var(--light-gray);
+      border-radius: 4px;
+    }
+    
+    /* Estilo para campos de tiempo de convivencia */
+    .tiempo-convivencia {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .tiempo-convivencia input {
+      width: 60px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar mejorado -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-leaf"></i>
+        <h3>SISTEMA CUSAF</h3>
+      </div>
+      <ul class="nav-menu">
+        <li class="nav-item">
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\inicio.html" class="nav-link">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Inicio</span>
+          </a>
+        </li>
+        <li class="nav-item ">
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\prime.html" class="nav-link">
+            <i class="fas fa-map-marked-alt"></i>
+            <span>Registro Áreas Potenciales</span>
+          </a>
+        </li>
+                
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\beneficiarios.html" class="nav-link active" onclick="toggleSubmenu('beneficiarios-menu')">
+            <i class="fas fa-users"></i>
+            <span>Registro Potenciales Beneficiarios</span>
+          </a>
+                    
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="showSection('listado-section')">
+                <i class="fas fa-list"></i>
+                <span>Listado</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="showSection('reportes-section')">
+                <i class="fas fa-chart-bar"></i>
+                <span>Reportes</span>
+              </a>
+            </li>
+                        
+      
+      </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+    
+      <!-- Sección de Registro -->
+      <div id="registro-section" class="content-section active">
+        <!-- Process Steps -->
+        <div class="card">
+          <div class="card-body">
+      <div class="process-steps">
+            <div class="step completed">
+              <div class="step-icon"><i class="fas fa-male"></i></div>
+              <div class="step-title">Presentación posibles Beneficiarios</div>
+            </div>
+            <div class="step ">
+              <div class="step-icon"><i class="fas fa-tree"></i></div>
+              <div class="step-title">Trabajo de Campo</div>
+            </div>
+            <div class="step ">
+              <div class="step-icon"><i class="fas fa-pencil"></i></div>
+              <div class="step-title">Elaboración del informe Tecnico</div>
+            </div>
+            <div class="step ">
+              <div class="step-icon"><i class="fas fa-check"></i></div>
+              <div class="step-title">Otorgamiento del Derecho</div>
+            </div>
+            <div class="step ">
+              <div class="step-icon"><i class="fas fa-gavel"></i></div>
+              <div class="step-title">Recursos Administrativos</div>
+            </div>
+            <div class="step ">
+              <div class="step-icon"><i class="fas fa-handshake"></i></div>
+              <div class="step-title">Suscripcion del contrato</div>
+            </div>
+          </div>
+            
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle"></i>
+              Complete toda la información solicitada. Los campos marcados con (*) son obligatorios.
+            </div>
+          </div>
+        </div>
+        
+        <!-- Formulario de Registro Completo -->
+        <div class="card">
+          <div class="card-body">
+            <div class="tabs" id="formTabs">
+			 
+           <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\beneficiarios.html"><div class="tab-item active" data-tab="tab1"><i class="fas fa-user"></i>Datos Generales</div></a>
+           <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_socioeconomico.html"><div class="tab-item " data-tab="tab2"><i class="fas fa-money-bill-wave"></i> Datos Socioeconómicos</div></a>
+           <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_datosagricolas.html"><div class="tab-item " data-tab="tab3"><i class="fas fa-tractor"></i> Datos Agrícola-Pecuaria</div></a>
+		   <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_division.html"><div class="tab-item " data-tab="tab1"><i class="fas fa-map-marked-alt"></i>Division del Área</div></a>
+           <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_documentos.html"><div class="tab-item" data-tab="tab4"><i class="fas fa-file-alt"></i> Documentos-Requisitos</div></a>
+          </div>
+            
+            <!-- Tab 1: Datos del Solicitante (Formulario Completo) -->
+            <div id="tab1" class="tab-content active">
+              <form id="beneficiario-form">
+			  
+			  <div class="download-container">
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\doc\1declaratoriadeinteres.html"><div class="tab-item" data-tab="tab4"><i class="fas fa-file-alt"></i> ANEXO - Declaratoria de Interes</div></a>
+    </div>
+  </br>
+                <div class="form-group">
+                  
+                  <div class="file-upload" id="actaUploadArea">
+                    <i class="fas fa-file-signature"></i>
+                    <p id="upload-text">Arrastre y suelte el documento de declaratoria de interés o haga clic para cargarla</p>
+                    <div id="file-name" class="file-upload-preview"></div>
+                    <input type="file" id="actaInput" accept=".pdf,.doc,.docx" hidden>
+                  </div>
+                  <p class="text-sm text-gray-600 mt-2">Formatos aceptados: PDF, Word (DOC, DOCX)</p>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Tipo de Documento</label>
+                      <select class="form-control" name="tipoDocumento" id="tipoDocumento" onchange="toggleReniecButton()">
+                        <option value="">Seleccione</option>
+                        <option value="dni">DNI</option>
+                        <option value="carnet">Carnet de Extranjería</option>
+                        <option value="pasaporte">Pasaporte</option>
+                      </select>
+                      <button type="button" id="reniec-btn" class="btn btn-secondary reniec-btn" onclick="consultarReniec()">
+                        <i class="fas fa-id-card"></i> Consultar RENIEC
+                      </button>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Número de Documento</label>
+                      <input type="text" class="form-control" name="numeroDocumento" id="numeroDocumento" placeholder="Ingrese número de documento" >
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Estado Civil</label>
+                      <select class="form-control" id="estado-civil" name="estadoCivil" onchange="toggleConyugeSection()">
+                        <option value="soltero">Soltero(a)</option>
+                        <option value="casado">Casado(a)</option>
+                        <option value="conviviente">Conviviente</option>
+                        <option value="divorciado">Divorciado(a)</option>
+                        <option value="viudo">Viudo(a)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Nombres</label>
+                      <input type="text" class="form-control" name="nombres" placeholder="Ingrese nombres" >
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Apellido Paterno</label>
+                      <input type="text" class="form-control" name="apellidoPaterno" placeholder="Ingrese apellido paterno" >
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Apellido Materno</label>
+                      <input type="text" class="form-control" name="apellidoMaterno" placeholder="Ingrese apellido materno">
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Teléfono</label>
+                      <input type="text" class="form-control" name="telefono" placeholder="Ingrese número telefónico" >
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Fecha de Nac.</label>
+                      <input type="date" class="form-control" name="fechaNacimiento">
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Correo Electrónico</label>
+                      <input type="email" class="form-control" name="email" placeholder="Ingrese correo electrónico" >
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Idiomas</label>
+                      <select class="form-control" name="lenguaOriginaria" >
+                        <option value="">Seleccione</option>
+                        <option value="espanol">Español</option>
+                        <option value="quechua">Quechua</option>
+                        <option value="aymara">Aymara</option>
+                        <option value="ashaninca">Ashaninca</option>
+                        <option value="otros">Otros</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required"> Grado de estudios</label>
+                      <select class="form-control" name="nivelEstudios" >
+                        <option value="">Seleccione</option>
+                        <option value="sin_educacion">Sin educación</option>
+                        <option value="inicial">Inicial</option>
+                        <option value="primaria">Primaria</option>
+                        <option value="secundaria">Secundaria</option>
+                        <option value="tecnico">Técnico</option>
+                        <option value="universitario">Universitario</option>
+                        <option value="postgrado">Postgrado</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Sexo</label>
+                      <select class="form-control" name="sexo">
+                        <option value="">Seleccione</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="femenino">Femenino</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Nacionalidad</label>
+                      <select class="form-control" name="etnia">
+                        <option value="">Seleccione</option>
+                        <option value="quechua">Peruana</option>
+                        <option value="aymara">Venezolana</option>
+                        <option value="nativo">Colombiana</option>
+                        <option value="afroperuano">Brasileña</option>
+                        <option value="ninguna">Chilena</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Ocupación</label>
+                      <input type="text" class="form-control" name="ocupacion" placeholder="Ingrese ocupación">
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Discapacidad</label>
+                      <select class="form-control" name="discapacidad" onchange="toggleDiscapacidadFields(this.value)">
+                        <option value="no">No</option>
+                        <option value="si">Sí</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+				
+			<div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Departamento</label>
+                  <select class="form-control" id="departamento">
+                    <option value="">Seleccionar departamento</option>
+                    <option value="san-martin">San Martín</option>
+                    <option value="loreto">Loreto</option>
+                    <option value="ucayali">Ucayali</option>
+                    <option value="ucayali">Huanuco</option>
+                    <option value="ucayali">Amazonas</option>
+                    <option value="ucayali">Huanuco</option>
+                    <option value="ucayali">Cuzco</option>
+                    <option value="ucayali">Junin</option>
+                    <option value="ucayali">Pasco</option>
+                    <option value="Cajamarca">Huanuco</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Provincia</label>
+                  <select class="form-control" id="provincia" >
+				            <option value="">Elegir provincia</option>
+                    <option value="san-martin">cajamarca</option>
+                    <option value="loreto">san jacinto</option>
+                    <option value="">Nuevo san martin</option>
+                  </select>
+                </div>
+              </div>
+			  
+			    <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Distrito</label>
+                  <select class="form-control" id="provincia" >
+				            <option value="">Elegir distrito</option>
+                    <option value="san-martin">cajamarca</option>
+                    <option value="loreto">san jacinto</option>
+                    <option value="">Nuevo san martin</option>
+                  </select>
+                </div>
+              </div>
+			  
+            </div>
+				
+				                
+                <div id="discapacidad-fields" class="discapacidad-fields">
+                  <div class="form-row">
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Tipo de discapacidad</label>
+                        <select class="form-control" name="tipoDiscapacidad">
+                          <option value="">Seleccione</option>
+                          <option value="fisica">Física</option>
+                          <option value="visual">Visual</option>
+                          <option value="auditiva">Auditiva</option>
+                          <option value="intelectual">Intelectual</option>
+                          <option value="mental">Mental</option>
+                          <option value="multiple">Múltiple</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Grado de discapacidad (%)</label>
+                        <input type="number" class="form-control" name="gradoDiscapacidad" min="0" max="100" placeholder="0-100">
+                      </div>
+                    </div>
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Carné CONADIS</label>
+                        <input type="text" class="form-control" name="carneConadis" placeholder="Número de carné">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label required">Dirección de Domicilio</label>
+                  <input type="text" class="form-control" name="direccion" placeholder="Ingrese dirección completa" >
+                </div>
+				
+				 <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Situacion frente al Predio</label>
+                      <select class="form-control" name="lenguaOriginaria" >
+                        <option value="">Seleccione</option>
+                        <option value="espanol">Dueño/Propietario</option>
+                        <option value="quechua">Arrendatario</option>
+                        <option value="aymara">Representante Legal</option>
+                        <option value="ashaninca">Apoderado</option>
+                        <option value="otros">Otros</option>
+                      </select>
+                    </div>
+                  </div>
+				  <div class="form-col">
+				  
+				   <label class="form-label required">Centro Poblado</label>
+                  <input type="text" class="form-control" name="direccion" placeholder="Ingrese dirección completa" >
+                    </div>           
+                </div>
+				
+                <div class="form-row">
+                  <div class="form-col">
+                <div class="form-group">
+				 
+					  <div class="form-col">
+                  <label class="form-label">¿Vive con otras personas?</label>
+                  <select class="form-control" name="viveConOtros" id="viveConOtros" onchange="togglePersonasConvivencia()">
+                    <option value="no">No</option>
+                    <option value="si">Sí</option>
+                  </select>
+                </div>
+				</div>
+				</div>
+				</div>
+				
+				
+
+                <!-- Sección de personas con las que convive (visible solo si selecciona "Sí") -->
+                <div id="personas-convivencia-section" class="conyuge-section" style="display: none;">
+                  <h4><i class="fas fa-users"></i> Personas con las que convive</h4>
+                  
+                  <div class="form-group">
+                    <button type="button" class="btn btn-secondary" onclick="agregarPersonaConvivencia()">
+                      <i class="fas fa-plus"></i> Agregar Persona
+                    </button>
+                  </div>
+                  
+                  <table class="data-table" id="tabla-personas-convivencia">
+                    <thead>
+                      <tr>
+                        <th>Nombres Completos</th>
+                        <th>Parentesco</th>
+                        <th>Edad</th>
+                        <th>Grado de Instrucción</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Las filas se agregarán dinámicamente -->
+                    </tbody>
+                  </table>
+                </div>
+  
+                <!-- Sección de Cónyuge (visible solo si estado civil es "Casado" o "Conviviente") -->
+                <div id="conyuge-section" class="conyuge-section">
+                  <h4><i class="fas fa-user-friends"></i> Datos del Cónyuge/Conviviente</h4>
+                  
+                  <div class="form-row">
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Tipo de Documento</label>
+                        <select class="form-control" name="conyugeTipoDocumento">
+                          <option value="">Seleccione</option>
+                          <option value="dni">DNI</option>
+                          <option value="carnet">Carnet de Extranjería</option>
+                          <option value="pasaporte">Pasaporte</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Número de Documento</label>
+                        <input type="text" class="form-control" name="conyugeNumeroDocumento" placeholder="Ingrese número de documento">
+                      </div>
+                    </div>
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Nacionalidad</label>
+                        <select class="form-control" name="conyugeNacionalidad">
+                          <option value="peruana">Peruana</option>
+                          <option value="extranjera">Extranjera</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="form-row">
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Nombres</label>
+                        <input type="text" class="form-control" name="conyugeNombres" placeholder="Ingrese nombres">
+                      </div>
+                    </div>
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Apellido Paterno</label>
+                        <input type="text" class="form-control" name="conyugeApellidoPaterno" placeholder="Ingrese apellido paterno">
+                      </div>
+                    </div>
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Apellido Materno</label>
+                        <input type="text" class="form-control" name="conyugeApellidoMaterno" placeholder="Ingrese apellido materno">
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="form-row">
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" name="conyugeTelefono" placeholder="Ingrese número telefónico">
+                      </div>
+                    </div>
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Fecha de Nac.</label>
+                        <input type="date" class="form-control" name="conyugeFechaNacimiento">
+                      </div>
+                    </div>
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" name="conyugeEmail" placeholder="Ingrese correo electrónico">
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="form-row">
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Ocupación</label>
+                        <input type="text" class="form-control" name="conyugeOcupacion" placeholder="Ingrese ocupación">
+                      </div>
+                    </div>
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Discapacidad</label>
+                        <select class="form-control" name="conyugeDiscapacidad" onchange="toggleConyugeDiscapacidadFields(this.value)">
+                          <option value="no">No</option>
+                          <option value="si">Sí</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Hijos en común</label>
+                        <input type="number" class="form-control" name="conyugeHijosComun" min="0" placeholder="Número de hijos">
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div id="conyuge-discapacidad-fields" class="discapacidad-fields">
+                    <div class="form-row">
+                      <div class="form-col">
+                        <div class="form-group">
+                          <label class="form-label">Tipo de discapacidad</label>
+                          <select class="form-control" name="conyugeTipoDiscapacidad">
+                            <option value="">Seleccione</option>
+                            <option value="fisica">Física</option>
+                            <option value="visual">Visual</option>
+                            <option value="auditiva">Auditiva</option>
+                            <option value="intelectual">Intelectual</option>
+                            <option value="mental">Mental</option>
+                            <option value="multiple">Múltiple</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-col">
+                        <div class="form-group">
+                          <label class="form-label">Grado de discapacidad (%)</label>
+                          <input type="number" class="form-control" name="conyugeGradoDiscapacidad" min="0" max="100" placeholder="0-100">
+                        </div>
+                      </div>
+                      <div class="form-col">
+                        <div class="form-group">
+                          <label class="form-label">Carné CONADIS</label>
+                          <input type="text" class="form-control" name="conyugeCarneConadis" placeholder="Número de carné">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label class="form-label">Tiempo de convivencia</label>
+                    <div class="tiempo-convivencia">
+                      <input type="number" class="form-control" name="convivenciaAnios" min="0" placeholder="Años">
+                      <span>años y</span>
+                      <input type="number" class="form-control" name="convivenciaMeses" min="0" max="11" placeholder="Meses">
+                      <span>meses</span>
+                    </div>
+                  </div>
+                </div>
+                </br>
+                <div class="form-row">
+                  <div class="form-col" style="text-align: left;">
+                    <button type="button" class="btn btn-secondary">Cancelar</button>
+                  </div>
+                  <div class="form-col" style="text-align: right;">
+                    <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_socioeconomico.html"><button type="button" class="btn btn-primary">Guardar y Siguiente</button></a>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección de Listado -->
+      <div id="listado-section" class="content-section">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-list"></i> Listado de Potenciales Beneficiarios</h2>
+            <div>
+              <button class="btn btn-primary" onclick="exportToExcel()">
+                <i class="fas fa-file-excel"></i> Exportar
+              </button>
+              <button class="btn btn-secondary" onclick="printList()">
+                <i class="fas fa-print"></i> Imprimir
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Buscar:</label>
+                  <input type="text" class="form-control" id="search-input" placeholder="Buscar por nombre, documento..." onkeyup="filterTable()">
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Estado:</label>
+                  <select class="form-control" id="status-filter" onchange="filterTable()">
+                    <option value="">Todos</option>
+                    <option value="registrado">Registrado</option>
+                    <option value="verificado">Verificado</option>
+                    <option value="evaluado">Evaluado</option>
+                    <option value="aprobado">Aprobado</option>
+                    <option value="rechazado">Rechazado</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>N°</th>
+                  <th>Documento</th>
+                  <th>Nombres</th>
+                  <th>Apellidos</th>
+                  <th>Teléfono</th>
+                  <th>Estado</th>
+                  <th>Fecha Registro</th>
+                  <th class="actions">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="beneficiarios-table">
+                <th>10651847</th>
+                <th>Dni</th>
+                <th>Pedro</th>
+                <th>Bejar</th>
+                <th>997890172</th>
+                <th>Aprobado</th>
+                <th>22/03/2011</th>
+              </tbody>
+            </table>
+            
+            <div class="pagination">
+              <div class="pagination-info">
+                Mostrando <span id="rows-count">0</span> de <span id="total-rows">0</span> registros
+              </div>
+              <div class="pagination-controls">
+                <button class="btn btn-secondary" id="prev-btn" disabled>
+                  <i class="fas fa-chevron-left"></i> Anterior
+                </button>
+                <span>Página <span id="current-page">1</span></span>
+                <button class="btn btn-secondary" id="next-btn" disabled>
+                  Siguiente <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección de Reportes -->
+      <div id="reportes-section" class="content-section">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-chart-bar"></i> Reportes de Potenciales Beneficiarios</h2>
+          </div>
+          <div class="card-body">
+            <div class="report-filters">
+              <div class="form-row">
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label">Fecha desde:</label>
+                    <input type="date" class="form-control" id="report-date-from">
+                  </div>
+                </div>
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label">Fecha hasta:</label>
+                    <input type="date" class="form-control" id="report-date-to">
+                  </div>
+                </div>
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label">Departamento:</label>
+                    <select class="form-control" id="report-department">
+                      <option value="">Todos</option>
+                      <option value="amazonas">Amazonas</option>
+                      <option value="san_martin">San Martín</option>
+                      <option value="loreto">Loreto</option>
+                      <option value="ucayali">Ucayali</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-col" style="align-self: flex-end;">
+                  <button class="btn btn-primary" onclick="generateReport()">
+                    <i class="fas fa-sync-alt"></i> Generar
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="report-card">
+                  <h3><i class="fas fa-users" style="color: var(--primary);"></i> Total Beneficiarios</h3>
+                  <p>Registrados en el sistema</p>
+                  <div class="stat" id="total-beneficiarios">8</div>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="report-card">
+                  <h3><i class="fas fa-check-circle" style="color: var(--secondary);"></i> Aprobados</h3>
+                  <p>Beneficiarios aprobados</p>
+                  <div class="stat" id="aprobados-count">1</div>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="report-card">
+                  <h3><i class="fas fa-clock" style="color: var(--warning);"></i> En Proceso</h3>
+                  <p>En evaluación o verificación</p>
+                  <div class="stat" id="proceso-count">2</div>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="report-card">
+                  <h3><i class="fas fa-times-circle" style="color: var(--danger);"></i> Rechazados</h3>
+                  <p>Solicitudes rechazadas</p>
+                  <div class="stat" id="rechazados-count">5</div>
+                </div>
+              </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+              <button class="btn btn-primary" onclick="exportReportPDF()">
+                <i class="fas fa-file-pdf"></i> Exportar a PDF
+              </button>
+              <button class="btn btn-success" onclick="sendReportEmail()" style="margin-left: 10px;">
+                <i class="fas fa-envelope"></i> Enviar por Correo
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para agregar/editar persona -->
+  <div id="persona-modal" class="modal">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title" id="modal-title">Agregar Persona</h3>
+        <button type="button" onclick="cerrarModal()">&times;</button>
+      </div>
+      <div class="card-body">
+        <form id="persona-form">
+          <input type="hidden" id="persona-index">
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label class="form-label required">Nombres Completos</label>
+                <input type="text" class="form-control" id="persona-nombres" required>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label class="form-label required">Parentesco</label>
+                <select class="form-control" id="persona-parentesco" required>
+                  <option value="">Seleccione</option>
+                  <option value="conyuge">Cónyuge</option>
+                  <option value="hijo">Hijo(a)</option>
+                  <option value="padre">Padre</option>
+                  <option value="madre">Madre</option>
+                  <option value="hermano">Hermano(a)</option>
+                  <option value="abuelo">Abuelo(a)</option>
+                  <option value="nieto">Nieto(a)</option>
+                  <option value="otro">Otro familiar</option>
+                  <option value="no_familiar">No familiar</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-col">
+              <div class="form-group">
+                <label class="form-label required">Edad</label>
+                <input type="number" class="form-control" id="persona-edad" min="0" max="120" required>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label class="form-label required">Grado de estudios</label>
+                <select class="form-control" id="persona-parentesco" required>
+                  <option value="">Seleccione</option>
+                  <option value="conyuge">Primaria</option>
+                  <option value="hijo">Secundaria</option>
+                  <option value="padre">Superior universitaria</option>
+                  <option value="madre">Superior no universitaria</option>
+                  <option value="hermano">Sin estudios</option>
+                  
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-row" style="margin-top: 20px;">
+            <div class="form-col" style="text-align: right;">
+              <button type="button" class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
+              <button type="button" class="btn btn-primary" onclick="guardarPersona()">Guardar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Función para mostrar/ocultar submenús
+    function toggleSubmenu(menuId) {
+      const menu = document.getElementById(menuId);
+      menu.classList.toggle('active');
+      
+      // Cerrar otros submenús si están abiertos (opcional)
+      document.querySelectorAll('.has-submenu').forEach(item => {
+        if (item.id !== menuId && item.classList.contains('active')) {
+          item.classList.remove('active');
+        }
+      });
+      
+      // Prevenir el comportamiento predeterminado del enlace
+      event.preventDefault();
+    }
+    
+    // Función para mostrar sección y actualizar menú activo
+    function showSection(sectionId) {
+      document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(sectionId).classList.add('active');
+      
+      // Actualizar menú activo
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+      });
+      
+      // Marcar como activo el ítem del menú correspondiente
+      const activeLink = document.querySelector(`.nav-link[onclick*="${sectionId}"]`);
+      if (activeLink) {
+        activeLink.classList.add('active');
+        
+        // Asegurar que el submenú padre esté abierto
+        const submenu = activeLink.closest('.submenu');
+        if (submenu) {
+          submenu.classList.add('active');
+          const parentMenu = submenu.closest('.has-submenu');
+          if (parentMenu) {
+            parentMenu.classList.add('active');
+          }
+        }
+      }
+      
+      // Cargar datos según la sección
+      if (sectionId === 'listado-section') {
+        loadBeneficiariosTable();
+      } else if (sectionId === 'reportes-section') {
+        loadReportStats();
+      }
+      
+      // Prevenir el comportamiento predeterminado del enlace
+      if (event) {
+        event.preventDefault();
+      }
+    }
+    
+    // Configurar área de carga de archivos
+    function setupFileUpload() {
+      const uploadArea = document.getElementById('actaUploadArea');
+      const fileInput = document.getElementById('actaInput');
+      const uploadText = document.getElementById('upload-text');
+      const fileNameDisplay = document.getElementById('file-name');
+      
+      uploadArea.addEventListener('click', () => fileInput.click());
+      
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'var(--primary)';
+        uploadArea.style.backgroundColor = 'var(--light)';
+      });
+      
+      uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.borderColor = '#ddd';
+        uploadArea.style.backgroundColor = 'transparent';
+      });
+      
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = '#ddd';
+        uploadArea.style.backgroundColor = 'transparent';
+        
+        if (e.dataTransfer.files.length) {
+          fileInput.files = e.dataTransfer.files;
+          handleFileUpload();
+        }
+      });
+      
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) {
+          handleFileUpload();
+        }
+      });
+    }
+    
+    // Manejar archivo cargado
+    function handleFileUpload() {
+      const fileInput = document.getElementById('actaInput');
+      const fileNameDisplay = document.getElementById('file-name');
+      const uploadText = document.getElementById('upload-text');
+      const file = fileInput.files[0];
+      
+      // Validar tipo de archivo
+      const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      if (!validTypes.includes(file.type)) {
+        alert('Formato de archivo no válido. Por favor, suba un archivo PDF o Word.');
+        fileInput.value = '';
+        return;
+      }
+      
+      // Mostrar nombre del archivo
+      fileNameDisplay.innerHTML = `
+        <div class="file-upload-name">
+          <span>${file.name}</span>
+          <button type="button" onclick="removeFile()"><i class="fas fa-times"></i></button>
+        </div>
+      `;
+      fileNameDisplay.style.display = 'block';
+      uploadText.style.display = 'none';
+    }
+    
+    // Eliminar archivo cargado
+    function removeFile() {
+      const fileInput = document.getElementById('actaInput');
+      const fileNameDisplay = document.getElementById('file-name');
+      const uploadText = document.getElementById('upload-text');
+      
+      fileInput.value = '';
+      fileNameDisplay.style.display = 'none';
+      fileNameDisplay.innerHTML = '';
+      uploadText.style.display = 'block';
+    }
+    
+    // Mostrar/ocultar botón de RENIEC según tipo de documento
+    function toggleReniecButton() {
+      const tipoDocumento = document.getElementById('tipoDocumento').value;
+      const reniecBtn = document.getElementById('reniec-btn');
+      
+      if (tipoDocumento === 'dni') {
+        reniecBtn.style.display = 'block';
+      } else {
+        reniecBtn.style.display = 'none';
+      }
+    }
+    
+    // Consultar RENIEC (simulación)
+    function consultarReniec() {
+      const numeroDocumento = document.getElementById('numeroDocumento').value;
+      
+      if (!numeroDocumento) {
+        alert('Por favor ingrese el número de documento');
+        return;
+      }
+      
+      // Simular consulta a RENIEC
+      alert(`Consultando RENIEC para DNI: ${numeroDocumento}...`);
+      
+      // Simular datos de respuesta (en un caso real sería una llamada API)
+      setTimeout(() => {
+        document.getElementsByName('nombres')[0].value = 'JUAN';
+        document.getElementsByName('apellidoPaterno')[0].value = 'PEREZ';
+        document.getElementsByName('apellidoMaterno')[0].value = 'GOMEZ';
+        document.getElementsByName('fechaNacimiento')[0].value = '1985-05-15';
+        
+        alert('Datos obtenidos de RENIEC correctamente');
+      }, 1500);
+    }
+    
+    // Mostrar/ocultar campos de discapacidad
+    function toggleDiscapacidadFields(value) {
+      const discapacidadFields = document.getElementById('discapacidad-fields');
+      
+      if (value === 'si') {
+        discapacidadFields.style.display = 'block';
+      } else {
+        discapacidadFields.style.display = 'none';
+      }
+    }
+    
+    // Mostrar/ocultar campos de discapacidad del cónyuge
+    function toggleConyugeDiscapacidadFields(value) {
+      const discapacidadFields = document.getElementById('conyuge-discapacidad-fields');
+      
+      if (value === 'si') {
+        discapacidadFields.style.display = 'block';
+      } else {
+        discapacidadFields.style.display = 'none';
+      }
+    }
+    
+    // Función para mostrar/ocultar sección de cónyuge
+    function toggleConyugeSection() {
+      const estadoCivil = document.getElementById('estado-civil').value;
+      const conyugeSection = document.getElementById('conyuge-section');
+      
+      if (estadoCivil === 'casado' || estadoCivil === 'conviviente') {
+        conyugeSection.style.display = 'block';
+      } else {
+        conyugeSection.style.display = 'none';
+      }
+    }
+    
+    // Mostrar/ocultar sección de personas con las que convive
+    function togglePersonasConvivencia() {
+      const viveConOtros = document.getElementById('viveConOtros').value;
+      const seccion = document.getElementById('personas-convivencia-section');
+      
+      if (viveConOtros === 'si') {
+        seccion.style.display = 'block';
+      } else {
+        seccion.style.display = 'none';
+      }
+    }
+
+    // Array para almacenar las personas
+    let personasConvivencia = [];
+
+    // Mostrar modal para agregar/editar persona
+    function agregarPersonaConvivencia(index = null) {
+      const modal = document.getElementById('persona-modal');
+      const title = document.getElementById('modal-title');
+      const form = document.getElementById('persona-form');
+      
+      if (index !== null) {
+        // Modo edición
+        title.textContent = 'Editar Persona';
+        const persona = personasConvivencia[index];
+        
+        document.getElementById('persona-index').value = index;
+        document.getElementById('persona-nombres').value = persona.nombres;
+        document.getElementById('persona-parentesco').value = persona.parentesco;
+        document.getElementById('persona-edad').value = persona.edad;
+        document.getElementById('persona-telefono').value = persona.telefono || '';
+      } else {
+        // Modo nuevo
+        title.textContent = 'Agregar Persona';
+        form.reset();
+        document.getElementById('persona-index').value = '';
+      }
+      
+      modal.style.display = 'flex';
+    }
+
+    // Cerrar modal
+    function cerrarModal() {
+      document.getElementById('persona-modal').style.display = 'none';
+    }
+
+    // Guardar persona en el array
+    function guardarPersona() {
+      const form = document.getElementById('persona-form');
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      
+      const index = document.getElementById('persona-index').value;
+      const persona = {
+        nombres: document.getElementById('persona-nombres').value,
+        parentesco: document.getElementById('persona-parentesco').value,
+        edad: document.getElementById('persona-edad').value,
+        telefono: document.getElementById('persona-telefono').value || null
+      };
+      
+      if (index !== '') {
+        // Editar persona existente
+        personasConvivencia[index] = persona;
+      } else {
+        // Agregar nueva persona
+        personasConvivencia.push(persona);
+      }
+      
+      actualizarTablaPersonas();
+      cerrarModal();
+    }
+
+    // Actualizar tabla de personas
+    function actualizarTablaPersonas() {
+      const tbody = document.querySelector('#tabla-personas-convivencia tbody');
+      tbody.innerHTML = '';
+      
+      if (personasConvivencia.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No hay personas registradas</td></tr>';
+        return;
+      }
+      
+      personasConvivencia.forEach((persona, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${persona.nombres}</td>
+          <td>${getParentescoTexto(persona.parentesco)}</td>
+          <td>${persona.edad}</td>
+          <td>${persona.telefono || 'No registrado'}</td>
+          <td class="actions">
+            <button class="btn btn-warning btn-sm" onclick="agregarPersonaConvivencia(${index})" title="Editar">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="eliminarPersona(${index})" title="Eliminar">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Eliminar persona
+    function eliminarPersona(index) {
+      if (confirm('¿Está seguro que desea eliminar esta persona?')) {
+        personasConvivencia.splice(index, 1);
+        actualizarTablaPersonas();
+      }
+    }
+
+    // Obtener texto descriptivo del parentesco
+    function getParentescoTexto(codigo) {
+      const parentescos = {
+        'conyuge': 'Cónyuge',
+        'hijo': 'Hijo(a)',
+        'padre': 'Padre',
+        'madre': 'Madre',
+        'hermano': 'Hermano(a)',
+        'abuelo': 'Abuelo(a)',
+        'nieto': 'Nieto(a)',
+        'otro': 'Otro familiar',
+        'no_familiar': 'No familiar'
+      };
+      return parentescos[codigo] || codigo;
+    }
+    
+    // Almacenamiento de beneficiarios
+    let beneficiarios = JSON.parse(localStorage.getItem('beneficiarios')) || [];
+    
+    // Cargar tabla de beneficiarios
+    function loadBeneficiariosTable() {
+      const tableBody = document.getElementById('beneficiarios-table');
+      tableBody.innerHTML = '';
+      
+      if (beneficiarios.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td colspan="8" class="no-data">
+            <i class="fas fa-info-circle"></i>
+            <p>No se encontraron beneficiarios registrados</p>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      } else {
+        beneficiarios.forEach((benef, index) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${benef.tipoDocumento}: ${benef.numeroDocumento}</td>
+            <td>${benef.nombres}</td>
+            <td>${benef.apellidoPaterno} ${benef.apellidoMaterno || ''}</td>
+            <td>${benef.telefono}</td>
+            <td><span class="badge ${getStatusBadgeClass(benef.estado)}">${benef.estado}</span></td>
+            <td>${benef.fechaRegistro}</td>
+            <td class="actions">
+              <button class="btn btn-primary btn-sm" onclick="viewBeneficiario(${benef.id})" title="Ver">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn btn-warning btn-sm" onclick="editBeneficiario(${benef.id})" title="Editar">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="deleteBeneficiario(${benef.id})" title="Eliminar">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
+      
+      // Actualizar contadores
+      document.getElementById('rows-count').textContent = beneficiarios.length;
+      document.getElementById('total-rows').textContent = beneficiarios.length;
+    }
+    
+    // Clase CSS para el estado
+    function getStatusBadgeClass(status) {
+      const classes = {
+        'registrado': 'badge-secondary',
+        'verificado': 'badge-info',
+        'evaluado': 'badge-warning',
+        'aprobado': 'badge-success',
+        'rechazado': 'badge-danger'
+      };
+      return classes[status] || 'badge-secondary';
+    }
+    
+    // Cargar estadísticas para reportes
+    function loadReportStats() {
+      const total = beneficiarios.length;
+      const aprobados = beneficiarios.filter(b => b.estado === 'aprobado').length;
+      const enProceso = beneficiarios.filter(b => ['registrado', 'verificado', 'evaluado'].includes(b.estado)).length;
+      const rechazados = beneficiarios.filter(b => b.estado === 'rechazado').length;
+      
+      document.getElementById('total-beneficiarios').textContent = total;
+      document.getElementById('aprobados-count').textContent = aprobados;
+      document.getElementById('proceso-count').textContent = enProceso;
+      document.getElementById('rechazados-count').textContent = rechazados;
+    }
+    
+    // Funciones de acciones
+    function viewBeneficiario(id) {
+      const beneficiario = beneficiarios.find(b => b.id === id);
+      if (beneficiario) {
+        let mensaje = `Detalles del beneficiario:\n\n`;
+        mensaje += `Nombre: ${beneficiario.nombres} ${beneficiario.apellidoPaterno} ${beneficiario.apellidoMaterno || ''}\n`;
+        mensaje += `Documento: ${beneficiario.tipoDocumento} ${beneficiario.numeroDocumento}\n`;
+        mensaje += `Teléfono: ${beneficiario.telefono}\n`;
+        mensaje += `Correo: ${beneficiario.email || 'No registrado'}\n`;
+        mensaje += `Dirección: ${beneficiario.direccion || 'No registrada'}\n`;
+        mensaje += `Departamento: ${beneficiario.departamento || 'No registrado'}\n`;
+        mensaje += `Estado: ${beneficiario.estado}\n`;
+        mensaje += `Fecha Registro: ${beneficiario.fechaRegistro}`;
+        
+        alert(mensaje);
+      }
+    }
+    
+    function editBeneficiario(id) {
+      const beneficiario = beneficiarios.find(b => b.id === id);
+      if (beneficiario) {
+        if (confirm(`¿Editar beneficiario: ${beneficiario.nombres} ${beneficiario.apellidoPaterno}?`)) {
+          // Aquí podrías implementar la lógica para cargar el formulario de edición
+          showSection('registro-section');
+          alert('Funcionalidad de edición en desarrollo');
+        }
+      }
+    }
+    
+    function deleteBeneficiario(id) {
+      const beneficiario = beneficiarios.find(b => b.id === id);
+      if (beneficiario && confirm(`¿Está seguro que desea eliminar a ${beneficiario.nombres} ${beneficiario.apellidoPaterno}?`)) {
+        beneficiarios = beneficiarios.filter(b => b.id !== id);
+        localStorage.setItem('beneficiarios', JSON.stringify(beneficiarios));
+        loadBeneficiariosTable();
+        alert('Beneficiario eliminado correctamente');
+      }
+    }
+    
+    // Funciones de exportación
+    function exportToExcel() {
+      alert('Exportando datos a Excel...');
+      // En una implementación real, aquí se generaría el archivo Excel
+    }
+    
+    function printList() {
+      window.print();
+    }
+    
+    function exportReportPDF() {
+      alert('Generando reporte en PDF...');
+    }
+    
+    function sendReportEmail() {
+      alert('Enviando reporte por correo electrónico...');
+    }
+    
+    function generateReport() {
+      alert('Generando reporte con los filtros seleccionados...');
+      loadReportStats();
+    }
+    
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', function() {
+      // Configurar eventos para la carga de documentos
+      setupFileUpload();
+      
+      // Mostrar sección de registro por defecto
+      showSection('registro-section');
+      
+      // Configurar eventos para los submenús
+      document.querySelectorAll('.has-submenu > .nav-link').forEach(link => {
+        if (!link.getAttribute('onclick')) {
+          link.setAttribute('onclick', `toggleSubmenu('${link.parentElement.id}')`);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

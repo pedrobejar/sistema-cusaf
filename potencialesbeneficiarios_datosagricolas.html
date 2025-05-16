@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Gestión CUSAF - Formulario de Solicitud</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <!-- Leaflet para mapas -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    :root {
+      --primary: #2E7D32;
+      --secondary: #4CAF50;
+      --light: #E8F5E9;
+      --dark: #1B5E20;
+      --accent: #8BC34A;
+      --warning: #FFC107;
+      --danger: #F44336;
+      --gray: #757575;
+      --light-gray: #F5F5F5;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f0f2f5;
+    }
+    
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background-color: var(--dark);
+      color: white;
+      padding-top: 20px;
+    }
+    
+    .sidebar-header {
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .sidebar-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .nav-menu {
+      list-style: none;
+    }
+    
+    .nav-item {
+      margin-bottom: 5px;
+    }
+    
+    .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: all 0.3s;
+      gap: 10px;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .nav-link i {
+      width: 20px;
+      text-align: center;
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .page-title {
+      font-size: 24px;
+      color: var(--dark);
+    }
+    
+    .breadcrumb {
+      display: flex;
+      list-style: none;
+      background-color: #fff;
+      padding: 8px 16px;
+      border-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .breadcrumb-item {
+      display: flex;
+      align-items: center;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+      content: "/";
+      padding: 0 8px;
+      color: var(--gray);
+    }
+    
+    .breadcrumb-item a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    
+    .breadcrumb-item.active {
+      color: var(--gray);
+    }
+    
+    /* Cards */
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .card-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .card-title {
+      font-size: 18px;
+      color: var(--dark);
+      margin: 0;
+    }
+    
+    .card-body {
+      padding: 20px;
+    }
+    
+    /* Forms */
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+    }
+    
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-right: -10px;
+      margin-left: -10px;
+    }
+    
+    .form-col {
+      padding-right: 10px;
+      padding-left: 10px;
+      flex: 1;
+    }
+    
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      text-decoration: none;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--dark);
+    }
+    
+    .btn-secondary {
+      background-color: var(--gray);
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #616161;
+    }
+    
+    .btn-success {
+      background-color: var(--secondary);
+      color: white;
+    }
+    
+    .btn-warning {
+      background-color: var(--warning);
+      color: white;
+    }
+    
+    .btn-danger {
+      background-color: var(--danger);
+      color: white;
+    }
+    
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+    
+    .tab-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+    
+    .tab-item.active {
+      border-bottom-color: var(--primary);
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* Process Steps */
+    .process-steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 25px;
+      position: relative;
+    }
+    
+    .process-steps::before {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #ddd;
+      z-index: 1;
+    }
+    
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      flex: 1;
+    }
+    
+    .step-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: white;
+      border: 2px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      color: var(--gray);
+      font-weight: bold;
+    }
+    
+    .step.active .step-icon {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+    
+    .step.completed .step-icon {
+      background-color: var(--secondary);
+      border-color: var(--secondary);
+      color: white;
+    }
+    
+    .step-title {
+      font-size: 12px;
+      color: var(--gray);
+      text-align: center;
+    }
+    
+    .step.active .step-title {
+      color: var(--primary);
+      font-weight: 500;
+    }
+    
+    /* Activities section */
+    .activities-section {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      border: 1px solid #eee;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .activities-section h4 {
+      color: var(--dark);
+      margin-bottom: 15px;
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .activities-section h4 i {
+      color: var(--primary);
+    }
+	
+	 .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      background-color: var(--light);
+      border-radius: 6px;
+      margin-bottom: 15px;
+      cursor: pointer;
+    }
+    
+    .section-header h3 {
+      font-size: 16px;
+      color: var(--dark);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .section-header .fas {
+      transition: transform 0.3s;
+    }
+    
+    .section-header.collapsed .fas {
+      transform: rotate(-90deg);
+    }
+
+    /* Species list */
+    .species-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .species-item {
+      background-color: var(--light-gray);
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .species-item i {
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .add-species {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .add-species input {
+      flex: 1;
+    }
+
+    .add-species button {
+      padding: 10px 12px;
+    }
+    
+    .required::after {
+      content: ' (*)';
+      color: var(--danger);
+    }
+    
+    .alert {
+      padding: 12px 15px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .alert-info {
+      background-color: #E3F2FD;
+      color: #0D47A1;
+      border-left: 4px solid #2196F3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-leaf"></i>
+        <h3>SISTEMA CUSAF</h3>
+      </div>
+      <ul class="nav-menu">
+        <li class="nav-item">
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\inicio.html" class="nav-link">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Inicio</span>
+          </a>
+        </li>
+        <li class="nav-item ">
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\prime.html" class="nav-link">
+            <i class="fas fa-map-marked-alt"></i>
+            <span>Registro Áreas Potenciales</span>
+          </a>
+        </li>
+                
+          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\beneficiarios.html" class="nav-link active" onclick="toggleSubmenu('beneficiarios-menu')">
+            <i class="fas fa-users"></i>
+            <span>Registro Potenciales Beneficiarios</span>
+          </a>
+                    
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="showSection('listado-section')">
+                <i class="fas fa-list"></i>
+                <span>Listado</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="showSection('reportes-section')">
+                <i class="fas fa-chart-bar"></i>
+                <span>Reportes</span>
+              </a>
+            </li>
+                        
+      
+      </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="page-header">
+       
+      </div>
+      
+      <div class="card">
+        <div class="card-body">
+             <div class="process-steps">
+              <div class="step active">
+                <div class="step-icon"><i class="fas fa-male"></i></div>
+                <div class="step-title">Presentación posibles Beneficiarios</div>
+              </div>
+              <div class="step">
+                <div class="step-icon"><i class="fas fa-tree"></i></div>
+                <div class="step-title">Trabajo de Campo</div>
+              </div>
+              <div class="step">
+                <div class="step-icon"><i class="fas fa-pencil"></i></div>
+                <div class="step-title">Elaboración del informe Tecnico</div>
+              </div>
+              <div class="step">
+                <div class="step-icon"><i class="fas fa-check"></i></div>
+                <div class="step-title">Otorgamiento del Derecho</div>
+              </div>
+              <div class="step">
+                <div class="step-icon"><i class="fas fa-gavel"></i></div>
+                <div class="step-title">Recursos Administrativos</div>
+              </div>
+              <div class="step">
+                <div class="step-icon"><i class="fas fa-handshake"></i></div>
+                <div class="step-title">Suscripcion del contrato</div>
+              </div>
+            </div>
+          
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            Complete toda la información agrícola y pecuaria solicitada. Los campos marcados con (*) son obligatorios.
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-body">
+         <div class="tabs" id="formTabs">
+			 
+           <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\beneficiarios.html"><div class="tab-item active" data-tab="tab1"><i class="fas fa-user"></i>Datos Generales</div></a>
+           <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_socioeconomico.html"><div class="tab-item active" data-tab="tab2"><i class="fas fa-money-bill-wave"></i> Datos Socioeconómicos</div></a>
+           <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_datosagricolas.html"><div class="tab-item active" data-tab="tab3"><i class="fas fa-tractor"></i> Datos Agrícola-Pecuaria</div></a>
+		   <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_division.html"><div class="tab-item " data-tab="tab1"><i class="fas fa-map-marked-alt"></i>Division del Área</div></a>
+           <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_documentos.html"><div class="tab-item" data-tab="tab4"><i class="fas fa-file-alt"></i> Documentos-Requisitos</div></a>
+          </div>
+          
+          <div id="tab3" class="tab-content active">
+            <form>
+              <!-- Sección de datos agrícolas -->
+             <div class="section-header" )">
+                <h3><i class="fas fa-seedling"></i> Actividades Agricolas</h3>
+              
+              </div>
+                  <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Nombre de la unidad productiva</label>
+                      <input type="text" class="form-control" name="nombre_unidad" placeholder="Ej. Finca 'Los Alamos'">
+                    </div>
+                  </div>
+                  <div class="form-col">
+                       <div class="form-group">
+                <label class="required">Tipo de Productor:</label>
+                <select name="tipo_productor" class="form-control" required onchange="toggleOtherField(this, 'otro_tipo_productor')">
+                    <option value="">Seleccione...</option>
+                    <option value="Agricultor">Agricultor</option>
+                    <option value="Ganadero">Ganadero</option>
+                    <option value="Agroindustrial">Agroindustrial</option>
+                    <option value="Piscicultor">Piscicultor</option>
+                    <option value="Apicultor">Apicultor</option>
+                    <option value="Forestal">Forestal</option>
+                    <option value="otro">Otro</option>
+                </select>
+                <div id="otro_tipo_productor" class="form-control">
+                    <label>Especifique otro tipo:</label>
+                    <input type="text" name="otro_tipo_productor_text" class="form-control">
+                </div>
+            </div>
+                  </div>
+                </div>
+				
+				
+				
+				    <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Tipo de tenencia</label>
+                      <select class="form-control" name="tenencia" required onchange="toggleOtherField(this, 'detalle_tenencia')">
+                    <option value="">Seleccione...</option>
+                    <option value="Propio con título">Propio con título</option>
+                    <option value="Propio sin título">Propio sin título</option>
+                    <option value="Arrendado">Arrendado</option>
+                    <option value="Comunero">Comunero</option>
+                    <option value="Asociado">Asociado</option>
+                    <option value="Posesión">Posesión</option>
+                    <option value="Cesión en uso">Cesión en uso</option>
+                    <option value="otro">Otro</option>
+                </select>
+				   <div id="detalle_tenencia" class="form-control">
+                    <div class="form-group">
+                        <label>Detalles de tenencia:</label>
+                        <textarea class="form-control" name="detalle_tenencia_text" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Años en la propiedad:</label>
+                        <input class="form-control" type="number" name="anos_propiedad" min="0">
+                    </div>
+                </div>
+                    </div>
+                  </div>
+                
+                </div>
+				
+				
+		  <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Uso actual de la tierra (marque todos los que correspondan):</label>
+                       <div class="form-control">
+                    <input type="checkbox" name="uso_agricola" value="1"> Agrícola<br>
+                    <input type="checkbox" name="uso_ganadero" value="1"> Ganadero<br>
+                    <input type="checkbox" name="uso_forestal" value="1"> Forestal<br>
+                    <input type="checkbox" name="uso_descanso" value="1"> Descanso/barbecho<br>
+                    <input type="checkbox" name="uso_otros" value="1" onclick="toggleOtherField(this, 'otros_usos')"> Otros
+                    <div id="otros_usos" class="other-field">
+                        <label>Especifique otros usos:</label>
+                        <textarea class="form-control" name="otros_usos_text" rows="2"></textarea>
+                    </div>
+                </div>
+                    </div>
+                  </div>
+                 
+                </div>
+				
+				
+				
+				
+				
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Área Total (ha)</label>
+                     <input class="form-control" type="number" name="area_total" step="0.01" min="0" required>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Área cultivable (ha)</label>
+                      <input type="number" class="form-control" name="area_cultivada" step="0.01" min="0" required>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Cultivos Principales</label>
+                      <select class="form-control" name="cultivo_principal" id="cultivo_principal" required>
+                        <option value="">Seleccione</option>
+                        <option value="cafe">Café</option>
+                        <option value="cacao">Cacao</option>
+                        <option value="coca">Coca</option>
+                        <option value="yuca">Yuca</option>
+                        <option value="platano">Plátano</option>
+                        <option value="maiz">Maíz</option>
+                        <option value="arroz">Arroz</option>
+                        <option value="frijol">Frijol</option>
+                        <option value="otro">Otros</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Otros cultivos (especificar)</label>
+                      <input type="text" class="form-control" name="otros_cultivos" id="otros_cultivos">
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Sistema de producción</label>
+                      <select class="form-control" name="sistema_produccion" required>
+                        <option value="">Seleccione</option>
+                        <option value="tradicional">Tradicional</option>
+                        <option value="tecnificado">Tecnificado</option>
+                        <option value="semi_tecnificado">Semi-tecnificado</option>
+                        <option value="agroecologico">Agroecológico</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Sistema de riego</label>
+                      <select class="form-control" name="sistema_riego" required>
+                        <option value="">Seleccione</option>
+                        <option value="secano">Secano (lluvia)</option>
+                        <option value="gravedad">Gravedad</option>
+                        <option value="aspersion">Aspersión</option>
+                        <option value="goteo">Goteo</option>
+                        <option value="ninguno">No tiene</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">Destino de la producción</label>
+                      <select class="form-control" name="destino_produccion" required>
+                        <option value="">Seleccione</option>
+                        <option value="autoconsumo">Autoconsumo</option>
+                        <option value="venta_local">Venta local</option>
+                        <option value="venta_regional">Venta regional</option>
+                        <option value="exportacion">Exportación</option>
+                        <option value="mixto">Mixto (consumo y venta)</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Rendimiento promedio (kg/ha)</label>
+                      <input type="number" class="form-control" name="rendimiento_promedio" min="0">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Sección de datos pecuarios -->
+              <div class="section-header" )">
+                <h3><i class="fas fa-horse"></i> Actividades Pecuarias</h3>
+              
+              </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">¿Realiza actividad pecuaria?</label>
+                      <select class="form-control" name="realiza_actividad_pecuaria" id="actividad_pecuaria" required>
+                        <option value="">Seleccione</option>
+                        <option value="si">Sí</option>
+                        <option value="no">No</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Área destinada a ganadería (hectáreas)</label>
+                      <input type="number" class="form-control" name="area_ganaderia" step="0.01" min="0">
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Tipo de ganado principal</label>
+                      <select class="form-control" name="tipo_ganado_principal" id="tipo_ganado">
+                        <option value="">Seleccione</option>
+                        <option value="vacuno">Vacuno</option>
+                        <option value="ovino">Ovino</option>
+                        <option value="caprino">Caprino</option>
+                        <option value="porcino">Porcino</option>
+                        <option value="aves">Aves</option>
+                        <option value="cuyes">Cuyes</option>
+                        <option value="otro">Otro</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Número de cabezas</label>
+                      <input type="number" class="form-control" name="numero_cabezas" min="0">
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Sistema de manejo</label>
+                      <select class="form-control" name="sistema_manejo">
+                        <option value="">Seleccione</option>
+                        <option value="extensivo">Extensivo</option>
+                        <option value="intensivo">Intensivo</option>
+                        <option value="semi_intensivo">Semi-intensivo</option>
+                        <option value="estabulado">Estabulado</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Finalidad principal</label>
+                      <select class="form-control" name="finalidad_principal">
+                        <option value="">Seleccione</option>
+                        <option value="carne">Carne</option>
+                        <option value="leche">Leche</option>
+                        <option value="doble_proposito">Doble propósito</option>
+                        <option value="cria">Cría</option>
+                        <option value="trabajo">Trabajo</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              
+              
+              <!-- Sección de sistemas agroforestales -->
+               <div class="section-header" )">
+                <h3><i class="fas fa-tree"></i> Sistemas Agroforestales</h3>
+              
+              </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label required">¿Tiene sistema agroforestal?</label>
+                      <select class="form-control" name="tiene_sistema_agroforestal" id="sistema_agroforestal" required>
+                        <option value="">Seleccione</option>
+                        <option value="si">Sí</option>
+                        <option value="no">No</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Área con sistema agroforestal (hectáreas)</label>
+                      <input type="number" class="form-control" name="area_agroforestal" step="0.01" min="0">
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Tipo de sistema agroforestal</label>
+                      <select class="form-control" name="tipo_sistema_agroforestal">
+                        <option value="">Seleccione</option>
+                        <option value="agrosilvicola">Agrosilvícola (cultivos y árboles)</option>
+                        <option value="silvopastoril">Silvopastoril (árboles y ganado)</option>
+                        <option value="agrosilvopastoril">Agrosilvopastoril (cultivos, árboles y ganado)</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Especies maderables principales</label>
+                      <select class="form-control" name="especies_maderables" id="especies_maderables">
+                        <option value="">Seleccione</option>
+                        <option value="caoba">Caoba</option>
+                        <option value="cedro">Cedro</option>
+                        <option value="tornillo">Tornillo</option>
+                        <option value="lupuna">Lupuna</option>
+                        <option value="eucalipto">Eucalipto</option>
+                        <option value="pino">Pino</option>
+                        <option value="aliso">Aliso</option>
+                        <option value="otro">Otros</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Otras especies forestales (especifique)</label>
+                  <input type="text" class="form-control" name="otras_especies_forestales">
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Describa el arreglo agroforestal</label>
+                  <textarea class="form-control" name="descripcion_arreglo" rows="3" placeholder="Describa cómo se distribuyen los cultivos, árboles y/o ganado en su sistema agroforestal"></textarea>
+                </div>
+              
+              <!-- Información adicional -->
+               <div class="section-header" )">
+                <h3><i class="fas fa-info-circle"></i> Información Adicional</h3>
+              
+              </div>
+                
+                <div class="form-row">
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">¿Recibe asistencia técnica?</label>
+                      <select class="form-control" name="recibe_asistencia_tecnica">
+                        <option value="">Seleccione</option>
+                        <option value="si">Sí</option>
+                        <option value="no">No</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-col">
+                    <div class="form-group">
+                      <label class="form-label">Institución que brinda asistencia</label>
+                      <input type="text" class="form-control" name="institucion_asistencia">
+                    </div>
+                  </div>
+                </div>
+			 <div class="form-row">
+                <div class="form-col" style="text-align: left;">
+                  <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_socioeconomico.html"><button type="button" class="btn btn-secondary" onclick="showTab('tab1')">Anterior</button></a>
+                </div>
+                <div class="form-col" style="text-align: right;">
+                  <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_division.html"><button type="button" class="btn btn-primary" onclick="showTab('tab3')">Guardar y Siguiente</button></a>
+                </div>
+              </div>
+              </div>
+				
+                
+
+            </div>
+           
+				  </div>
+                   </div>	
+				   </div>	
+ <script>
+        // Función para mostrar/ocultar campos "Otro"
+        function toggleOtherField(selectElement, fieldId) {
+            const otherField = document.getElementById(fieldId);
+            if ((selectElement.value === 'otro' || selectElement.value === 'Si' || 
+                (selectElement.type === 'checkbox' && selectElement.checked)) && 
+                selectElement.value !== 'No') {
+                otherField.style.display = 'block';
+            } else {
+                otherField.style.display = 'none';
+                if (selectElement.type !== 'checkbox') {
+                    const inputs = otherField.querySelectorAll('input, textarea, select');
+                    inputs.forEach(input => {
+                        if (input.type !== 'checkbox' && input.type !== 'radio') {
+                            input.value = '';
+                        } else {
+                            input.checked = false;
+                        }
+                    });
+                }
+            }
+        }
+
+        // Calcular edad automáticamente
+        document.getElementsByName('fecha_nacimiento')[0].addEventListener('change', function() {
+            const fechaNacimiento = new Date(this.value);
+            const hoy = new Date();
+            let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+            const mes = hoy.getMonth() - fechaNacimiento.getMonth();
+            
+            if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+                edad--;
+            }
+            
+            document.getElementById('edad_calculada').value = edad >= 0 ? edad : '';
+        });
+
+        // Funciones para cargar provincias y distritos (ejemplo simplificado)
+        function loadProvincias(departamento) {
+            const provinciaSelect = document.getElementById('provincia');
+            provinciaSelect.innerHTML = '<option value="">Seleccione...</option>';
+            
+            // En una implementación real, esto haría una llamada AJAX o usaría datos predefinidos
+            if (departamento === 'Lima') {
+                addOption(provinciaSelect, 'Lima', 'Lima');
+                addOption(provinciaSelect, 'Huarochirí', 'Huarochirí');
+                addOption(provinciaSelect, 'Cañete', 'Cañete');
+                addOption(provinciaSelect, 'Barranca', 'Barranca');
+                addOption(provinciaSelect, 'Cajatambo', 'Cajatambo');
+            } else if (departamento === 'Cusco') {
+                addOption(provinciaSelect, 'Cusco', 'Cusco');
+                addOption(provinciaSelect, 'Quispicanchi', 'Quispicanchi');
+                addOption(provinciaSelect, 'Canchis', 'Canchis');
+                addOption(provinciaSelect, 'Espinar', 'Espinar');
+                addOption(provinciaSelect, 'La Convención', 'La Convención');
+            }
+            // Agregar más opciones según departamento
+            
+            // Limpiar distritos
+            document.getElementById('distrito').innerHTML = '<option value="">Seleccione...</option>';
+        }
+
+        function loadDistritos(provincia) {
+            const distritoSelect = document.getElementById('distrito');
+            distritoSelect.innerHTML = '<option value="">Seleccione...</option>';
+            
+            // En una implementación real, esto haría una llamada AJAX o usaría datos predefinidos
+            if (provincia === 'Lima') {
+                addOption(distritoSelect, 'Lima', 'Lima');
+                addOption(distritoSelect, 'Ancón', 'Ancón');
+                addOption(distritoSelect, 'Ate', 'Ate');
+                addOption(distritoSelect, 'Barranco', 'Barranco');
+                addOption(distritoSelect, 'Breña', 'Breña');
+            } else if (provincia === 'Huarochirí') {
+                addOption(distritoSelect, 'Matucana', 'Matucana');
+                addOption(distritoSelect, 'San Mateo', 'San Mateo');
+                addOption(distritoSelect, 'Chicla', 'Chicla');
+                addOption(distritoSelect, 'Laraos', 'Laraos');
+                addOption(distritoSelect, 'Huachupampa', 'Huachupampa');
+            }
+            // Agregar más opciones según provincia
+        }
+
+        function addOption(selectElement, value, text) {
+            const option = document.createElement('option');
+            option.value = value;
+            option.text = text;
+            selectElement.add(option);
+        }
+
+        // Manejar el envío del formulario
+        document.getElementById('formCusaf').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validar campos requeridos
+            let valid = true;
+            const requiredFields = this.querySelectorAll('[required]');
+            
+            requiredFields.forEach(field => {
+                if (!field.value) {
+                    field.style.borderColor = 'red';
+                    valid = false;
+                } else {
+                    field.style.borderColor = '#ddd';
+                }
+            });
+            
+            if (valid) {
+                alert('Formulario enviado correctamente');
+                // Aquí iría el código para procesar el formulario (AJAX, etc.)
+                // this.submit();
+            } else {
+                alert('Por favor complete todos los campos requeridos marcados con *');
+            }
+        });
+
+        // Restablecer bordes al modificar campos
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.hasAttribute('required') && this.value) {
+                    this.style.borderColor = '#ddd';
+                }
+            });
+        });
+    </script>
+    </body>				   
+			 
+	</html>		  
