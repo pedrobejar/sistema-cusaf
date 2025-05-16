@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formato de Áreas con y sin Cobertura de Bosques Naturales - CUSAF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.5;
+            color: #333;
+        }
+        .header {
+            display: flex;
+            
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #2c6e31;
+            padding-bottom: 15px;
+        }
+        .logo {
+           height: 60px;
+        }
+        .header-right {
+            text-align: right;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .document-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 25px 0;
+            color: #2c6e31;
+        }
+        .date {
+            text-align: right;
+            margin: 20px 0;
+        }
+        .recipient {
+            margin-bottom: 20px;
+        }
+        .reference {
+            margin-bottom: 25px;
+        }
+        
+        .signature-section {
+            margin-top: 50px;
+        }
+        .signature-line {
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        .signature-box {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-top: 40px;
+        }
+        .signature {
+            border-top: 1px solid black;
+            width: 250px;
+            text-align: center;
+            padding-top: 5px;
+        }
+        input, select, textarea {
+            border: none;
+            border-bottom: 1px solid #2c6e31;
+            padding: 5px;
+            margin: 2px 0;
+            width: 100%;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            background-color: #f9fffa;
+        }
+        textarea {
+            border: 1px solid #2c6e31;
+            min-height: 80px;
+            resize: vertical;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-bottom: 2px solid #2c6e31;
+            background-color: #f0fff0;
+        }
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat, repeat;
+            background-position: right .7em top 50%, 0 0;
+            background-size: .65em auto, 100%;
+            padding-right: 20px;
+        }
+        .inline-field {
+            display: inline-block;
+            width: auto;
+            margin: 0 5px;
+        }
+        .field-container {
+            margin: 8px 0;
+        }
+        .field-label {
+            font-weight: bold;
+            color: #2c6e31;
+            margin-right: 5px;
+        }
+        .section-title {
+            background-color: #2c6e31;
+            color: white;
+            padding: 8px 15px;
+            margin: 25px 0 15px 0;
+            font-weight: bold;
+        }
+        button {
+            background-color: #2c6e31;
+            color: white;
+            padding: 10px 15px;
+            margin: 20px 5px 20px 0;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #1e5123;
+        }
+        .no-print {
+            margin-top: 40px;
+            justify-content: center;
+        }
+        p {
+            margin: 12px 0;
+        }
+        .checkbox-group {
+            margin: 15px 0;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+        }
+        .checkbox-container input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        .forest-area {
+            border: 1px solid #2c6e31;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9fffa;
+            border-radius: 5px;
+        }
+        .add-area-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .remove-area-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+            float: right;
+        }
+        .coordinates-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .coordinates-table th {
+            background-color: #e8f5e9;
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #2c6e31;
+        }
+        .coordinates-table td {
+            padding: 8px;
+            border: 1px solid #2c6e31;
+        }
+        .add-row-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+        @media print {
+            body {
+                padding: 0;
+                font-size: 12pt;
+            }
+            input, select, textarea {
+                font-size: 12pt;
+                border-bottom: 1px solid #999;
+                background: none;
+            }
+            .no-print {
+                display: none;
+                justify-content: center;
+            }
+            select {
+                appearance: none;
+                background: none;
+            }
+            .section-title {
+                background-color: white;
+                color: black;
+                border: 1px solid black;
+            }
+            button.add-area-btn, button.add-row-btn, button.remove-area-btn {
+                display: none;
+            }
+        }
+        .container {
+            box-shadow: none;
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        .title {
+            text-align: center;
+            color: #2e7d32;
+            margin: 20px 0;
+        }
+        .area-counter {
+            background-color: #e8f5e9;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <img src="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\doc\Logo.png" class="logo">
+        <div class="header-right">
+            <div class="form-group">
+                <label class="field-label">ATFFS/ARFFS:</label>
+                <select id="atffs" style="width: 200px; display: inline-block;">
+                    <option value=""> </option>
+                    <option value="Cajamarca">Cajamarca</option>
+                    <option value="Piura">Piura</option>
+                    <option value="Lambayeque">Lambayeque</option>
+                    <option value="Ancash">Ancash</option>
+                    <option value="Lima">Lima</option>
+                    <option value="SierraCentral">Sierra Central</option>
+                    <option value="SelvaCentral">Selva Central</option>
+                    <option value="Apurimac">Apurimac</option>
+                    <option value="Ica">Ica</option>
+                    <option value="Arequipa">Arequipa</option>
+                    <option value="MoqueguaTacna">Moquegua-Tacna</option>
+                    <option value="Puno">Puno</option>
+                    <option value="Cusco">Cusco</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="field-label">N° Expediente:</label>
+                <input type="text" id="num_expediente" style="width: 100px; display: inline-block;">
+            </div>
+            <div class="date">
+                <select id="day" style="width: 60px; display: inline-block;">
+                    <option value="">Día</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                    <option value="31">31</option>
+                </select>
+                de
+                <select id="month" style="width: 120px; display: inline-block;">
+                    <option value="">Mes</option>
+                    <option value="enero">enero</option>
+                    <option value="febrero">febrero</option>
+                    <option value="marzo">marzo</option>
+                    <option value="abril">abril</option>
+                    <option value="mayo">mayo</option>
+                    <option value="junio">junio</option>
+                    <option value="julio">julio</option>
+                    <option value="agosto">agosto</option>
+                    <option value="septiembre">septiembre</option>
+                    <option value="octubre">octubre</option>
+                    <option value="noviembre">noviembre</option>
+                    <option value="diciembre">diciembre</option>
+                </select>
+                del
+                <select id="year" style="width: 80px; display: inline-block;">
+                    <option value="">Año</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <h1 class="title">FORMATO DE ÁREAS CON Y SIN COBERTURA DE BOSQUES NATURALES</h1>
+    
+    <div class="recipient">
+        <div class="field-container">
+            <span class="field-label">Señor(a):</span>
+            <input type="text" id="recipient_name" placeholder="">
+        </div>
+        <div class="field-container">
+            <strong>Administrador(a) Técnico Forestal y de Fauna Silvestre </strong><br>
+        </div>
+    </div>
+    
+    <div class="reference">
+        <div class="field-container">
+            <span class="field-label">Referencia:</span>
+            <input type="text" id="reference_number" placeholder="N° de Expediente o Proceso CUSAF">
+        </div>
+    </div>
+    
+    <div class="content">
+        <p>
+            Yo <input type="text" id="full_name" placeholder="" style="width: 300px; display: inline-block;">,
+            identificado(a) con D.N.I. N° <input type="text" id="dni" placeholder="" maxlength="8" style="width: 100px; display: inline-block;">, 
+            solicitante del Contrato de Cesión en Uso para Sistemas Agroforestales (CUSAF) para el predio denominado
+            <input type="text" id="area_name" placeholder="" style="width: 250px; display: inline-block;">, 
+            ubicado en el distrito de <input type="text" id="district" placeholder="" style="width: 150px; display: inline-block;">, 
+            provincia de 
+            <select id="province" style="width: 150px; display: inline-block;">
+                <option value=""> </option>
+                <option value="Chanchamayo">Chanchamayo</option>
+                <option value="Chupaca">Chupaca</option>
+                <option value="Concepción">Concepción</option>
+                <option value="Huancayo">Huancayo</option>
+                <option value="Jauja">Jauja</option>
+                <option value="Junín">Junín</option>
+                <option value="Satipo">Satipo</option>
+                <option value="Tarma">Tarma</option>
+                <option value="Yauli">Yauli</option>
+                <option value="Otra">Otra</option>
+            </select>, 
+            departamento de
+            <select id="department" style="width: 120px; display: inline-block;">
+                <option value=""> </option>
+                <option value="Amazonas">Amazonas</option>
+                <option value="Áncash">Áncash</option>
+                <option value="Apurímac">Apurímac</option>
+                <option value="Arequipa">Arequipa</option>
+                <option value="Ayacucho">Ayacucho</option>
+                <option value="Cajamarca">Cajamarca</option>
+                <option value="Callao">Callao</option>
+                <option value="Cusco">Cusco</option>
+                <option value="Huancavelica">Huancavelica</option>
+                <option value="Huánuco">Huánuco</option>
+                <option value="Ica">Ica</option>
+                <option value="Junín">Junín</option>
+                <option value="La Libertad">La Libertad</option>
+                <option value="Lambayeque">Lambayeque</option>
+                <option value="Lima">Lima</option>
+                <option value="Loreto">Loreto</option>
+                <option value="Madre de Dios">Madre de Dios</option>
+                <option value="Moquegua">Moquegua</option>
+                <option value="Pasco">Pasco</option>
+                <option value="Piura">Piura</option>
+                <option value="Puno">Puno</option>
+                <option value="San Martín">San Martín</option>
+                <option value="Tacna">Tacna</option>
+                <option value="Tumbes">Tumbes</option>
+                <option value="Ucayali">Ucayali</option>
+            </select>,
+            ante usted con el debido respeto me presento y expongo:
+        </p>
+        
+        <p>
+            De conformidad con lo establecido en la normativa forestal y de fauna silvestre vigente, presento la descripción 
+            detallada de las áreas con y sin cobertura de bosques naturales dentro del área propuesta para el Contrato CUSAF:
+        </p>
+        
+        <h3 class="title">INFORMACIÓN GENERAL DEL PREDIO</h3>
+        
+        <div class="">
+            <span class="">Área total del predio (hectáreas):</span>
+            <input type="number" id="total_area" step="0.01" min="0">
+        </div>
+        
+        <div class="">
+            <label>Área con cobertura de bosque natural (hectáreas):</label>
+            <input type="number" id="forest_area" step="0.01" min="0">
+        </div>
+        
+        <div class="field-container">
+            <span class="">Área sin cobertura de bosque natural (hectáreas):</span>
+            <input type="number" id="non_forest_area" step="0.01" min="0">
+        </div>
+        
+       
+        
+        <h3 class="title">ÁREAS CON COBERTURA DE BOSQUE NATURAL</h3>
+        
+        <div id="forest_areas_container">
+            <!-- Área con bosque 1 (template) -->
+            <div class="forest-area" id="forest_area_1">
+                <h3><span class="area-counter">1</span>ÁREA CON COBERTURA DE BOSQUE NATURAL</h3>
+                <button type="button" class="remove-area-btn" onclick="removeForestArea(1)">Eliminar</button>
+                
+                <div class="field-container">
+                    <span class="field-label">Tipo de bosque:</span>
+                    <select id="forest_type_1">
+                        <option value=""> </option>
+                        <option value="primario">Bosque primario</option>
+                        <option value="secundario">Bosque secundario</option>
+                        <option value="riparino">Bosque ripario</option>
+                        <option value="montano">Bosque montano</option>
+                        <option value="otro">Otro tipo</option>
+                    </select>
+                </div>
+                
+                <div class="field-container">
+                    <span class="field-label">Si marcó "Otro tipo", especifique:</span>
+                    <input type="text" id="forest_other_1">
+                </div>
+                
+                <div class="field-container">
+                    <span class="field-label">Extensión (hectáreas):</span>
+                    <input type="number" id="forest_area_size_1" step="0.01" min="0">
+                </div>
+                
+                <div class="field-container">
+                    <span class="field-label">Especies forestales predominantes:</span>
+                    <textarea id="forest_species_1" placeholder="Liste las especies forestales predominantes en esta área..."></textarea>
+                </div>
+                
+                <div class="field-container">
+                    <span class="field-label">Coordenadas UTM WGS84 de los vértices del área:</span>
+                    <table class="coordinates-table" id="forest_coordinates_table_1">
+                        <thead>
+                            <tr>
+                                <th>Vértice</th>
+                                <th>Este (X)</th>
+                                <th>Norte (Y)</th>
+                                <th>Zona UTM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                                <td>
+                                    <select>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                                <td>
+                                    <select>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                                <td>
+                                    <select>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                                <td>
+                                    <select>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="add-row-btn" onclick="addForestCoordinateRow(1)">+ Añadir vértice</button>
+                </div>
+            </div>
+        </div>
+        
+        <button type="button" class="add-area-btn" id="add_forest_area_btn">+ Añadir otra área con bosque</button>
+        
+        <h3 class="title">ÁREAS SIN COBERTURA DE BOSQUE NATURAL</h3>
+        
+        <div id="non_forest_areas_container">
+            <!-- Área sin bosque 1 (template) -->
+            <div class="forest-area" id="non_forest_area_1">
+                <h3><span class="area-counter">2</span>ÁREA SIN COBERTURA DE BOSQUE NATURAL</h3>
+                <button type="button" class="remove-area-btn" onclick="removeNonForestArea(1)">Eliminar</button>
+                
+                <div class="field-container">
+                    <span class="field-label">Tipo de uso actual:</span>
+                    <select id="non_forest_type_1">
+                        <option value=""> </option>
+                        <option value="agricola">Uso agrícola</option>
+                        <option value="pastizal">Pastizal</option>
+                        <option value="eriazas">Tierras eriazas</option>
+                        <option value="degradado">Área degradada</option>
+                        <option value="otro">Otro tipo</option>
+                    </select>
+                </div>
+                
+                <div class="field-container">
+                    <span class="field-label">Si marcó "Otro tipo", especifique:</span>
+                    <input type="text" id="non_forest_other_1">
+                </div>
+                
+                <div class="field-container">
+                    <span class="field-label">Extensión (hectáreas):</span>
+                    <input type="number" id="non_forest_area_size_1" step="0.01" min="0">
+                </div>
+                
+                <div class="field-container">
+                    <span class="field-label">Descripción del uso actual:</span>
+                    <textarea id="non_forest_description_1" placeholder="Describa el uso actual de esta área..."></textarea>
+                </div>
+                
+                <div class="field-container">
+                    <span class="field-label">Coordenadas UTM WGS84 de los vértices del área:</span>
+                    <table class="coordinates-table" id="non_forest_coordinates_table_1">
+                        <thead>
+                            <tr>
+                                <th>Vértice</th>
+                                <th>Este (X)</th>
+                                <th>Norte (Y)</th>
+                                <th>Zona UTM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                                <td>
+                                    <select>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                                <td>
+                                    <select>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                                <td>
+                                    <select>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                                <td>
+                                    <select>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="add-row-btn" onclick="addNonForestCoordinateRow(1)">+ Añadir vértice</button>
+                </div>
+            </div>
+        </div>
+        
+        <button type="button" class="add-area-btn" id="add_non_forest_area_btn">+ Añadir otra área sin bosque</button>
+        
+        <h3 class="title">OBSERVACIONES</h3>
+        
+        <div class="field-container">
+            <span class="field-label">Estado de conservación del bosque:</span>
+            <textarea id="conservation_status" placeholder="Describa el estado de conservación del bosque..."></textarea>
+        </div>
+        
+        <div class="field-container">
+            <span class="field-label">Presencia de especies protegidas o en peligro:</span>
+            <textarea id="protected_species" placeholder="Mencione si existen especies protegidas o en peligro en el área..."></textarea>
+        </div>
+        
+        <div class="field-container">
+            <span class="field-label">Observaciones adicionales:</span>
+            <textarea id="additional_comments" placeholder="Ingrese cualquier información adicional relevante..."></textarea>
+        </div>
+        
+       
+    </div>
+    
+    <div class="signature-section">
+        <div class="signature-line">
+           
+        </div>
+        <div class="signature-line">
+           
+        </div>
+        
+        <div class="signature-box">
+            <div class="signature">
+                <input type="text" id="signature_line" placeholder="Firma">
+            </div>
+            <div style="margin-top: 10px;">
+                <strong>Nombre:</strong> <input type="text" id="signature_name" placeholder="Nombre completo" style="width: 300px; display: inline-block;"><br>
+                <strong>DNI:</strong> <input type="text" id="signature_dni" placeholder="DNI" maxlength="8" style="width: 100px; display: inline-block;">
+            </div>
+        </div>
+    </div>
+    
+    <div class="no-print">
+        <button onclick="window.print()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: text-bottom; margin-right: 5px;">
+                <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+            </svg>
+            Imprimir / Guardar como PDF
+        </button>
+    </div>
+</div>
+
+<script>
+    // Variables globales
+    let forestAreaCounter = 1;
+    let nonForestAreaCounter = 1;
+    
+    // Función para inicializar el formulario
+    document.addEventListener('DOMContentLoaded', function() {
+        // Prellenar con la fecha actual
+        const today = new Date();
+        const day = today.getDate();
+        const month = today.getMonth();
+        const year = today.getFullYear();
+        
+        const monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
+                           "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+        
+        document.getElementById('day').value = day;
+        document.getElementById('month').value = monthNames[month];
+        document.getElementById('year').value = year;
+        
+        // Configurar botones de añadir áreas
+        document.getElementById('add_forest_area_btn').addEventListener('click', addForestArea);
+        document.getElementById('add_non_forest_area_btn').addEventListener('click', addNonForestArea);
+        
+        // Calcular porcentaje automáticamente
+        document.getElementById('forest_area').addEventListener('input', calculatePercentage);
+        document.getElementById('total_area').addEventListener('input', calculatePercentage);
+    });
+    
+    // Función para calcular el porcentaje de cobertura boscosa
+    function calculatePercentage() {
+        const totalArea = parseFloat(document.getElementById('total_area').value) || 0;
+        const forestArea = parseFloat(document.getElementById('forest_area').value) || 0;
+        
+        if (totalArea > 0) {
+            const percentage = (forestArea / totalArea) * 100;
+            document.getElementById('forest_percentage').value = percentage.toFixed(2);
+        }
+    }
+    
+    // Función para añadir una nueva área con bosque
+    function addForestArea() {
+        forestAreaCounter++;
+        const newAreaId = forestAreaCounter;
+        
+        const newArea = document.createElement('div');
+        newArea.className = 'forest-area';
+        newArea.id = 'forest_area_' + newAreaId;
+        
+        newArea.innerHTML = `
+            <h3><span class="area-counter">${newAreaId}</span>ÁREA CON COBERTURA DE BOSQUE NATURAL</h3>
+            <button type="button" class="remove-area-btn" onclick="removeForestArea(${newAreaId})">Eliminar</button>
+            
+            <div class="field-container">
+                <span class="field-label">Tipo de bosque:</span>
+                <select id="forest_type_${newAreaId}">
+                    <option value=""> </option>
+                    <option value="primario">Bosque primario</option>
+                    <option value="secundario">Bosque secundario</option>
+                    <option value="riparino">Bosque ripario</option>
+                    <option value="montano">Bosque montano</option>
+                    <option value="otro">Otro tipo</option>
+                </select>
+            </div>
+            
+            <div class="field-container">
+                <span class="field-label">Si marcó "Otro tipo", especifique:</span>
+                <input type="text" id="forest_other_${newAreaId}">
+            </div>
+            
+            <div class="field-container">
+                <span class="field-label">Extensión (hectáreas):</span>
+                <input type="number" id="forest_area_size_${newAreaId}" step="0.01" min="0">
+            </div>
+            
+            <div class="field-container">
+                <span class="field-label">Especies forestales predominantes:</span>
+                <textarea id="forest_species_${newAreaId}" placeholder="Liste las especies forestales predominantes en esta área..."></textarea>
+            </div>
+            
+            <div class="field-container">
+                <span class="field-label">Coordenadas UTM WGS84 de los vértices del área:</span>
+                <table class="coordinates-table" id="forest_coordinates_table_${newAreaId}">
+                    <thead>
+                        <tr>
+                            <th>Vértice</th>
+                            <th>Este (X)</th>
+                            <th>Norte (Y)</th>
+                            <th>Zona UTM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                            <td>
+                                <select>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                            <td>
+                                <select>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                            <td>
+                                <select>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                            <td>
+                                <select>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="add-row-btn" onclick="addForestCoordinateRow(${newAreaId})">+ Añadir vértice</button>
+            </div>
+        `;
+        
+        document.getElementById('forest_areas_container').appendChild(newArea);
+    }
+    
+    // Función para añadir una nueva área sin bosque
+    function addNonForestArea() {
+        nonForestAreaCounter++;
+        const newAreaId = nonForestAreaCounter;
+        
+        const newArea = document.createElement('div');
+        newArea.className = 'forest-area';
+        newArea.id = 'non_forest_area_' + newAreaId;
+        
+        newArea.innerHTML = `
+            <h3><span class="area-counter">${newAreaId}</span>ÁREA SIN COBERTURA DE BOSQUE NATURAL</h3>
+            <button type="button" class="remove-area-btn" onclick="removeNonForestArea(${newAreaId})">Eliminar</button>
+            
+            <div class="field-container">
+                <span class="field-label">Tipo de uso actual:</span>
+                <select id="non_forest_type_${newAreaId}">
+                    <option value=""> </option>
+                    <option value="agricola">Uso agrícola</option>
+                    <option value="pastizal">Pastizal</option>
+                    <option value="eriazas">Tierras eriazas</option>
+                    <option value="degradado">Área degradada</option>
+                    <option value="otro">Otro tipo</option>
+                </select>
+            </div>
+            
+            <div class="field-container">
+                <span class="field-label">Si marcó "Otro tipo", especifique:</span>
+                <input type="text" id="non_forest_other_${newAreaId}">
+            </div>
+            
+            <div class="field-container">
+                <span class="field-label">Extensión (hectáreas):</span>
+                <input type="number" id="non_forest_area_size_${newAreaId}" step="0.01" min="0">
+            </div>
+            
+            <div class="field-container">
+                <span class="field-label">Descripción del uso actual:</span>
+                <textarea id="non_forest_description_${newAreaId}" placeholder="Describa el uso actual de esta área..."></textarea>
+            </div>
+            
+            <div class="field-container">
+                <span class="field-label">Coordenadas UTM WGS84 de los vértices del área:</span>
+                <table class="coordinates-table" id="non_forest_coordinates_table_${newAreaId}">
+                    <thead>
+                        <tr>
+                            <th>Vértice</th>
+                            <th>Este (X)</th>
+                            <th>Norte (Y)</th>
+                            <th>Zona UTM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                            <td>
+                                <select>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                            <td>
+                                <select>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                            <td>
+                                <select>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                            <td>
+                                <select>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="add-row-btn" onclick="addNonForestCoordinateRow(${newAreaId})">+ Añadir vértice</button>
+            </div>
+        `;
+        
+        document.getElementById('non_forest_areas_container').appendChild(newArea);
+    }
+    
+    // Función para eliminar un área con bosque
+    function removeForestArea(areaId) {
+        if (confirm('¿Está seguro que desea eliminar esta área con cobertura de bosque?')) {
+            const areaToRemove = document.getElementById('forest_area_' + areaId);
+            areaToRemove.remove();
+            
+            // Reorganizar los números de las áreas restantes
+            const areas = document.querySelectorAll('#forest_areas_container .forest-area');
+            areas.forEach((area, index) => {
+                const counter = area.querySelector('.area-counter');
+                if (counter) {
+                    counter.textContent = index + 1;
+                }
+            });
+        }
+    }
+    
+    // Función para eliminar un área sin bosque
+    function removeNonForestArea(areaId) {
+        if (confirm('¿Está seguro que desea eliminar esta área sin cobertura de bosque?')) {
+            const areaToRemove = document.getElementById('non_forest_area_' + areaId);
+            areaToRemove.remove();
+            
+            // Reorganizar los números de las áreas restantes
+            const areas = document.querySelectorAll('#non_forest_areas_container .forest-area');
+            areas.forEach((area, index) => {
+                const counter = area.querySelector('.area-counter');
+                if (counter) {
+                    counter.textContent = index + 1;
+                }
+            });
+        }
+    }
+    
+    // Función para añadir una fila de coordenadas a un área con bosque
+    function addForestCoordinateRow(areaId) {
+        const table = document.getElementById('forest_coordinates_table_' + areaId);
+        const tbody = table.querySelector('tbody');
+        const rowCount = tbody.rows.length;
+        
+        const newRow = tbody.insertRow();
+        newRow.innerHTML = `
+            <td>${rowCount + 1}</td>
+            <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+            <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+            <td>
+                <select>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                </select>
+            </td>
+        `;
+    }
+    
+    // Función para añadir una fila de coordenadas a un área sin bosque
+    function addNonForestCoordinateRow(areaId) {
+        const table = document.getElementById('non_forest_coordinates_table_' + areaId);
+        const tbody = table.querySelector('tbody');
+        const rowCount = tbody.rows.length;
+        
+        const newRow = tbody.insertRow();
+        newRow.innerHTML = `
+            <td>${rowCount + 1}</td>
+            <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+            <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+            <td>
+                <select>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                </select>
+            </td>
+        `;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acuerdo de Colindancia - CUSAF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.5;
+            color: #333;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #2c6e31;
+            padding-bottom: 15px;
+        }
+        .logo {
+           height: 60px;
+        }
+        .header-right {
+            text-align: right;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .document-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 25px 0;
+            color: #2c6e31;
+        }
+        .date {
+            text-align: right;
+            margin: 20px 0;
+        }
+        .recipient {
+            margin-bottom: 20px;
+        }
+        .reference {
+            margin-bottom: 25px;
+        }
+        .content {
+            text-align: justify;
+        }
+        .signature-section {
+            margin-top: 50px;
+        }
+        .signature-line {
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        .signature-box {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-top: 40px;
+        }
+        .signature {
+            border-top: 1px solid black;
+            width: 250px;
+            text-align: center;
+            padding-top: 5px;
+        }
+        input, select, textarea {
+            border: none;
+            border-bottom: 1px solid #2c6e31;
+            padding: 5px;
+            margin: 2px 0;
+            width: 100%;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            background-color: #f9fffa;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-bottom: 2px solid #2c6e31;
+            background-color: #f0fff0;
+        }
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat, repeat;
+            background-position: right .7em top 50%, 0 0;
+            background-size: .65em auto, 100%;
+            padding-right: 20px;
+        }
+        .inline-field {
+            display: inline-block;
+            width: auto;
+            margin: 0 5px;
+        }
+        .field-container {
+            margin: 8px 0;
+        }
+        .field-label {
+            font-weight: bold;
+            color: #2c6e31;
+            margin-right: 5px;
+        }
+        .section-title {
+            background-color: #2c6e31;
+            color: white;
+            padding: 8px 15px;
+            margin: 25px 0 15px 0;
+            font-weight: bold;
+        }
+        button {
+            background-color: #2c6e31;
+            color: white;
+            padding: 10px 15px;
+            margin: 20px 5px 20px 0;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #1e5123;
+        }
+        .no-print {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+        }
+        p {
+            margin: 12px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #2c6e31;
+        }
+        th {
+            background-color: #f0fff0;
+            padding: 10px;
+            text-align: center;
+            color: #2c6e31;
+        }
+        td {
+            padding: 8px;
+        }
+        .signatures-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .sketch {
+            border: 1px solid #2c6e31;
+            padding: 15px;
+            margin: 20px 0;
+            min-height: 400px;
+        }
+        .sketch-title {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #2c6e31;
+        }
+        .sketch-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .sketch-item {
+            flex: 1 1 45%;
+            padding: 5px;
+        }
+        @media print {
+            body {
+                padding: 0;
+                font-size: 12pt;
+            }
+            input, select, textarea {
+                font-size: 12pt;
+                border-bottom: 1px solid #999;
+                background: none;
+            }
+            .no-print {
+                display: none;
+            }
+            select {
+                appearance: none;
+                background: none;
+            }
+            .section-title {
+                background-color: white;
+                color: black;
+                border: 1px solid black;
+            }
+            button {
+                display: none;
+            }
+        }
+        .container {
+            box-shadow: none;
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        .title {
+            text-align: center;
+            color: #2e7d32;
+            margin: 20px 0;
+        }
+        .coordinates-table td input {
+            width: 100%;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .checkbox-container input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        .validity-note {
+            font-style: italic;
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f0fff0;
+            border: 1px dashed #2c6e31;
+        }
+        .emphasis {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <img src="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\doc\Logo.png" class="logo">
+        <div class="header-right">
+            <div class="form-group">
+                <label class="field-label">ATFFS:</label>
+                <select id="atffs" style="width: 200px; display: inline-block;">
+                    <option value="">Seleccione ATFFS</option>
+                    <option value="Cajamarca">Cajamarca</option>
+                    <option value="Piura">Piura</option>
+                    <option value="Lambayeque">Lambayeque</option>
+                    <option value="Ancash">Ancash</option>
+                    <option value="Lima">Lima</option>
+                    <option value="SierraCentral">Sierra Central</option>
+                    <option value="SelvaCentral">Selva Central</option>
+                    <option value="Apurimac">Apurimac</option>
+                    <option value="Ica">Ica</option>
+                    <option value="Arequipa">Arequipa</option>
+                    <option value="MoqueguaTacna">Moquegua-Tacna</option>
+                    <option value="Puno">Puno</option>
+                    <option value="Cusco">Cusco</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="field-label">N° Acta:</label>
+                <input type="text" id="num_acta" style="width: 100px; display: inline-block;">
+            </div>
+			    <div class="date">
+        <select id="day" style="width: 60px; display: inline-block;">
+            <option value="">Día</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="26">26</option>
+            <option value="27">27</option>
+            <option value="28">28</option>
+            <option value="29">29</option>
+            <option value="30">30</option>
+            <option value="31">31</option>
+        </select>
+        de
+        <select id="month" style="width: 120px; display: inline-block;">
+            <option value="">Mes</option>
+            <option value="enero">enero</option>
+            <option value="febrero">febrero</option>
+            <option value="marzo">marzo</option>
+            <option value="abril">abril</option>
+            <option value="mayo">mayo</option>
+            <option value="junio">junio</option>
+            <option value="julio">julio</option>
+            <option value="agosto">agosto</option>
+            <option value="septiembre">septiembre</option>
+            <option value="octubre">octubre</option>
+            <option value="noviembre">noviembre</option>
+            <option value="diciembre">diciembre</option>
+        </select>
+        del
+        <select id="year" style="width: 80px; display: inline-block;">
+            <option value="">Año</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+        </select>
+    </div>
+        </div>
+    </div>
+    
+    <h1 class="title">ACUERDO DE COLINDANCIA</h1>
+    
+    
+    <div class="content">
+        <p>
+            Siendo las <input type="time" id="meeting_time" style="width: 80px; display: inline-block;"> horas, del 
+            <input type="number" id="day" placeholder="Día" min="1" max="31" style="width: 50px; display: inline-block;"> 
+            del mes de 
+            <select id="month" style="width: 120px; display: inline-block;">
+                <option value="">Mes</option>
+                <option value="enero">enero</option>
+                <option value="febrero">febrero</option>
+                <option value="marzo">marzo</option>
+                <option value="abril">abril</option>
+                <option value="mayo">mayo</option>
+                <option value="junio">junio</option>
+                <option value="julio">julio</option>
+                <option value="agosto">agosto</option>
+                <option value="septiembre">septiembre</option>
+                <option value="octubre">octubre</option>
+                <option value="noviembre">noviembre</option>
+                <option value="diciembre">diciembre</option>
+            </select> 
+            del 
+            <input type="number" id="year" placeholder="Año" min="2020" max="2030" style="width: 70px; display: inline-block;">, 
+            en el área ubicada en los puntos de coordenadas 
+            <input type="text" id="coordinates" placeholder="Coordenadas UTM" style="width: 350px; display: inline-block;">, 
+            en el interior de la unidad de manejo, los que suscribimos en la parte final del presente documento, manifestamos ser colindantes del Sr.(a) :
+            <span class="emphasis"><input type="text" id="applicant_name" placeholder="Nombre del solicitante" style="width: 300px; display: inline-block;"></span> 
+           , 
+            identificado con DNI Nº <input type="text" id="applicant_dni" placeholder="DNI" maxlength="8" style="width: 120px; display: inline-block;"> 
+            quien es posesionario del área denominada <span class="emphasis"><input type="text" id="property_name" placeholder="Nombre del predio" style="width: 200px; display: inline-block;"></span>, 
+            desde hace <input type="number" id="years_possession" placeholder="Años" min="0" max="100" style="width: 50px; display: inline-block;"> años, 
+            ubicada en <input type="text" id="property_location" placeholder="Ubicación del predio" style="width: 300px; display: inline-block;">. 
+            Asimismo, manifestamos que no existen conflictos de derechos y de límites, y los suscritos nos comprometemos a conservar y hacer respetar el lindero así determinado, siendo que la colindancia está determinada conforme al croquis y detalle siguiente:
+        </p>
+        
+        <div class="sketch">
+            <div class="sketch-title">CROQUIS</div>
+            <div class="sketch-content">
+               
+            </div>
+        </div>
+        
+        <h3 class="title">FIRMA DE COLINDANTES</h3>
+        <p>En señal de conformidad con lo establecido en el presente acuerdo, firman los colindantes:</p>
+        
+        <div class="signatures-grid">
+            <div class="signature-box">
+                <div class="signature">
+                    <input type="text" id="signature1_line" placeholder="Firma">
+                </div>
+                <div style="margin-top: 10px;">
+                    <strong>Nombre:</strong> <input type="text" id="signature1_name" placeholder="Nombre completo"><br>
+                    <strong>DNI:</strong> <input type="text" id="signature1_dni" placeholder="DNI" maxlength="8" style="width: 100px;"><br>
+                    <strong>Condición:</strong> <select id="signature1_condition" style="width: 150px;">
+                        <option value="">Seleccione</option>
+                        <option value="Colindante Norte">Colindante Norte</option>
+                        <option value="Colindante Sur">Colindante Sur</option>
+                        <option value="Colindante Este">Colindante Este</option>
+                        <option value="Colindante Oeste">Colindante Oeste</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="signature-box">
+                <div class="signature">
+                    <input type="text" id="signature2_line" placeholder="Firma">
+                </div>
+                <div style="margin-top: 10px;">
+                    <strong>Nombre:</strong> <input type="text" id="signature2_name" placeholder="Nombre completo"><br>
+                    <strong>DNI:</strong> <input type="text" id="signature2_dni" placeholder="DNI" maxlength="8" style="width: 100px;"><br>
+                    <strong>Condición:</strong> <select id="signature2_condition" style="width: 150px;">
+                        <option value="">Seleccione</option>
+                        <option value="Colindante Norte">Colindante Norte</option>
+                        <option value="Colindante Sur">Colindante Sur</option>
+                        <option value="Colindante Este">Colindante Este</option>
+                        <option value="Colindante Oeste">Colindante Oeste</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="signature-box">
+                <div class="signature">
+                    <input type="text" id="signature3_line" placeholder="Firma">
+                </div>
+                <div style="margin-top: 10px;">
+                    <strong>Nombre:</strong> <input type="text" id="signature3_name" placeholder="Nombre completo"><br>
+                    <strong>DNI:</strong> <input type="text" id="signature3_dni" placeholder="DNI" maxlength="8" style="width: 100px;"><br>
+                    <strong>Condición:</strong> <select id="signature3_condition" style="width: 150px;">
+                        <option value="">Seleccione</option>
+                        <option value="Colindante Norte">Colindante Norte</option>
+                        <option value="Colindante Sur">Colindante Sur</option>
+                        <option value="Colindante Este">Colindante Este</option>
+                        <option value="Colindante Oeste">Colindante Oeste</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="signature-box">
+                <div class="signature">
+                    <input type="text" id="signature4_line" placeholder="Firma">
+                </div>
+                <div style="margin-top: 10px;">
+                    <strong>Nombre:</strong> <input type="text" id="signature4_name" placeholder="Nombre completo"><br>
+                    <strong>DNI:</strong> <input type="text" id="signature4_dni" placeholder="DNI" maxlength="8" style="width: 100px;"><br>
+                    <strong>Condición:</strong> <select id="signature4_condition" style="width: 150px;">
+                        <option value="">Seleccione</option>
+                        <option value="Colindante Norte">Colindante Norte</option>
+                        <option value="Colindante Sur">Colindante Sur</option>
+                        <option value="Colindante Este">Colindante Este</option>
+                        <option value="Colindante Oeste">Colindante Oeste</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="no-print">
+        <button onclick="window.print()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: text-bottom; margin-right: 5px;">
+                <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+            </svg>
+            Imprimir / Guardar como PDF
+        </button>
+    </div>
+</div>
+
+<script>
+    function saveDocument() {
+        // Aquí iría la lógica para guardar el documento
+        alert("Documento guardado correctamente");
+    }
+</script>
+</body>
+</html>

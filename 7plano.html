@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Croquis con Ubicación y Tabla de Coordenadas - CUSAF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.5;
+            color: #333;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #2c6e31;
+            padding-bottom: 15px;
+        }
+        .form-section {
+
+          margin-bottom: 30px;
+        }
+        .logo {
+           height: 60px;
+        }
+        .header-right {
+            text-align: right;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .document-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 25px 0;
+            color: #2c6e31;
+        }
+        .date {
+            text-align: right;
+            margin: 20px 0;
+        }
+        .content {
+            text-align: justify;
+        }
+        .signature-section {
+            margin-top: 30px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            padding-top: 30px;
+        }
+        .signature-line {
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        .signature-box {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-top: 40px;
+        }
+        .signature {
+            border-top: 1px solid black;
+            width: 250px;
+            text-align: center;
+            padding-top: 5px;
+        }
+
+        .signatures-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        input, select, textarea {
+            border: none;
+            border-bottom: 1px solid #2c6e31;
+            padding: 5px;
+            margin: 2px 0;
+            width: 100%;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            background-color: #f9fffa;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-bottom: 2px solid #2c6e31;
+            background-color: #f0fff0;
+        }
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat, repeat;
+            background-position: right .7em top 50%, 0 0;
+            background-size: .65em auto, 100%;
+            padding-right: 20px;
+        }
+        .inline-field {
+            display: inline-block;
+            width: auto;
+            margin: 0 5px;
+        }
+        .field-container {
+            margin: 8px 0;
+        }
+        .field-label {
+            font-weight: bold;
+            color: #2c6e31;
+            margin-right: 5px;
+        }
+        .section-title {
+            background-color: #2c6e31;
+            color: white;
+            padding: 8px 15px;
+            margin: 25px 0 15px 0;
+            font-weight: bold;
+        }
+        button {
+            background-color: #2c6e31;
+            color: white;
+            padding: 10px 15px;
+            margin: 20px 5px 20px 0;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #1e5123;
+        }
+        .no-print {
+            margin-top: 40px;
+            justify-content: center;
+        }
+        p {
+            margin: 12px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .sketch-area {
+            border: 1px solid #2c6e31;
+            height: 400px;
+            margin: 20px 0;
+            position: relative;
+            background-color: #f9f9f9;
+        }
+        .sketch-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(#ddd 1px, transparent 1px),
+                              linear-gradient(90deg, #ddd 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .sketch-tools {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .sketch-tools button {
+            margin-right: 10px;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        .coordinates-table {
+            margin-top: 20px;
+        }
+        .north-arrow {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-weight: bold;
+            color: #2c6e31;
+        }
+        .scale-bar {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            height: 10px;
+            background-color: #2c6e31;
+            color: white;
+            font-size: 10px;
+            text-align: center;
+            line-height: 10px;
+        }
+        @media print {
+            body {
+                padding: 0;
+                font-size: 12pt;
+            }
+            input, select, textarea {
+                font-size: 12pt;
+                border-bottom: 1px solid #999;
+                background: none;
+            }
+            .no-print {
+                display: none;
+                justify-content: center;
+            }
+            select {
+                appearance: none;
+                background: none;
+            }
+            .section-title {
+                background-color: white;
+                color: black;
+                border: 1px solid black;
+            }
+            .sketch-area {
+                height: 500px;
+            }
+        }
+        .container {
+            box-shadow: none;
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        .title {
+            text-align: center;
+            color: #2e7d32;
+            margin: 20px 0;
+        }
+        .content {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+       <div class="header">
+        <img src="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\doc\Logo.png" class="logo">
+        <div class="header-right">
+            <div class="form-group">
+                <label class="field-label">ATFFS/ARFFS:</label>
+                <select id="atffs" style="width: 200px; display: inline-block;">
+                    <option value=""> </option>
+                    <option value="Cajamarca">Cajamarca</option>
+                    <option value="Piura">Piura</option>
+                    <option value="Lambayeque">Lambayeque</option>
+                    <option value="Ancash">Ancash</option>
+                    <option value="Lima">Lima</option>
+                    <option value="SierraCentral">Sierra Central</option>
+                    <option value="SelvaCentral">Selva Central</option>
+                    <option value="Apurimac">Apurimac</option>
+                    <option value="Ica">Ica</option>
+                    <option value="Arequipa">Arequipa</option>
+                    <option value="MoqueguaTacna">Moquegua-Tacna</option>
+                    <option value="Puno">Puno</option>
+                    <option value="Cusco">Cusco</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="field-label">N° Acta:</label>
+                <input type="text" id="num_acta" style="width: 100px; display: inline-block;">
+            </div>
+			    <div class="date">
+        <select id="day" style="width: 60px; display: inline-block;">
+            <option value="">Día</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="26">26</option>
+            <option value="27">27</option>
+            <option value="28">28</option>
+            <option value="29">29</option>
+            <option value="30">30</option>
+            <option value="31">31</option>
+        </select>
+        de
+        <select id="month" style="width: 120px; display: inline-block;">
+            <option value="">Mes</option>
+            <option value="enero">enero</option>
+            <option value="febrero">febrero</option>
+            <option value="marzo">marzo</option>
+            <option value="abril">abril</option>
+            <option value="mayo">mayo</option>
+            <option value="junio">junio</option>
+            <option value="julio">julio</option>
+            <option value="agosto">agosto</option>
+            <option value="septiembre">septiembre</option>
+            <option value="octubre">octubre</option>
+            <option value="noviembre">noviembre</option>
+            <option value="diciembre">diciembre</option>
+        </select>
+        del
+        <select id="year" style="width: 80px; display: inline-block;">
+            <option value="">Año</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+        </select>
+    </div>
+        </div>
+    </div>
+       
+
+    <h1 class="title">CROQUIS CON UBICACIÓN Y TABLA DE COORDENADAS GEOGRÁFICAS</h1>
+        
+        <div class="form-section">
+            <div class="content">
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <label for="predio-nombre" class="required">Nombre del predio:</label>
+                        <input type="text" id="predio-nombre" name="predio-nombre">
+                    </div>
+                    <div class="form-col">
+                        <label for="predio-area" class="required">Área total (hectáreas):</label>
+                        <input type="number" id="predio-area" name="predio-area" min="0" step="0.01">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <label for="predio-sector" class="required">Sector:</label>
+                        <input type="text" id="predio-sector" name="predio-sector">
+                    </div>
+                    <div class="form-col">
+                        <label for="predio-distrito" class="required">Distrito:</label>
+                        <select id="predio-distrito" name="predio-distrito">
+                            <option value="">Seleccione distrito</option>
+                            <option value="Chanchamayo">Chanchamayo</option>
+                            <option value="Chupaca">Chupaca</option>
+                            <option value="Concepción">Concepción</option>
+                            <option value="Huancayo">Huancayo</option>
+                            <option value="Jauja">Jauja</option>
+                            <option value="Junín">Junín</option>
+                            <option value="Satipo">Satipo</option>
+                            <option value="Tarma">Tarma</option>
+                            <option value="Yauli">Yauli</option>
+                            <option value="Otra">Otra</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <label for="predio-provincia" class="required">Provincia:</label>
+                        <select id="predio-provincia" name="predio-provincia">
+                            <option value="">Seleccione provincia</option>
+                            <option value="Chanchamayo">Chanchamayo</option>
+                            <option value="Chupaca">Chupaca</option>
+                            <option value="Concepción">Concepción</option>
+                            <option value="Huancayo">Huancayo</option>
+                            <option value="Jauja">Jauja</option>
+                            <option value="Junín">Junín</option>
+                            <option value="Satipo">Satipo</option>
+                            <option value="Tarma">Tarma</option>
+                            <option value="Yauli">Yauli</option>
+                            <option value="Otra">Otra</option>
+                        </select>
+                    </div>
+                    <div class="form-col">
+                        <label for="predio-departamento" class="required">Departamento:</label>
+                        <select id="predio-departamento" name="predio-departamento">
+                            <option value="">Seleccione departamento</option>
+                            <option value="Amazonas">Amazonas</option>
+                            <option value="Áncash">Áncash</option>
+                            <option value="Apurímac">Apurímac</option>
+                            <option value="Arequipa">Arequipa</option>
+                            <option value="Ayacucho">Ayacucho</option>
+                            <option value="Cajamarca">Cajamarca</option>
+                            <option value="Callao">Callao</option>
+                            <option value="Cusco">Cusco</option>
+                            <option value="Huancavelica">Huancavelica</option>
+                            <option value="Huánuco">Huánuco</option>
+                            <option value="Ica">Ica</option>
+                            <option value="Junín">Junín</option>
+                            <option value="La Libertad">La Libertad</option>
+                            <option value="Lambayeque">Lambayeque</option>
+                            <option value="Lima">Lima</option>
+                            <option value="Loreto">Loreto</option>
+                            <option value="Madre de Dios">Madre de Dios</option>
+                            <option value="Moquegua">Moquegua</option>
+                            <option value="Pasco">Pasco</option>
+                            <option value="Piura">Piura</option>
+                            <option value="Puno">Puno</option>
+                            <option value="San Martín">San Martín</option>
+                            <option value="Tacna">Tacna</option>
+                            <option value="Tumbes">Tumbes</option>
+                            <option value="Ucayali">Ucayali</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <label for="datum-ref" class="required">Sistema de referencia/Datum:</label>
+                        <select id="datum-ref" name="datum-ref">
+                            <option value="">Seleccione</option>
+                            <option value="WGS84">WGS84</option>
+                            <option value="PSAD56">PSAD56</option>
+                        </select>
+                    </div>
+                    <div class="form-col">
+                        <label for="zona-utm" class="required">Zona UTM:</label>
+                        <select id="zona-utm" name="zona-utm">
+                            <option value="">Seleccione</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="title">CROQUIS DE UBICACIÓN</h3>
+    
+               
+        <div class="sketch-area">
+            <div class="sketch-grid"></div>
+            <div class="north-arrow">N ↑</div>
+            <div class="scale-bar" style="width: 100px;">100 m</div>
+            <!-- Aquí se dibujará el croquis -->
+        </div>
+        
+        <h3 class="title">TABLA DE COORDENADAS GEOGRÁFICAS</h3>
+        
+        <table class="coordinates-table">
+            <thead>
+                <tr>
+                    <th>Punto</th>
+                    <th>Este (X)</th>
+                    <th>Norte (Y)</th>
+                    <th>Altitud (msnm)</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><input type="text" placeholder="Coordenada Este"></td>
+                    <td><input type="text" placeholder="Coordenada Norte"></td>
+                    <td><input type="text" placeholder="Altitud"></td>
+                    <td><input type="text" placeholder="Ej: Límite NE"></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><input type="text" placeholder="Coordenada Este"></td>
+                    <td><input type="text" placeholder="Coordenada Norte"></td>
+                    <td><input type="text" placeholder="Altitud"></td>
+                    <td><input type="text" placeholder="Ej: Límite SE"></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><input type="text" placeholder="Coordenada Este"></td>
+                    <td><input type="text" placeholder="Coordenada Norte"></td>
+                    <td><input type="text" placeholder="Altitud"></td>
+                    <td><input type="text" placeholder="Ej: Límite SO"></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><input type="text" placeholder="Coordenada Este"></td>
+                    <td><input type="text" placeholder="Coordenada Norte"></td>
+                    <td><input type="text" placeholder="Altitud"></td>
+                    <td><input type="text" placeholder="Ej: Límite NO"></td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td><input type="text" placeholder="Coordenada Este"></td>
+                    <td><input type="text" placeholder="Coordenada Norte"></td>
+                    <td><input type="text" placeholder="Altitud"></td>
+                    <td><input type="text" placeholder="Ej: Punto central"></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="field-container">
+            <span class="field-label">Área total (ha):</span>
+            <input type="text" id="total_area" style="width: 100px; display: inline-block;">
+        </div>
+        
+        <div class="field-container">
+            <span class="field-label">Perímetro (m):</span>
+            <input type="text" id="perimeter" style="width: 100px; display: inline-block;">
+        </div>
+        
+        <div class="section-title">OBSERVACIONES</div>
+        <textarea id="observations" rows="4" placeholder="Ingrese cualquier observación relevante sobre el croquis o las coordenadas..."></textarea>
+        
+        <div class="signatures-grid">
+            <div class="signature-box">
+                <div class="signature">
+                    <input type="text" id="signature1_line" placeholder="Firma">
+                </div>
+                <div style="margin-top: 10px;">
+                    <strong>Nombre:</strong> <input type="text" id="signature1_name" placeholder="Nombre completo"><br>
+                    <strong>DNI:</strong> <input type="text" id="signature1_dni" placeholder="DNI" maxlength="8" style="width: 100px;"><br>
+                    <strong>Condición:</strong> <select id="signature1_condition" style="width: 150px;">
+                        <option value="">Seleccione</option>
+                        <option value="Colindante Norte">Colindante Norte</option>
+                        <option value="Colindante Sur">Colindante Sur</option>
+                        <option value="Colindante Este">Colindante Este</option>
+                        <option value="Colindante Oeste">Colindante Oeste</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="signature-box">
+                <div class="signature">
+                    <input type="text" id="signature2_line" placeholder="Firma">
+                </div>
+                <div style="margin-top: 10px;">
+                    <strong>Nombre:</strong> <input type="text" id="signature2_name" placeholder="Nombre completo"><br>
+                    <strong>DNI:</strong> <input type="text" id="signature2_dni" placeholder="DNI" maxlength="8" style="width: 100px;"><br>
+                    <strong>Condición:</strong> <select id="signature2_condition" style="width: 150px;">
+                        <option value="">Seleccione</option>
+                        <option value="Colindante Norte">Colindante Norte</option>
+                        <option value="Colindante Sur">Colindante Sur</option>
+                        <option value="Colindante Este">Colindante Este</option>
+                        <option value="Colindante Oeste">Colindante Oeste</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+            </div>
+                               
+        </div>
+        
+        <div class="no-print">
+            <button onclick="window.print()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: text-bottom; margin-right: 5px;">
+                    <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                    <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+                </svg>
+                Imprimir / Guardar como PDF
+            </button>
+          
+        </div>
+    </div>
+    
+    <script>
+        // Función para prellenar el formulario con datos de ejemplo
+        function fillExampleData() {
+            document.getElementById('atffs').value = "Lima";
+            document.getElementById('day').value = "5";
+            document.getElementById('month').value = "mayo";
+            document.getElementById('year').value = "2025";
+            document.getElementById('property_name').value = "Finca Agroforestal Santa Rosa";
+            document.getElementById('location').value = "Satipo, Junín";
+        }
+        
+        // Función para limpiar el formulario
+        function clearForm() {
+            const inputs = document.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.value = '';
+            });
+        }
+        
+        // Prellenar con la fecha actual al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const day = today.getDate();
+            const month = today.getMonth();
+            const year = today.getFullYear();
+            
+            const monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
+                               "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+            
+            document.getElementById('day').value = day;
+            document.getElementById('month').value = monthNames[month];
+            document.getElementById('year').value = year;
+            
+            // Simulación básica de dibujo en el croquis (en un entorno real se implementaría con Canvas o SVG)
+            const sketchArea = document.querySelector('.sketch-area');
+            sketchArea.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    const marker = document.createElement('div');
+                    marker.style.position = 'absolute';
+                    marker.style.left = (e.offsetX - 5) + 'px';
+                    marker.style.top = (e.offsetY - 5) + 'px';
+                    marker.style.width = '10px';
+                    marker.style.height = '10px';
+                    marker.style.backgroundColor = '#2c6e31';
+                    marker.style.borderRadius = '50%';
+                    this.appendChild(marker);
+                }
+            });
+        });
+    </script>
+    </body>
+    </html>

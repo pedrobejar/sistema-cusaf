@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de Coordenadas - CUSAF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.5;
+            color: #333;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #2c6e31;
+            padding-bottom: 15px;
+        }
+        .logo {
+           height: 60px;
+        }
+        .header-right {
+            text-align: right;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .document-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 25px 0;
+            color: #2c6e31;
+        }
+        .date {
+            text-align: right;
+            margin: 20px 0;
+        }
+        .recipient {
+            margin-bottom: 20px;
+        }
+        .reference {
+            margin-bottom: 25px;
+        }
+        .content {
+            text-align: justify;
+        }
+        .signature-section {
+            margin-top: 50px;
+        }
+        .signature-line {
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        .signature-box {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-top: 40px;
+        }
+        .signature {
+            border-top: 1px solid black;
+            width: 250px;
+            text-align: center;
+            padding-top: 5px;
+        }
+        input, select {
+            border: none;
+            border-bottom: 1px solid #2c6e31;
+            padding: 5px;
+            margin: 2px 0;
+            width: 100%;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            background-color: #f9fffa;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-bottom: 2px solid #2c6e31;
+            background-color: #f0fff0;
+        }
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat, repeat;
+            background-position: right .7em top 50%, 0 0;
+            background-size: .65em auto, 100%;
+            padding-right: 20px;
+        }
+        .inline-field {
+            display: inline-block;
+            width: auto;
+            margin: 0 5px;
+        }
+        .field-container {
+            margin: 8px 0;
+        }
+        .field-label {
+            font-weight: bold;
+            color: #2c6e31;
+            margin-right: 5px;
+        }
+        .section-title {
+            background-color: #2c6e31;
+            color: white;
+            padding: 8px 15px;
+            margin: 25px 0 15px 0;
+            font-weight: bold;
+        }
+        button {
+            background-color: #2c6e31;
+            color: white;
+            padding: 10px 15px;
+            margin: 20px 5px 20px 0;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #1e5123;
+        }
+        .no-print {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+        }
+        p {
+            margin: 12px 0;
+        }
+        
+        /* Estilos para la tabla de coordenadas */
+        .coordinates-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .coordinates-table th, .coordinates-table td {
+            border: 1px solid #2c6e31;
+            padding: 8px;
+            text-align: center;
+        }
+        .coordinates-table th {
+            background-color: #e7f3e8;
+            color: #2c6e31;
+            font-weight: bold;
+        }
+        .coordinates-table tr:nth-child(even) {
+            background-color: #f9fffa;
+        }
+        .coordinates-table tr:hover {
+            background-color: #f0fff0;
+        }
+        .add-row-btn {
+            background-color: #2c6e31;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .remove-row-btn {
+            background-color: #d32f2f;
+            color: white;
+            border: none;
+            padding: 2px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .coord-input {
+            width: 100%;
+            text-align: center;
+        }
+        
+        @media print {
+            body {
+                padding: 0;
+                font-size: 12pt;
+            }
+            input, select {
+                font-size: 12pt;
+                border-bottom: 1px solid #999;
+                background: none;
+            }
+            .no-print {
+                display: none;
+            }
+            select {
+                appearance: none;
+                background: none;
+            }
+            .section-title {
+                background-color: white;
+                color: black;
+                border: 1px solid black;
+            }
+            .add-row-btn, .remove-row-btn {
+                display: none;
+            }
+            .coordinates-table th {
+                background-color: white;
+            }
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        
+        .title {
+            text-align: center;
+            color: #2e7d32;
+            margin: 20px 0;
+        }
+        
+        .info-section {
+            border: 1px solid #2c6e31;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #f9fffa;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <img src="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\doc\Logo.png" class="logo">
+        <div class="header-right">
+            <div class="form-group">
+                <label class="field-label">ATFFS/ARFFS:</label>
+                <select id="atffs" style="width: 200px; display: inline-block;">
+                    <option value=""> </option>
+                    <option value="Cajamarca">Cajamarca</option>
+                    <option value="Piura">Piura</option>
+                    <option value="Lambayeque">Lambayeque</option>
+                    <option value="Ancash">Ancash</option>
+                    <option value="Lima">Lima</option>
+                    <option value="SierraCentral">Sierra Central</option>
+                    <option value="SelvaCentral">Selva Central</option>
+                    <option value="Apurimac">Apurimac</option>
+                    <option value="Ica">Ica</option>
+                    <option value="Arequipa">Arequipa</option>
+                    <option value="MoqueguaTacna">Moquegua-Tacna</option>
+                    <option value="Puno">Puno</option>
+                    <option value="Cusco">Cusco</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="field-label">N° Expediente:</label>
+                <input type="text" id="num_expediente" style="width: 100px; display: inline-block;">
+            </div>
+            <div class="date">
+                <select id="day" style="width: 60px; display: inline-block;">
+                    <option value="">Día</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                    <option value="31">31</option>
+                </select>
+                de
+                <select id="month" style="width: 120px; display: inline-block;">
+                    <option value="">Mes</option>
+                    <option value="enero">enero</option>
+                    <option value="febrero">febrero</option>
+                    <option value="marzo">marzo</option>
+                    <option value="abril">abril</option>
+                    <option value="mayo">mayo</option>
+                    <option value="junio">junio</option>
+                    <option value="julio">julio</option>
+                    <option value="agosto">agosto</option>
+                    <option value="septiembre">septiembre</option>
+                    <option value="octubre">octubre</option>
+                    <option value="noviembre">noviembre</option>
+                    <option value="diciembre">diciembre</option>
+                </select>
+                del
+                <select id="year" style="width: 80px; display: inline-block;">
+                    <option value="">Año</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <h1 class="title">TABLA DE COORDENADAS - CUSAF</h1>
+    
+    <div class="info-section">
+        <div class="field-container">
+            <span class="field-label">Nombre del Solicitante:</span>
+            <input type="text" id="full_name" placeholder="">
+        </div>
+        <div class="field-container">
+            <span class="field-label">DNI:</span>
+            <input type="text" id="dni" placeholder="" maxlength="8" style="width: 150px; display: inline-block;">
+        </div>
+        <div class="field-container">
+            <span class="field-label">Nombre del Predio/Área:</span>
+            <input type="text" id="area_name" placeholder="">
+        </div>
+        <div class="field-container">
+            <span class="field-label">Ubicación:</span>
+            <div style="display: flex; gap: 10px; margin-top: 5px;">
+                <div style="flex: 1;">
+                    <span style="font-size: 13px;">Distrito:</span>
+                    <input type="text" id="district" placeholder="">
+                </div>
+                <div style="flex: 1;">
+                    <span style="font-size: 13px;">Provincia:</span>
+                    <select id="province" style="width: 100%;">
+                        <option value=""> </option>
+                        <option value="Chanchamayo">Chanchamayo</option>
+                        <option value="Chupaca">Chupaca</option>
+                        <option value="Concepción">Concepción</option>
+                        <option value="Huancayo">Huancayo</option>
+                        <option value="Jauja">Jauja</option>
+                        <option value="Junín">Junín</option>
+                        <option value="Satipo">Satipo</option>
+                        <option value="Tarma">Tarma</option>
+                        <option value="Yauli">Yauli</option>
+                        <option value="Otra">Otra</option>
+                    </select>
+                </div>
+                <div style="flex: 1;">
+                    <span style="font-size: 13px;">Departamento:</span>
+                    <select id="department" style="width: 100%;">
+                        <option value=""> </option>
+                        <option value="Amazonas">Amazonas</option>
+                        <option value="Áncash">Áncash</option>
+                        <option value="Apurímac">Apurímac</option>
+                        <option value="Arequipa">Arequipa</option>
+                        <option value="Ayacucho">Ayacucho</option>
+                        <option value="Cajamarca">Cajamarca</option>
+                        <option value="Callao">Callao</option>
+                        <option value="Cusco">Cusco</option>
+                        <option value="Huancavelica">Huancavelica</option>
+                        <option value="Huánuco">Huánuco</option>
+                        <option value="Ica">Ica</option>
+                        <option value="Junín">Junín</option>
+                        <option value="La Libertad">La Libertad</option>
+                        <option value="Lambayeque">Lambayeque</option>
+                        <option value="Lima">Lima</option>
+                        <option value="Loreto">Loreto</option>
+                        <option value="Madre de Dios">Madre de Dios</option>
+                        <option value="Moquegua">Moquegua</option>
+                        <option value="Pasco">Pasco</option>
+                        <option value="Piura">Piura</option>
+                        <option value="Puno">Puno</option>
+                        <option value="San Martín">San Martín</option>
+                        <option value="Tacna">Tacna</option>
+                        <option value="Tumbes">Tumbes</option>
+                        <option value="Ucayali">Ucayali</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <h3 class="title">COORDENADAS UTM - DATUM WGS84</h3>
+    
+    <div class="form-group">
+        <label class="field-label">Zona UTM:</label>
+        <select id="utm_zone" style="width: 100px; display: inline-block;">
+            <option value=""> </option>
+            <option value="17S">17S</option>
+            <option value="18S">18S</option>
+            <option value="19S">19S</option>
+        </select>
+    </div>
+    
+    <div class="content">
+        <table class="coordinates-table" id="coordinates-table">
+            <thead>
+                <tr>
+                    <th>Vértice</th>
+                    <th>Este (X)</th>
+                    <th>Norte (Y)</th>
+                    
+                </tr>
+            </thead>
+            <tbody id="coordinates-tbody">
+                <tr>
+                    <td>1</td>
+                    <td><input type="text" class="coord-input east-coord" placeholder=""></td>
+                    <td><input type="text" class="coord-input north-coord" placeholder=""></td>
+                    
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><input type="text" class="coord-input east-coord" placeholder=""></td>
+                    <td><input type="text" class="coord-input north-coord" placeholder=""></td>
+                   
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><input type="text" class="coord-input east-coord" placeholder=""></td>
+                    <td><input type="text" class="coord-input north-coord" placeholder=""></td>
+                    
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><input type="text" class="coord-input east-coord" placeholder=""></td>
+                    <td><input type="text" class="coord-input north-coord" placeholder=""></td>
+                   
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="no-print" style="text-align: center;">
+            <button class="add-row-btn" onclick="addRow()">+ Añadir Vértice</button>
+        </div>
+        
+        <div class="form-group" style="margin-top: 20px;">
+            <label class="field-label">Área Total (Hectáreas):</label>
+            <input type="text" id="total_area" style="width: 150px; display: inline-block;">
+        </div>
+        
+        <div class="form-group">
+            <label class="field-label">Perímetro (Metros):</label>
+            <input type="text" id="perimeter" style="width: 150px; display: inline-block;">
+        </div>
+        
+        <p style="margin-top: 30px;">
+            las coordenadas consignadas en el presente documento corresponden al área 
+            denominada <input type="text" id="area_name_confirmation" placeholder="" style="width: 280px; display: inline-block;">, 
+            de la cual soy poseedor(a) y para la cual solicito el Contrato de Cesión en Uso para Sistemas Agroforestales (CUSAF).
+        </p>
+    </div>
+    
+    <div class="signature-section">
+        <div class="signature-box">
+            <div class="signature">
+                <input type="text" id="signature_line" placeholder="Firma">
+            </div>
+            <div style="margin-top: 10px;">
+                <strong>Nombre:</strong> <input type="text" id="signature_name" placeholder="Nombre completo" style="width: 300px; display: inline-block;"><br>
+                <strong>DNI:</strong> <input type="text" id="signature_dni" placeholder="DNI" maxlength="8" style="width: 100px; display: inline-block;">
+            </div>
+        </div>
+    </div>
+    
+    <div class="no-print" style="display: flex; justify-content: center;">
+        <button onclick="window.print()" style="margin-right: 10px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: text-bottom; margin-right: 5px;">
+                <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+            </svg>
+            Imprimir / Guardar como PDF
+        </button>
+      
+    </div>
+</div>
+
+<script>
+    // Función para añadir una nueva fila a la tabla
+    function addRow() {
+        const tbody = document.getElementById('coordinates-tbody');
+        const rowCount = tbody.rows.length;
+        const newRow = tbody.insertRow();
+        
+        // Celda para el número de vértice
+        const cellVertice = newRow.insertCell(0);
+        cellVertice.textContent = (rowCount + 1).toString();
+        
+        // Celda para la coordenada Este
+        const cellEast = newRow.insertCell(1);
+        const inputEast = document.createElement('input');
+        inputEast.type = 'text';
+        inputEast.className = 'coord-input east-coord';
+        inputEast.placeholder = '';
+        cellEast.appendChild(inputEast);
+        
+        // Celda para la coordenada Norte
+        const cellNorth = newRow.insertCell(2);
+        const inputNorth = document.createElement('input');
+        inputNorth.type = 'text';
+        inputNorth.className = 'coord-input north-coord';
+        inputNorth.placeholder = '';
+        cellNorth.appendChild(inputNorth);
+        
+        // Celda para el botón de eliminar
+        const cellAction = newRow.insertCell(3);
+        cellAction.className = 'no-print';
+        const btnRemove = document.createElement('button');
+        btnRemove.className = 'remove-row-btn';
+        btnRemove.textContent = 'X';
+        btnRemove.onclick = function() { removeRow(this); };
+        cellAction.appendChild(btnRemove);
+    }
+    
+    // Función para eliminar una fila de la tabla
+    function removeRow(btn) {
+        const row = btn.parentNode.parentNode;
+        const tbody = row.parentNode;
+        
+        // Solo permitir eliminar si hay más de 3 filas
+        if (tbody.rows.length > 3) {
+            tbody.removeChild(row);
+            // Renumerar los vértices
+            for (let i = 0; i < tbody.rows.length; i++) {
+                tbody.rows[i].cells[0].textContent = (i + 1).toString();
+            }
+        } else {
+            alert('Se requieren al menos 3 vértices para definir un polígono.');
+        }
+    }
+    
+    // Función para limpiar el formulario
+    function clearForm() {
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.value = '';
+        });
+        
+        // Mantener solo 4 filas en la tabla
+        const tbody = document.getElementById('coordinates-tbody');
+        while (tbody.rows.length > 4) {
+            tbody.deleteRow(tbody.rows.length - 1);
+        }
+        
+        // Limpiar los campos de coordenadas
+        const coordInputs = document.querySelectorAll('.coord-input');
+        coordInputs.forEach(input => {
+            input.value = '';
+        });
+    }
+    
+    // Prellenar con la fecha actual al cargar
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date();
+        const day = today.getDate();
+        const month = today.getMonth();
+        const year = today.getFullYear();
+        
+        const monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
+                           "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+        
+        document.getElementById('day').value = day;
+        document.getElementById('month').value = monthNames[month];
+        document.getElementById('year').value = year;
+        
+        // Auto-completar nombre del área cuando se escribe en el primer campo
+        document.getElementById('area_name').addEventListener('input', function() {
+            document.getElementById('area_name_confirmation').value = this.value;
+        });
+        
+        // Auto-completar nombre del firmante cuando se escribe en el campo del solicitante
+        document.getElementById('full_name').addEventListener('input', function() {
+            document.getElementById('signature_name').value = this.value;
+        });
+        
+        // Auto-completar DNI del firmante cuando se escribe en el campo del solicitante
+        document.getElementById('dni').addEventListener('input', function() {
+            document.getElementById('signature_dni').value = this.value;
+        });
+    });
+</script>
+</body>
+</html>

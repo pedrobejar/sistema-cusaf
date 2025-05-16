@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <title>Mapa Interactivo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+    integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+    crossorigin=""/>
+  <title>Acta de Levantamiento de Información de Campo</title>
+  <!-- Agregar html2pdf para exportar a PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+  <style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.6;
+    letter-spacing: normal;
+    color: #333;
+    background-color: #f9f9f9;
+  }
+  
+  .header {
+     display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #2e7d32;
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo {
+    height: 80px;
+    margin-right: 15px;
+  }
+  
+  .document-title {
+    text-align: center;
+    font-weight: bold;
+    margin: 20px 0;
+    font-size: 18px;
+    text-decoration: underline;
+    color: #2c3e50;
+  }
+    
+  .form-section {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .title {
+    text-align: center;
+            color: #2e7d32;
+            margin: 20px 0;
+  }
+  
+  .content {
+    text-align: justify;
+    letter-spacing: normal;
+  }
+    
+  #map {
+    width: 700px;
+    height: 600px;
+    border: 1px solid black;
+    margin: 20px auto;
+  }
+  
+  #vertices {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: 150px;
+    overflow-y: auto;
+  }
+  
+  #vertices li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    background-color: #fff;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  #vertices li:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+  
+  .container {
+   max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px
+  }
+  
+  .titulo {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .formulario {
+    margin-top: 20px;
+  }
+  
+  .boton {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .boton:hover {
+    background-color: #3e8e41;
+  }
+  
+  .boton-azul {
+    background-color: #2196F3;
+  }
+  
+  .boton-azul:hover {
+    background-color: #0b7dda;
+  }
+  
+  .boton-gris {
+    background-color: #757575;
+  }
+  
+  .boton-gris:hover {
+    background-color: #606060;
+  }
+    
+  .document-title {
+      text-align: center;
+      color: #2e7d32;
+      margin: 20px 0;
+  }
+  
+  .date {
+    text-align: right;
+    margin: 20px 0;
+  }
+  
+  .recipient {
+    margin-bottom: 15px;
+  }
+  
+  .reference {
+    margin-bottom: 20px;
+  }
+  
+  .content {
+    text-align: justify;
+    letter-spacing: normal;
+  }
+  
+  .signature {
+    margin-top: 40px;
+    border-top: 1px solid black;
+    width: 250px;
+  }
+  
+  input, select {
+    border: none;
+    border-bottom: 1px solid #999;
+    padding: 5px;
+    margin: 2px 0;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    letter-spacing: normal;
+    font-size: 14px;
+  }
+  
+  select {
+    background-color: #f9f9f9;
+  }
+  
+  .signature-line {
+    margin-top: 50px;
+  }
+  
+  .signature-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 30px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  table, th, td {
+    border: 1px solid #ddd;
+  }
+  
+  th, td {
+    padding: 8px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  .checkbox-group {
+    margin-bottom: 5px;
+  }
+  
+  .actions-container {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  /* Estilos mejorados para impresión */
+  @media print {
+    body {
+      padding: 0;
+      font-size: 12pt;
+      background-color: white;
+      color: black;
+    }
+    
+    .no-print {
+      display: none !important;
+    }
+    
+    .container, .form-section {
+      box-shadow: none;
+      border: none;
+      page-break-inside: avoid;
+    }
+    
+    #map {
+      width: 100% !important;
+      height: 400px !important;
+      page-break-inside: avoid;
+    }
+    
+    table {
+      page-break-inside: avoid;
+    }
+    
+    /* Evitar que los elementos se corten al final de la página */
+    .avoid-break {
+      page-break-inside: avoid;
+    }
+    
+    /* Asegurar que los encabezados y pies de página se muestren en cada página */
+    @page {
+      size: A4;
+      margin: 1cm;
+      
+      @top-center {
+        content: "Acta de Levantamiento de Información de Campo";
+        font-size: 14pt;
+        font-weight: bold;
+      }
+      
+      @bottom-right {
+        content: "Página " counter(page) " de " counter(pages);
+        font-size: 10pt;
+      }
+    }
+  }
+  
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+  
+  .info-panel {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  
+  #area-display {
+    font-weight: bold;
+    color: #2c3e50;
+  }
+  
+  #export-options {
+    display: none;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+  }
+
+  .info-panel {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  
+  #area-display {
+    font-weight: bold;
+    color: #2c3e50;
+  }
+  
+  #export-options {
+    display: none;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+  }
+
+  .pregunta {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .numero-pregunta {
+            font-weight: bold;
+            margin-top: 0;
+        }
+        
+        .opcion {
+            margin-bottom: 15px;
+        }
+        
+        .linderos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .lindero {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-top: 5px;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+        
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .subpregunta {
+            margin-left: 20px;
+            margin-top: 10px;
+            padding: 10px;
+            border-left: 3px solid #2196F3;
+            background-color: #f0f8ff;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        .card {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--medium-gray);
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: var(--light-gray);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .checkbox-item:hover {
+            background-color: var(--medium-gray);
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-color);
+        }
+        
+        .checkbox-item label {
+            font-weight: 500;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+        
+        select, input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            background-color: var(--white);
+        }
+        
+        select:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .submenu-container {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: var(--light-gray);
+            border-radius: 5px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .hectares-input {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            background-color: var(--light-gray);
+            padding: 12px 15px;
+            border-radius: 5px;
+        }
+        
+        .hectares-input label {
+            margin-right: 15px;
+            font-weight: 500;
+            min-width: 150px;
+        }
+        
+        .btn-submit {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: block;
+            width: 200px;
+            margin: 30px auto 0;
+            text-align: center;
+        }
+        
+        .btn-submit:hover {
+            background-color: #3e8e41;
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: #e74c3c;
+        }
+
+  
+  /* Clase para elementos que deben evitar cortes al imprimir */
+  .avoid-break {
+    page-break-inside: avoid;
+  }
+  </style>
+</head>
+<body>
+ <div class="container">
+  <div class="header">
+            <img src="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\doc\Logo.png" alt="Logo SERFOR" class="logo">
+            <div>
+                <div><strong>ATFFS/ARFFS:</strong> 
+                    <select>
+                        <option>Lima</option>
+                        <option>Ancash</option>
+                        <option>Arequipa</option>
+                        <option>Cusco</option>
+                    </select>
+                </div>
+                <div style="margin-top: 10px;">
+                    <strong>N° Acta:</strong> <input type="text" style="width: 80px;">
+                    <strong style="margin-left: 15px;">Fecha:</strong> <input type="date">
+                </div>
+            </div>
+        </div>
+  
+   <h1 class="title">ACTA DE LEVANTAMIENTO DE INFORMACIÓN DE CAMPO</h1>
+  
+  <div class="form-section">
+    <p style="text-align: justify; hyphens: auto;">
+      Siendo las <input type="time" id="hora" style="width: 80px;"> horas del día
+      <select id="day" style="width: 60px;">
+        <option value=""></option>
+        <!-- Opciones de días del 1 al 31 -->
+        <script>
+          for(let i=1; i<=31; i++) {
+            document.write(`<option value="${i}">${i}</option>`);
+          }
+        </script>
+      </select> del mes de
+      <select id="mes" style="width: 120px;">
+        <option value=""></option>
+        <option value="enero">Enero</option>
+        <option value="febrero">Febrero</option>
+        <option value="marzo">Marzo</option>
+        <option value="abril">Abril</option>
+        <option value="mayo">Mayo</option>
+        <option value="junio">Junio</option>
+        <option value="julio">Julio</option>
+        <option value="agosto">Agosto</option>
+        <option value="septiembre">Septiembre</option>
+        <option value="octubre">Octubre</option>
+        <option value="noviembre">Noviembre</option>
+        <option value="diciembre">Diciembre</option>
+      </select> del año
+      <select id="anio" style="width: 80px;">
+        <option value=""></option>
+        <option value="2023">2023</option>
+        <option value="2024">2024</option>
+        <option value="2025">2025</option>
+      </select>, ubicados en el sector
+      <input type="text" id="sector" placeholder="" style="width: 250px;">, distrito
+      <input type="text" id="distrito" placeholder="" style="width: 180px;">, provincia
+      <select id="province" style="width: 170px;">
+        <option value=""></option>
+        <option value="Chanchamayo">Chanchamayo</option>
+        <option value="Chupaca">Chupaca</option>
+        <option value="Concepción">Concepción</option>
+        <option value="Huancayo">Huancayo</option>
+        <option value="Jauja">Jauja</option>
+        <option value="Junín">Junín</option>
+        <option value="Satipo">Satipo</option>
+        <option value="Tarma">Tarma</option>
+        <option value="Yauli">Yauli</option>
+        <option value="Otra">Otra</option>
+      </select>, departamento
+      <select id="department" style="width: 150px;">
+        <option value=""></option>
+        <option value="Amazonas">Amazonas</option>
+        <option value="Áncash">Áncash</option>
+        <option value="Apurímac">Apurímac</option>
+        <option value="Arequipa">Arequipa</option>
+        <option value="Ayacucho">Ayacucho</option>
+        <option value="Cajamarca">Cajamarca</option>
+        <option value="Callao">Callao</option>
+        <option value="Cusco">Cusco</option>
+        <option value="Huancavelica">Huancavelica</option>
+        <option value="Huánuco">Huánuco</option>
+        <option value="Ica">Ica</option>
+        <option value="Junín">Junín</option>
+        <option value="La Libertad">La Libertad</option>
+        <option value="Lambayeque">Lambayeque</option>
+        <option value="Lima">Lima</option>
+        <option value="Loreto">Loreto</option>
+        <option value="Madre de Dios">Madre de Dios</option>
+        <option value="Moquegua">Moquegua</option>
+        <option value="Pasco">Pasco</option>
+        <option value="Piura">Piura</option>
+        <option value="Puno">Puno</option>
+        <option value="San Martín">San Martín</option>
+        <option value="Tacna">Tacna</option>
+        <option value="Tumbes">Tumbes</option>
+        <option value="Ucayali">Ucayali</option>
+      </select>,
+      nos reunimos las siguientes personas:
+    </p>
+    
+    <!-- Sección de participantes -->
+    <div style="display: flex; align-items: center; margin-bottom: 10px; flex-wrap: nowrap;">
+      <div style="margin-right: 10px;">1. El Sr(a) <input type="text" placeholder=" " style="width: 500px;"></div>
+      <div style="margin-right: 10px;">con DNI N° <input type="text" placeholder=" " maxlength="8" style="width: 150px;"></div>
+      <div>identificado como 
+        <select id="identificacion1" style="width: 160px;">
+          <option value=""></option>
+          <option value="poseedor">El(La) Posecionario(a)</option>
+          <option value="personal">Personal Local</option>
+          <option value="serfor">Personal participante</option>
+         
+        </select>
+      </div>
+    </div>
+    
+    <div style="display: flex; align-items: center; margin-bottom: 10px; flex-wrap: nowrap;">
+      <div style="margin-right: 10px;">2. El Sr(a) <input type="text" placeholder=" " style="width: 500px;"></div>
+      <div style="margin-right: 10px;">con DNI N° <input type="text" placeholder=" " maxlength="8" style="width: 150px;"></div>
+      <div>identificado como 
+        <select id="identificacion1" style="width: 160px;">
+          <option value=""></option>
+          <option value="poseedor">El(La) Posecionario(a)</option>
+          <option value="personal">Personal Local</option>
+          <option value="serfor">Personal participante</option>
+         
+        </select>
+      </div>
+    </div>
+    
+    <div style="display: flex; align-items: center; margin-bottom: 10px; flex-wrap: nowrap;">
+      <div style="margin-right: 10px;">3. El Sr(a) <input type="text" placeholder=" " style="width: 500px;"></div>
+      <div style="margin-right: 10px;">con DNI N° <input type="text" placeholder=" " maxlength="8" style="width: 150px;"></div>
+      <div>identificado como 
+        <select id="identificacion1" style="width: 160px;">
+          <option value=""></option>
+          <option value="poseedor">El(La) Posecionario(a)</option>
+          <option value="personal">Personal Local</option>
+          <option value="serfor">Personal participante</option>
+         
+        </select>
+      </div>
+    </div>
+    
+    <p style="text-align: justify; hyphens: auto;">
+      Con la finalidad de verificar las declaraciones y/o requisitos presentados por el(la) posesionario(a) en el proceso de oficio 
+      aprobado con Resolución Directoral N° <input type="text" id="resolucion" placeholder=" " style="width: 300px;">, de fecha <input type="date" style="width: 150px;">, para el otorgamiento de Contratos de Cesión en Uso para Sistemas Agroforestales. En ese sentido; se inicia levantamiento de información de campo del área del posesionario a fin de verificar lo siguiente:
+    </p>
+  </div>
+  
+  <div class="container avoid-break">
+    <h2>1. Identificación de los vértices para la elaboración del polígono del predio</h2>
+    <div id="map"></div>
+    
+    <div class="info-panel">
+      <p>Área del polígono: <span id="area-display">0.00 hectáreas</span></p>
+      
+    </div>
+    
+    <h3>Vértices registrados:</h3>
+    <ul id="vertices"></ul>
+    
+    <div class="formulario no-print">
+      <label for="x">X (Este):</label>
+      <input type="number" id="x" step="0.0001" placeholder="">
+      <label for="y">Y (Norte):</label>
+      <input type="number" id="y" step="0.0001" placeholder="">
+   
+      <button id="agregar" class="boton">Agregar vértice</button>
+      <button id="limpiar" class="boton" style="background-color: #f44336;">Limpiar vértices</button>
+      <br>
+      <label for="area-calculada">Área (ha):</label>
+      <input type="number" id="area-calculada" step="0.0001" readonly>
+      <label for="nombre-predio">Nombre del predio:</label>
+      <input type="text" id="nombre-predio">
+    </div>
+    
+    <div id="export-options" class="no-print">
+      <h3>Opciones de exportación</h3>
+      <button id="exportar-kml" class="boton boton-azul">Exportar a KML</button>
+      <button id="exportar-geojson" class="boton boton-azul">Exportar a GeoJSON</button>
+    </div>
+  </div>
+  
+
+
+  <div class="form-section">
+
+  <form id="ordenamientoForm">
+             
+                <div class="pregunta">
+                  <h2>2. Division de ordenamiento interno</h2>
+                    
+                    
+                    <div class="checkbox-grid">
+                        <!-- Bosque Primario -->
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="bosquePrimario" name="division" value="Bosque Primario" onchange="toggleSubMenus()">
+                            <label for="bosquePrimario">Bosque Primario</label>
+                        </div>
+                        
+                        <!-- Bosque Secundario -->
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="bosqueSecundarioCheck" name="division" value="Bosque Secundario" onchange="toggleSubMenus()">
+                            <label for="bosqueSecundarioCheck">Bosque Secundario</label>
+                        </div>
+                        
+                        <!-- Submenú para Bosque Secundario -->
+                        <div id="bosqueSecundarioGroup" class="submenu-container" style="display: none;">
+                            <label for="bosqueSecundario">Tipo de Bosque Secundario:</label>
+                            <select id="bosqueSecundario" name="bosqueSecundario" onchange="toggleSubSubMenus()" class="form-group">
+                                <option value="">-- Seleccione una opción --</option>
+                                <option value="Pionero">Pionero</option>
+                                <option value="Secundario Joven">Secundario Joven</option>
+                                <option value="Secundario Maduro">Secundario Maduro</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Purna -->
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="purna" name="division" value="Purna" onchange="toggleSubMenus()">
+                            <label for="purna">Purna</label>
+                        </div>
+                        
+                        <!-- Cultivos Agrícolas -->
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cultivosAgricolas" name="division" value="Cultivos Agrícolas" onchange="toggleSubMenus()">
+                            <label for="cultivosAgricolas">Cultivos Agrícolas</label>
+                        </div>
+                        
+                        <!-- Pastizales -->
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pastizales" name="division" value="Pastizales" onchange="toggleSubMenus()">
+                            <label for="pastizales">Pastizales</label>
+                        </div>
+
+                        <!-- sistemas silvopastoril -->
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="plantacionesForestales" name="division" value="Plantaciones forestales macizo" onchange="toggleSubMenus()">
+                            <label for="plantacionesForestales">Sistemas silvopastoril</label>
+                        </div>
+
+                        <!-- area destinada a proteccion -->
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="plantacionesForestales" name="division" value="Plantaciones forestales macizo" onchange="toggleSubMenus()">
+                            <label for="plantacionesForestales"> Área destinada a protección</label>
+                        </div>
+                        
+                        <!-- Plantaciones forestales macizo -->
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="plantacionesForestales" name="division" value="Plantaciones forestales macizo" onchange="toggleSubMenus()">
+                            <label for="plantacionesForestales">Plantaciones forestales macizo</label>
+                        </div>
+                        
+                        <!-- Sistemas agroforestales -->
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="sistemasAgroforestalesCheck" name="division" value="Sistemas agroforestales" onchange="toggleSubMenus()">
+                            <label for="sistemasAgroforestalesCheck">Sistemas agroforestales</label>
+                        </div>
+                        
+                        <!-- Submenú para Sistemas agroforestales -->
+                        <div id="sistemasAgroforestalesGroup" class="submenu-container" style="display: none;">
+                            <label for="sistemasAgroforestales">Tipo de Sistema Agroforestal:</label>
+                            <select id="sistemasAgroforestales" name="sistemasAgroforestales" onchange="toggleSubSubMenus()">
+                                <option value="">-- Seleccione una opción --</option>
+                                <option value="Secuenciales">Secuenciales</option>
+                                <option value="Simultaneos">Simultáneos</option>
+                            </select>
+                            
+                            <!-- Secuenciales -->
+                            <div id="secuencialesGroup" style="display: none; margin-top: 15px;">
+                                <label for="secuenciales">Tipo de Secuenciales:</label>
+                                <select id="secuenciales" name="secuenciales">
+                                    <option value="">-- Seleccione una opción --</option>
+                                    <option value="Agricultura migratoria con manejo del barbecho">Agricultura migratoria con manejo del barbecho</option>
+                                    <option value="Cultivo en plantaciones forestales y sistema Taurigya">Cultivo en plantaciones forestales y sistema Taurigya</option>
+                                    <option value="Arboles productores de madera comercial en los cultivos">Árboles productores de madera comercial en los cultivos</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Simultáneos -->
+                            <div id="simultaneosGroup" style="display: none; margin-top: 15px;">
+                                <label for="simultaneos">Tipo de Simultáneos:</label>
+                                <select id="simultaneos" name="simultaneos">
+                                    <option value="">-- Seleccione una opción --</option>
+                                    <option value="Arboles en parcelas de cultivo">Árboles en parcelas de cultivo (cercos vivos, cortinas rompevientos y árboles en linderos)</option>
+                                    <option value="Arboles para sombra de cultivos">Árboles para sombra de cultivos</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Campos de hectáreas dinámicos -->
+                    <div id="hectareasContainer"></div>
+                </div>
+                
+                <!-- Sección de Otras opciones -->
+                <div class="form-group">
+                    <h4>Otras opciones</h4>
+                    <select id="otrasOpciones" name="otrasOpciones" onchange="toggleOtrasHectareas()">
+                        <option value="">-- Seleccione una opción --</option>
+                        <option value="Sistemas silvopastoriles"></option>
+                        <option value="Area destinada a proteccion"></option>
+                        <option value="Otros usos">Otros usos</option>
+                    </select>
+                    
+                    <!-- Hectáreas para otras opciones -->
+                    <div id="otrasHectareaGroup" style="display: none; margin-top: 15px;">
+                        <div class="hectares-input">
+                            <label for="otrasHectareas">Hectáreas:</label>
+                            <input type="number" id="otrasHectareas" name="otrasHectareas" min="0" step="0.01" placeholder="Ingrese la cantidad en hectáreas">
+                        </div>
+                    </div>
+                </div>
+                
+            </form>
+          </div>
+  <!-- Sección de firmas -->
+  <div class="pregunta">
+
+    <h3>3.¿Se verificó la existencia de linderos (artificiales y naturales) que delimiten el predio en posesión?</h3>
+        
+        <div class="opcion">
+            
+            <select id="existenciaLinderos" name="existenciaLinderos">
+                <option value="">Seleccione una opción</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+        
+        <div class="linderos">
+            <div class="lindero">
+                <label for="linderoNorte">Por el norte:</label>
+                <textarea id="linderoNorte" name="linderoNorte" rows="2" placeholder="Describir límites naturales, hitos, cercos vivos, etc."></textarea>
+            </div>
+            <div class="lindero">
+                <label for="linderoSur">Por el sur:</label>
+                <textarea id="linderoSur" name="linderoSur" rows="2" placeholder="Describir límites naturales, hitos, cercos vivos, etc."></textarea>
+            </div>
+            <div class="lindero">
+                <label for="linderoEste">Por el este:</label>
+                <textarea id="linderoEste" name="linderoEste" rows="2" placeholder="Describir límites naturales, hitos, cercos vivos, etc."></textarea>
+            </div>
+            <div class="lindero">
+                <label for="linderoOeste">Por el oeste:</label>
+                <textarea id="linderoOeste" name="linderoOeste" rows="2" placeholder="Describir límites naturales, hitos, cercos vivos, etc."></textarea>
+            </div>
+        </div>
+    
+
+    <div class="pregunta">
+        <h3>4. ¿Se confirmó la inexistencia de conflictos y la posesión pacífica?</h3>
+        
+        <div class="opcion">
+           
+            <select id="inexistenciaConflictos" name="inexistenciaConflictos">
+                <option value="">Seleccione una opción</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+        
+        <div class="subpregunta">
+            <label for="acuerdoColindancia">¿Se firmó el acuerdo de colindancia?</label>
+            <select id="acuerdoColindancia" name="acuerdoColindancia">
+                <option value="">Seleccione una opción</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="pregunta">
+        <h3>5. ¿Se confirmó la correspondencia entre el área solicitada y el área del predio en posesión?</h3>
+        
+        <div class="opcion">
+           
+            <select id="correspondenciaArea" name="correspondenciaArea">
+                <option value="">Seleccione una opción</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+        
+        <div class="subpregunta">
+            <label for="conduccionDirecta">¿Se confirmó la conducción directa?</label>
+            <select id="conduccionDirecta" name="conduccionDirecta">
+                <option value="">Seleccione una opción</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="pregunta">
+        <h3>6. ¿Se confirmó las colindancias declaradas por el solicitante?</h3>
+        
+        <div class="opcion">
+            <label for="colindanciasAnteriores">Declaradas anteriormente:</label>
+            <select id="colindanciasAnteriores" name="colindanciasAnteriores">
+                <option value="">Seleccione una opción</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+        
+        <div class="opcion">
+            <label for="colindanciasCampo">Declaradas en la inspección de campo:</label>
+            <select id="colindanciasCampo" name="colindanciasCampo">
+                <option value="">Seleccione una opción</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+    </div>
+
+
+    <form id="formularioInspeccion">
+        
+
+        <div class="finalizacion">
+          <p style="text-align: justify; hyphens: auto;">
+            Siendo las <input type="time" id="hora" style="width: 80px;"> horas del día
+            <select id="day" style="width: 60px;">
+              <option value=""></option>
+              <!-- Opciones de días del 1 al 31 -->
+              <script>
+                for(let i=1; i<=31; i++) {
+                  document.write(`<option value="${i}">${i}</option>`);
+                }
+              </script>
+            </select> del mes de
+            <select id="mes" style="width: 120px;">
+              <option value=""></option>
+              <option value="enero">Enero</option>
+              <option value="febrero">Febrero</option>
+              <option value="marzo">Marzo</option>
+              <option value="abril">Abril</option>
+              <option value="mayo">Mayo</option>
+              <option value="junio">Junio</option>
+              <option value="julio">Julio</option>
+              <option value="agosto">Agosto</option>
+              <option value="septiembre">Septiembre</option>
+              <option value="octubre">Octubre</option>
+              <option value="noviembre">Noviembre</option>
+              <option value="diciembre">Diciembre</option>
+            </select> del año
+            <select id="anio" style="width: 80px;">
+              <option value=""></option>
+              <option value="2023">2023</option>
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+              <option value="2026">2025</option>
+            </select>, se da por finalizada la presente inspeccion pasando a firmar los participantes en señal de conformidad.</p><br>
+           
+          </p>
+      
+            <table class="tabla-firmas">
+                <thead>
+                    <tr>
+                        <th>Nombres y apellidos</th>
+                        <th>N° de DNI</th>
+                        <th>Condición</th>
+                        <th>Firma y/o huella</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <select id="nombre1" name="nombre1">
+                                <option value="">Seleccione participante</option>
+                               
+                            </select>
+                            <input type="text" id="nombreOtro1" name="nombreOtro1" placeholder="Especificar nombre" style="display: none; width: 100%; margin-top: 5px;">
+                        </td>
+                        <td>
+                            <select id="dni1" name="dni1">
+                                <option value="">Seleccione DNI</option>
+                              
+                            </select>
+                            <input type="text" id="dniOtro1" name="dniOtro1" placeholder="Especificar DNI" style="display: none; width: 100%; margin-top: 5px;">
+                        </td>
+                        <td>
+                            <select id="condicion1" name="condicion1">
+                                <option value="">Seleccione condición</option>
+                                <option value="">Seleccione condición</option>                                
+                                <option value="Posesionario">Posesionario</option>
+                                <option value="Representante">Personal Local</option>
+                                <option value="Testigo">Personal participante</option> 
+                            </select>
+                            <input type="text" id="condicionOtro1" name="condicionOtro1" placeholder="Especificar condición" style="display: none; width: 100%; margin-top: 5px;">
+                        </td>
+                        <td>
+                            <div class="firma-input"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select id="nombre2" name="nombre2">
+                                <option value="">Seleccione participante</option>
+                             
+                            </select>
+                            <input type="text" id="nombreOtro2" name="nombreOtro2" placeholder="Especificar nombre" style="display: none; width: 100%; margin-top: 5px;">
+                        </td>
+                        <td>
+                            <select id="dni2" name="dni2">
+                                <option value="">Seleccione DNI</option>
+                                
+                            </select>
+                            <input type="text" id="dniOtro2" name="dniOtro2" placeholder="Especificar DNI" style="display: none; width: 100%; margin-top: 5px;">
+                        </td>
+                        <td>
+                            <select id="condicion2" name="condicion2">
+                              <option value="">Seleccione condición</option>                                
+                                <option value="Posesionario">Posesionario</option>
+                                <option value="Representante">Personal Local</option>
+                                <option value="Testigo">Personal participante</option> 
+                            </select>
+                            <input type="text" id="condicionOtro2" name="condicionOtro2" placeholder="Especificar condición" style="display: none; width: 100%; margin-top: 5px;">
+                        </td>
+                        <td>
+                            <div class="firma-input"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select id="nombre3" name="nombre3">
+                                <option value="">Seleccione participante</option>
+                              
+                            </select>
+                            <input type="text" id="nombreOtro3" name="nombreOtro3" placeholder="Especificar nombre" style="display: none; width: 100%; margin-top: 5px;">
+                        </td>
+                        <td>
+                            <select id="dni3" name="dni3">
+                                <option value="">Seleccione DNI</option>
+                               
+                            </select>
+                            <input type="text" id="dniOtro3" name="dniOtro3" placeholder="Especificar DNI" style="display: none; width: 100%; margin-top: 5px;">
+                        </td>
+                        <td>
+                            <select id="condicion3" name="condicion3">
+                                <option value="">Seleccione condición</option>                                
+                                <option value="Posesionario">Posesionario</option>
+                                <option value="Representante">Personal Local</option>
+                                <option value="Testigo">Personal participante</option>                               
+                            </select>
+                            <input type="text" id="condicionOtro3" name="condicionOtro3" placeholder="Especificar condición" style="display: none; width: 100%; margin-top: 5px;">
+                        </td>
+                        <td>
+                            <div class="firma-input"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+      
+      
+      </form>
+
+
+
+  </div>
+
+  <div class="no-print">
+        <button onclick="window.print()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: text-bottom; margin-right: 5px;">
+                <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+            </svg>
+            Imprimir / Guardar como PDF
+        </button>
+    
+    </div>
+ </div>
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+    integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+    crossorigin=""></script>
+  <script>
+    // Inicializar el mapa con una vista centrada en Perú
+    let map = L.map('map').setView([-9.189967, -75.015152], 6);
+    
+    // Agregar capa base de OpenStreetMap
+    let baseMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
+      subdomains: ['a', 'b', 'c']
+    }).addTo(map);
+    
+    // Agregar capa satelital (opcional)
+    let satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    });
+    
+    // Agregar control de capas
+    let baseMaps = {
+      "Mapa": baseMap,
+      "Satélite": satelliteMap
+    };
+    
+    L.control.layers(baseMaps).addTo(map);
+    
+    // Variables para almacenar vértices y elementos del mapa
+    let vertices = [];
+    let markers = [];
+    let polygon = null;
+    let polyline = null;
+    
+    // Función para calcular el área del polígono en hectáreas
+    function calcularAreaPoligono() {
+      if (vertices.length < 3) {
+        return 0;
+      }
+      
+      // Convertir los vértices a coordenadas latitud-longitud para Leaflet
+      let latlngs = vertices.map(v => [v.x, v.y]);
+      
+      // Calcular el área usando la API de Leaflet
+      let tempPolygon = L.polygon(latlngs);
+      let areaMetros = L.GeometryUtil.geodesicArea(tempPolygon.getLatLngs()[0]);
+      
+      // Convertir de metros cuadrados a hectáreas (1 hectárea = 10,000 m²)
+      return areaMetros / 10000;
+    }
+    
+    // Evento para agregar vértice al hacer clic en el mapa
+    map.on('click', function(e) {
+      agregarVertice(e.latlng.lat, e.latlng.lng);
+    });
+    
+    // Agregar vértice mediante coordenadas de entrada
+    document.getElementById('agregar').addEventListener('click', function() {
+      let x = parseFloat(document.getElementById('x').value);
+      let y = parseFloat(document.getElementById('y').value);
+      
+      if (!isNaN(x) && !isNaN(y)) {
+        agregarVertice(x, y);
+        map.setView([x, y], 14);
+        
+        // Limpiar los campos de entrada
+        document.getElementById('x').value = '';
+        document.getElementById('y').value = '';
+      } else {
+        alert('Por favor, ingrese valores válidos para las coordenadas X e Y.');
+      }
+    });
+    
+    // Limpiar todos los vértices
+    document.getElementById('limpiar').addEventListener('click', function() {
+      limpiarVertices();
+    });
+    
+    // Función para agregar un vértice
+    function agregarVertice(x, y) {
+      // Crear un marcador en el mapa
+      let marker = L.marker([x, y], {
+        draggable: true, // Permitir arrastrar el marcador
+        title: `Vértice ${vertices.length + 1}`
+      }).addTo(map);
+      
+      // Agregar evento al arrastrar el marcador
+      marker.on('dragend', function(event) {
+        let position = marker.getLatLng();
+        let index = markers.indexOf(marker);
+        
+        if (index !== -1) {
+          vertices[index] = { x: position.lat, y: position.lng };
+          actualizarVisualizacion();
+        }
+      });
+      
+      // Agregar evento al hacer clic en el marcador (para borrar)
+      marker.on('contextmenu', function() {
+        let index = markers.indexOf(marker);
+        if (index !== -1) {
+          map.removeLayer(marker);
+          markers.splice(index, 1);
+          vertices.splice(index, 1);
+          actualizarVisualizacion();
+        }
+      });
+      
+      // Agregar el marcador y el vértice a los arrays
+      markers.push(marker);
+      vertices.push({ x: x, y: y });
+      
+      // Actualizar la visualización
+      actualizarVisualizacion();
+    }
+    
+    // Función para limpiar todos los vértices
+    function limpiarVertices() {
+      // Eliminar todos los marcadores del mapa
+      markers.forEach(marker => map.removeLayer(marker));
+      
+      // Eliminar el polígono y la polilínea si existen
+      if (polygon) map.removeLayer(polygon);
+      if (polyline) map.removeLayer(polyline);
+      
+      // Reiniciar las variables
+      vertices = [];
+      markers = [];
+      polygon = null;
+      polyline = null;
+      
+      // Actualizar la visualización
+      actualizarLista();
+      
+      // Actualizar el área del polígono
+      document.getElementById('area-display').textContent = '0.00 hectáreas';
+      document.getElementById('area-calculada').value = '0.00';
+    }
+    
+    // Función para actualizar la lista de vértices
+    function actualizarLista() {
+      let lista = document.getElementById('vertices');
+      lista.innerHTML = '';
+      
+      vertices.forEach((v, i) => {
+        let item = document.createElement('li');
+        item.textContent = `Vértice ${i + 1}: X = ${v.x.toFixed(6)}, Y = ${v.y.toFixed(6)}`;
+        
+        // Agregar un botón para eliminar el vértice
+        let btnEliminar = document.createElement('button');
+        btnEliminar.textContent = 'Eliminar';
+        btnEliminar.className = 'boton';
+        btnEliminar.style.marginLeft = '10px';
+        btnEliminar.style.padding = '2px 5px';
+        btnEliminar.style.fontSize = '12px';
+        
+        btnEliminar.addEventListener('click', function() {
+          map.removeLayer(markers[i]);
+          markers.splice(i, 1);
+          vertices.splice(i, 1);
+          actualizarVisualizacion();
+        });
+        
+        item.appendChild(btnEliminar);
+        lista.appendChild(item);
+      });
+    }
+    
+    // Función para actualizar la visualización del polígono y la polilínea
+    function actualizarVisualizacion() {
+      // Actualizar la lista de vértices
+      actualizarLista();
+      
+      // Si hay al menos dos vértices, dibujar la polilínea
+      if (vertices.length >= 2) {
+        // Eliminar la polilínea anterior si existe
+        if (polyline) map.removeLayer(polyline);
+        
+        // Crear los puntos para la polilínea
+        let puntos = vertices.map(v => [v.x, v.y]);
+        
+        // Dibujar la polilínea
+        polyline = L.polyline(puntos, { color: 'blue', weight: 3 }).addTo(map);
+      }
+      
+      // Si hay al menos tres vértices, dibujar el polígono
+      if (vertices.length >= 3) {
+        // Eliminar el polígono anterior si existe
+        if (polygon) map.removeLayer(polygon);
+        
+        // Crear los puntos para el polígono
+        let puntos = vertices.map(v => [v.x, v.y]);
+        
+        // Dibujar el polígono
+        polygon = L.polygon(puntos, { color: 'red', fillColor: '#f03', fillOpacity: 0.3 }).addTo(map);
+        
+        // Calcular y mostrar el área del polígono
+        let area = calcularAreaPoligono();
+        document.getElementById('area-display').textContent = area.toFixed(4) + ' hectáreas';
+        document.getElementById('area-calculada').value = area.toFixed(4);
+      } else {
+        // Si no hay suficientes vértices para un polígono, mostrar área cero
+        document.getElementById('area-display').textContent = '0.00 hectáreas';
+        document.getElementById('area-calculada').value = '0.00';
+      }
+    }
+    
+    // Exportar el polígono a KML
+    function exportarKML() {
+      if (vertices.length < 3) {
+        alert('Se necesitan al menos 3 vértices para exportar un polígono.');
+        return;
+      }
+      
+      let nombrePredio = document.getElementById('nombre-predio').value || 'Predio';
+      let kml = `<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>${nombrePredio}</name>
+    <Placemark>
+      <name>${nombrePredio}</name>
+      <Polygon>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>`;
+      
+      // Agregar las coordenadas (longitud, latitud, altura)
+      vertices.forEach(v => {
+        kml += `${v.y},${v.x},0\n`;
+      });
+      
+      // Cerrar el polígono repitiendo el primer vértice
+      if (vertices.length > 0) {
+        kml += `${vertices[0].y},${vertices[0].x},0\n`;
+      }
+      
+      kml += `          </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+  </Document>
+</kml>`;
+      
+      // Crear un enlace para descargar el archivo KML
+      let blob = new Blob([kml], { type: 'application/vnd.google-earth.kml+xml' });
+      let url = URL.createObjectURL(blob);
+      let a = document.createElement('a');
+      a.href = url;
+      a.download = `${nombrePredio.replace(/\s+/g, '_')}.kml`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+    
+    // Exportar el polígono a GeoJSON
+    function exportarGeoJSON() {
+      if (vertices.length < 3) {
+        alert('Se necesitan al menos 3 vértices para exportar un polígono.');
+        return;
+      }
+      
+      let nombrePredio = document.getElementById('nombre-predio').value || 'Predio';
+      
+      // Crear un objeto GeoJSON
+      let geojson = {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "properties": {
+              "name": nombrePredio
+            },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [[]]
+            }
+          }
+        ]
+      };
+      
+      // Agregar las coordenadas (longitud, latitud)
+      vertices.forEach(v => {
+        geojson.features[0].geometry.coordinates[0].push([v.y, v.x]);
+      });
+      
+      // Cerrar el polígono repitiendo el primer vértice
+      if (vertices.length > 0) {
+        geojson.features[0].geometry.coordinates[0].push([vertices[0].y, vertices[0].x]);
+      }
+      
+      // Crear un enlace para descargar el archivo GeoJSON
+      let blob = new Blob([JSON.stringify(geojson, null, 2)], { type: 'application/geo+json' });
+      let url = URL.createObjectURL(blob);
+      let a = document.createElement('a');
+      a.href = url;
+      a.download = `${nombrePredio.replace(/\s+/g, '_')}.geojson`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+    
+    // Función para guardar el formulario como PDF usando html2pdf
+    function guardarComoPDF() {
+      // Configuración para html2pdf
+      const element = document.body;
+      const opt = {
+        margin: 10,
+        filename: 'acta_levantamiento_informacion.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      
+      // Generar el PDF
+      html2pdf().set(opt).from(element).save();
+    }
+    
+    // Función para imprimir el documento
+    function imprimirDocumento() {
+      // Ocultar elementos que no deben imprimirse
+      const noPrintElements = document.querySelectorAll('.no-print');
+      noPrintElements.forEach(el => {
+        el.style.display = 'none';
+      });
+      
+      // Imprimir
+      window.print();
+      
+      // Restaurar la visibilidad de los elementos ocultos
+      setTimeout(() => {
+        noPrintElements.forEach(el => {
+          el.style.display = '';
+        });
+      }, 500);
+    }
+    
+    // Función para guardar los datos del formulario
+    function guardarFormulario() {
+      // Recopilar todos los datos del formulario
+      const formData = {
+        fecha: document.getElementById('fecha-actual').value,
+        hora: document.getElementById('hora').value,
+        sector: document.getElementById('sector').value,
+        distrito: document.getElementById('distrito').value,
+        provincia: document.getElementById('province').value,
+        departamento: document.getElementById('department').value,
+        vertices: vertices,
+        area: document.getElementById('area-calculada').value,
+        nombrePredio: document.getElementById('nombre-predio').value
+        // Agregar más campos según sea necesario
+      };
+      
+      // Convertir a JSON
+      const jsonData = JSON.stringify(formData, null, 2);
+      
+      // Crear un blob y descargar
+      const blob = new Blob([jsonData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'datos_acta_levantamiento.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      alert('Formulario guardado correctamente como JSON.');
+    }
+    
+    // Mostrar/ocultar opciones de exportación
+    document.getElementById('mostrar-opciones').addEventListener('click', function() {
+      const exportOptions = document.getElementById('export-options');
+      if (exportOptions.style.display === 'block') {
+        exportOptions.style.display = 'none';
+        this.textContent = 'Opciones de exportación';
+      } else {
+        exportOptions.style.display = 'block';
+        this.textContent = 'Ocultar opciones';
+      }
+    });
+    
+    // Asignar eventos a los botones
+    document.getElementById('exportar-kml').addEventListener('click', exportarKML);
+    document.getElementById('exportar-geojson').addEventListener('click', exportarGeoJSON);
+    document.getElementById('imprimir-final').addEventListener('click', imprimirDocumento);
+    document.getElementById('exportar-pdf-final').addEventListener('click', guardarComoPDF);
+    document.getElementById('guardar-form').addEventListener('click', guardarFormulario);
+    
+    // Inicializar la fecha actual en el campo de fecha
+    let now = new Date();
+    let day = ("0" + now.getDate()).slice(-2);
+    let month = ("0" + (now.getMonth() + 1)).slice(-2);
+    let today = now.getFullYear() + "-" + month + "-" + day;
+    document.getElementById('fecha-actual').value = today;
+    
+    // Inicializar la hora actual
+    let hours = ("0" + now.getHours()).slice(-2);
+    let minutes = ("0" + now.getMinutes()).slice(-2);
+    let currentTime = hours + ":" + minutes;
+    document.getElementById('hora').value = currentTime;
+    
+    // Seleccionar automáticamente la fecha actual
+    document.getElementById('day').value = now.getDate().toString();
+    let meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    document.getElementById('mes').value = meses[now.getMonth()];
+    document.getElementById('anio').value = now.getFullYear().toString();
+    
+    // Agregar LeafletGeometryUtil para el cálculo de áreas geodésicas
+    L.GeometryUtil = {
+      geodesicArea: function(latLngs) {
+        let pointsCount = latLngs.length,
+            area = 0.0,
+            d2r = Math.PI / 180,
+            p1, p2;
+        
+        if (pointsCount > 2) {
+          for (let i = 0; i < pointsCount; i++) {
+            p1 = latLngs[i];
+            p2 = latLngs[(i + 1) % pointsCount];
+            area += ((p2.lng - p1.lng) * d2r) * 
+                    (2 + Math.sin(p1.lat * d2r) + Math.sin(p2.lat * d2r));
+          }
+          area = area * 6378137.0 * 6378137.0 / 2.0;
+        }
+        
+        return Math.abs(area);
+      }
+    };
+
+    function toggleSubMenus() {
+            // Mostrar/ocultar submenús según los checkboxes seleccionados
+            document.getElementById('bosqueSecundarioGroup').style.display = 
+                document.getElementById('bosqueSecundarioCheck').checked ? 'block' : 'none';
+            
+            document.getElementById('sistemasAgroforestalesGroup').style.display = 
+                document.getElementById('sistemasAgroforestalesCheck').checked ? 'block' : 'none';
+            
+            // Actualizar campos de hectáreas
+            updateHectareasFields();
+        }
+        
+        function toggleSubSubMenus() {
+            const sistemasAgroforestales = document.getElementById('sistemasAgroforestales').value;
+            
+            // Ocultar todos los sub-submenús primero
+            document.getElementById('secuencialesGroup').style.display = 'none';
+            document.getElementById('simultaneosGroup').style.display = 'none';
+            
+            // Mostrar el sub-submenú correspondiente
+            if (sistemasAgroforestales === 'Secuenciales') {
+                document.getElementById('secuencialesGroup').style.display = 'block';
+            } else if (sistemasAgroforestales === 'Simultaneos') {
+                document.getElementById('simultaneosGroup').style.display = 'block';
+            }
+        }
+        
+        function toggleOtrasHectareas() {
+            const otrasOpciones = document.getElementById('otrasOpciones').value;
+            
+            if (otrasOpciones !== '') {
+                document.getElementById('otrasHectareaGroup').style.display = 'block';
+            } else {
+                document.getElementById('otrasHectareaGroup').style.display = 'none';
+            }
+        }
+        
+        function updateHectareasFields() {
+            const container = document.getElementById('hectareasContainer');
+            container.innerHTML = '';
+            
+            // Obtener todos los checkboxes marcados
+            const checkboxes = document.querySelectorAll('input[name="division"]:checked');
+            
+            checkboxes.forEach(checkbox => {
+                const div = document.createElement('div');
+                div.className = 'hectares-input';
+                div.style.marginTop = '15px';
+                
+                const label = document.createElement('label');
+                label.htmlFor = `hectareas_${checkbox.value}`;
+                label.textContent = `Hectáreas para ${checkbox.value}:`;
+                
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.id = `hectareas_${checkbox.value}`;
+                input.name = `hectareas_${checkbox.value}`;
+                input.min = '0';
+                input.step = '0.01';
+                input.placeholder = 'Ingrese la cantidad en hectáreas';
+                input.className = 'form-control';
+                
+                div.appendChild(label);
+                div.appendChild(input);
+                container.appendChild(div);
+            });
+        }
+  </script>
+</body>
+</html>

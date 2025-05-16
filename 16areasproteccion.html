@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formato de Áreas de Protección - CUSAF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.5;
+            color: #333;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #2c6e31;
+            padding-bottom: 15px;
+        }
+        .logo {
+           height: 60px;
+        }
+        .header-right {
+            text-align: right;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .document-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 25px 0;
+            color: #2c6e31;
+        }
+        .date {
+            text-align: right;
+            margin: 20px 0;
+        }
+        .recipient {
+            margin-bottom: 20px;
+        }
+        .reference {
+            margin-bottom: 25px;
+        }
+        .content {
+            text-align: justify;
+        }
+        .signature-section {
+            margin-top: 50px;
+        }
+        .signature-line {
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        .signature-box {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-top: 40px;
+        }
+        .signature {
+            border-top: 1px solid black;
+            width: 250px;
+            text-align: center;
+            padding-top: 5px;
+        }
+        input, select, textarea {
+            border: none;
+            border-bottom: 1px solid #2c6e31;
+            padding: 5px;
+            margin: 2px 0;
+            width: 100%;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            background-color: #f9fffa;
+        }
+        textarea {
+            border: 1px solid #2c6e31;
+            min-height: 80px;
+            resize: vertical;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-bottom: 2px solid #2c6e31;
+            background-color: #f0fff0;
+        }
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat, repeat;
+            background-position: right .7em top 50%, 0 0;
+            background-size: .65em auto, 100%;
+            padding-right: 20px;
+        }
+        .inline-field {
+            display: inline-block;
+            width: auto;
+            margin: 0 5px;
+        }
+        .field-container {
+            margin: 8px 0;
+        }
+        .field-label {
+            font-weight: bold;
+            color: #2c6e31;
+            margin-right: 5px;
+        }
+        .section-title {
+            background-color: #2c6e31;
+            color: white;
+            padding: 8px 15px;
+            margin: 25px 0 15px 0;
+            font-weight: bold;
+        }
+        button {
+            background-color: #2c6e31;
+            color: white;
+            padding: 10px 15px;
+            margin: 20px 5px 20px 0;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #1e5123;
+        }
+        .no-print {
+            margin-top: 40px;
+            justify-content: center;
+        }
+        p {
+            margin: 12px 0;
+        }
+        .checkbox-group {
+            margin: 15px 0;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+        }
+        .checkbox-container input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        .protection-area {
+            border: 1px solid #2c6e31;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9fffa;
+            border-radius: 5px;
+        }
+        .add-area-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .remove-area-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+            float: right;
+        }
+        .coordinates-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .coordinates-table th {
+            background-color: #e8f5e9;
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #2c6e31;
+        }
+        .coordinates-table td {
+            padding: 8px;
+            border: 1px solid #2c6e31;
+        }
+        .add-row-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+        @media print {
+            body {
+                padding: 0;
+                font-size: 12pt;
+            }
+            input, select, textarea {
+                font-size: 12pt;
+                border-bottom: 1px solid #999;
+                background: none;
+            }
+            .no-print {
+                display: none;
+                justify-content: center;
+            }
+            select {
+                appearance: none;
+                background: none;
+            }
+            .section-title {
+                background-color: white;
+                color: black;
+                border: 1px solid black;
+            }
+            button.add-area-btn, button.add-row-btn, button.remove-area-btn {
+                display: none;
+            }
+        }
+        .container {
+            box-shadow: none;
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        .title {
+            text-align: center;
+            color: #2e7d32;
+            margin: 20px 0;
+        }
+        .area-counter {
+            background-color: #e8f5e9;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <img src="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\doc\Logo.png" class="logo">
+        <div class="header-right">
+            <div class="form-group">
+                <label class="field-label">ATFFS/ARFFS:</label>
+                <select id="atffs" style="width: 200px; display: inline-block;">
+                    <option value=""> </option>
+                    <option value="Cajamarca">Cajamarca</option>
+                    <option value="Piura">Piura</option>
+                    <option value="Lambayeque">Lambayeque</option>
+                    <option value="Ancash">Ancash</option>
+                    <option value="Lima">Lima</option>
+                    <option value="SierraCentral">Sierra Central</option>
+                    <option value="SelvaCentral">Selva Central</option>
+                    <option value="Apurimac">Apurimac</option>
+                    <option value="Ica">Ica</option>
+                    <option value="Arequipa">Arequipa</option>
+                    <option value="MoqueguaTacna">Moquegua-Tacna</option>
+                    <option value="Puno">Puno</option>
+                    <option value="Cusco">Cusco</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="field-label">N° Expediente:</label>
+                <input type="text" id="num_expediente" style="width: 100px; display: inline-block;">
+            </div>
+            <div class="date">
+                <select id="day" style="width: 60px; display: inline-block;">
+                    <option value="">Día</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                    <option value="31">31</option>
+                </select>
+                de
+                <select id="month" style="width: 120px; display: inline-block;">
+                    <option value="">Mes</option>
+                    <option value="enero">enero</option>
+                    <option value="febrero">febrero</option>
+                    <option value="marzo">marzo</option>
+                    <option value="abril">abril</option>
+                    <option value="mayo">mayo</option>
+                    <option value="junio">junio</option>
+                    <option value="julio">julio</option>
+                    <option value="agosto">agosto</option>
+                    <option value="septiembre">septiembre</option>
+                    <option value="octubre">octubre</option>
+                    <option value="noviembre">noviembre</option>
+                    <option value="diciembre">diciembre</option>
+                </select>
+                del
+                <select id="year" style="width: 80px; display: inline-block;">
+                    <option value="">Año</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <h1 class="title">FORMATO DE ÁREAS DE PROTECCIÓN</h1>
+    
+    <div class="recipient">
+        <div class="field-container">
+            <span class="field-label">Señor(a):</span>
+            <input type="text" id="recipient_name" placeholder="">
+        </div>
+        <div class="field-container">
+            <strong>Administrador(a) Técnico Forestal y de Fauna Silvestre </strong><br>
+        </div>
+    </div>
+    
+    <div class="reference">
+        <div class="field-container">
+            <span class="field-label">Referencia:</span>
+            <input type="text" id="reference_number" placeholder="N° de Expediente o Proceso CUSAF">
+        </div>
+    </div>
+    
+    <div class="content">
+        <p>
+            Yo <input type="text" id="full_name" placeholder="" style="width: 300px; display: inline-block;">,
+            identificado(a) con D.N.I. N° <input type="text" id="dni" placeholder="" maxlength="8" style="width: 100px; display: inline-block;">, 
+            solicitante del Contrato de Cesión en Uso para Sistemas Agroforestales (CUSAF) para el predio denominado
+            <input type="text" id="area_name" placeholder="" style="width: 250px; display: inline-block;">, 
+            ubicado en el distrito de <input type="text" id="district" placeholder="" style="width: 150px; display: inline-block;">, 
+            provincia de 
+            <select id="province" style="width: 150px; display: inline-block;">
+                <option value=""> </option>
+                <option value="Chanchamayo">Chanchamayo</option>
+                <option value="Chupaca">Chupaca</option>
+                <option value="Concepción">Concepción</option>
+                <option value="Huancayo">Huancayo</option>
+                <option value="Jauja">Jauja</option>
+                <option value="Junín">Junín</option>
+                <option value="Satipo">Satipo</option>
+                <option value="Tarma">Tarma</option>
+                <option value="Yauli">Yauli</option>
+                <option value="Otra">Otra</option>
+            </select>, 
+            departamento de
+            <select id="department" style="width: 120px; display: inline-block;">
+                <option value=""> </option>
+                <option value="Amazonas">Amazonas</option>
+                <option value="Áncash">Áncash</option>
+                <option value="Apurímac">Apurímac</option>
+                <option value="Arequipa">Arequipa</option>
+                <option value="Ayacucho">Ayacucho</option>
+                <option value="Cajamarca">Cajamarca</option>
+                <option value="Callao">Callao</option>
+                <option value="Cusco">Cusco</option>
+                <option value="Huancavelica">Huancavelica</option>
+                <option value="Huánuco">Huánuco</option>
+                <option value="Ica">Ica</option>
+                <option value="Junín">Junín</option>
+                <option value="La Libertad">La Libertad</option>
+                <option value="Lambayeque">Lambayeque</option>
+                <option value="Lima">Lima</option>
+                <option value="Loreto">Loreto</option>
+                <option value="Madre de Dios">Madre de Dios</option>
+                <option value="Moquegua">Moquegua</option>
+                <option value="Pasco">Pasco</option>
+                <option value="Piura">Piura</option>
+                <option value="Puno">Puno</option>
+                <option value="San Martín">San Martín</option>
+                <option value="Tacna">Tacna</option>
+                <option value="Tumbes">Tumbes</option>
+                <option value="Ucayali">Ucayali</option>
+            </select>,
+            ante usted con el debido respeto me presento y expongo:
+        </p>
+        
+        <p>
+            De conformidad con lo establecido en la normativa forestal y de fauna silvestre vigente, presento la descripción 
+            detallada de las áreas de protección identificadas dentro del área propuesta para el Contrato CUSAF, 
+            las cuales serán excluidas de las actividades productivas y mantenidas para la conservación:
+        </p>
+        
+        <div class="section-title">ÁREAS DE PROTECCIÓN EN EL PREDIO</div>
+        
+        <div class="checkbox-group">
+            <div class="checkbox-container">
+                <input type="checkbox" id="has_protection_areas"> <label for="has_protection_areas">Se han identificado áreas de protección en el predio.</label>
+            </div>
+            <div class="checkbox-container">
+                <input type="checkbox" id="no_protection_areas"> <label for="no_protection_areas">No se han identificado áreas de protección en el predio.</label>
+            </div>
+        </div>
+        
+        <div id="protection_areas_container">
+            <!-- Área de protección 1 (template) -->
+            <div class="protection-area" id="area_1">
+                <h3><span class="area-counter">1</span>ÁREA DE PROTECCIÓN</h3>
+                <button type="button" class="remove-area-btn" onclick="removeArea(1)">Eliminar</button>
+                
+                <div class="field-container">
+                    <span class="field-label">Tipo de área de protección:</span>
+                    <select id="protection_type_1">
+                        <option value=""> </option>
+                        <option value="nacientes">Nacientes o fuentes de agua</option>
+                        <option value="riberas">Fajas marginales o riberas de ríos y quebradas</option>
+                        <option value="humedales">Humedales o áreas inundables</option>
+                        <option value="pendientes">Áreas con pendientes muy pronunciadas (mayor a 45°)</option>
+                        <option value="bosque">Bosque primario o en regeneración natural</option>
+                        <option value="fauna">Área de refugio de fauna silvestre</option>
+                        <option value="otro">Otro tipo</option>
+                    </select>
+                </div>
+                
+                <div class="field-container">
+                    <span class="field-label">Si marcó "Otro tipo", especifique:</span>
+                    <input type="text" id="protection_other_1">
+                </div>
+                
+                <div class="field-container">
+                    <span class="field-label">Extensión aproximada (hectáreas):</span>
+                    <input type="number" id="protection_area_1" step="0.01" min="0">
+                </div>
+                
+                <div class="field-container">
+                    <span class="field-label">Descripción del área de protección:</span>
+                    <textarea id="protection_description_1" placeholder="Describa las características y la importancia de conservación de esta área..."></textarea>
+                </div>
+                
+                <div class="field-container">
+                    <span class="field-label">Coordenadas UTM WGS84 de los vértices del área de protección:</span>
+                    <table class="coordinates-table" id="coordinates_table_1">
+                        <thead>
+                            <tr>
+                                <th>Vértice</th>
+                                <th>Este (X)</th>
+                                <th>Norte (Y)</th>
+                                <th>Zona UTM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                                <td>
+                                    <select>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                                <td>
+                                    <select>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                                <td>
+                                    <select>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                                <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                                <td>
+                                    <select>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="add-row-btn" onclick="addCoordinateRow(1)">+ Añadir vértice</button>
+                </div>
+            </div>
+        </div>
+        
+        <button type="button" class="add-area-btn" id="add_area_btn">+ Añadir otra área de protección</button>
+        
+        <div class="section-title">COMPROMISOS DE CONSERVACIÓN</div>
+        
+        <p>
+            Me comprometo a implementar acciones de conservación y protección en las áreas identificadas, que incluirán:
+        </p>
+        
+        <div class="checkbox-group">
+            <div class="checkbox-container">
+                <input type="checkbox" id="commit_no_intervention"> <label for="commit_no_intervention">No intervención en áreas de protección</label>
+            </div>
+            <div class="checkbox-container">
+                <input type="checkbox" id="commit_monitoring"> <label for="commit_monitoring">Monitoreo periódico de áreas de protección</label>
+            </div>
+            <div class="checkbox-container">
+                <input type="checkbox" id="commit_restoration"> <label for="commit_restoration">Restauración de áreas degradadas</label>
+            </div>
+            <div class="checkbox-container">
+                <input type="checkbox" id="commit_fire"> <label for="commit_fire">Prevención de incendios</label>
+            </div>
+            <div class="checkbox-container">
+                <input type="checkbox" id="commit_hunting"> <label for="commit_hunting">Control de caza y extracción no autorizada</label>
+            </div>
+            <div class="checkbox-container">
+                <input type="checkbox" id="commit_other"> <label for="commit_other">Otras acciones:</label>
+                <input type="text" id="commit_other_detail" placeholder="Especifique" style="width: 300px; display: inline-block; margin-left: 10px;">
+            </div>
+        </div>
+        
+        <div class="field-container">
+            <span class="field-label">Observaciones adicionales:</span>
+            <textarea id="additional_comments" placeholder="Ingrese cualquier información adicional relevante sobre las áreas de protección..."></textarea>
+        </div>
+        
+        <p>Declaro bajo juramento que la información proporcionada es veraz y me comprometo a conservar y proteger las áreas señaladas en el presente documento, de acuerdo con la legislación forestal y de fauna silvestre vigente.</p>
+    </div>
+    
+    <div class="signature-section">
+        <div class="signature-line">
+            Sin otro particular, quedo de ustedes.
+        </div>
+        <div class="signature-line">
+            Atentamente,
+        </div>
+        
+        <div class="signature-box">
+            <div class="signature">
+                <input type="text" id="signature_line" placeholder="Firma">
+            </div>
+            <div style="margin-top: 10px;">
+                <strong>Nombre:</strong> <input type="text" id="signature_name" placeholder="Nombre completo" style="width: 300px; display: inline-block;"><br>
+                <strong>DNI:</strong> <input type="text" id="signature_dni" placeholder="DNI" maxlength="8" style="width: 100px; display: inline-block;">
+            </div>
+        </div>
+    </div>
+    
+    <div class="no-print">
+        <button onclick="window.print()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: text-bottom; margin-right: 5px;">
+                <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+            </svg>
+            Imprimir / Guardar como PDF
+        </button>
+    </div>
+</div>
+
+<script>
+    // Variables globales
+    let areaCounter = 1;
+    
+    // Función para inicializar el formulario
+    document.addEventListener('DOMContentLoaded', function() {
+        // Prellenar con la fecha actual
+        const today = new Date();
+        const day = today.getDate();
+        const month = today.getMonth();
+        const year = today.getFullYear();
+        
+        const monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
+                           "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+        
+        document.getElementById('day').value = day;
+        document.getElementById('month').value = monthNames[month];
+        document.getElementById('year').value = year;
+        
+        // Configuración inicial de áreas de protección
+        setupProtectionAreasVisibility();
+        
+        // Configurar botón de añadir área
+        document.getElementById('add_area_btn').addEventListener('click', addProtectionArea);
+        
+        // Configurar checkbox de áreas de protección
+        document.getElementById('has_protection_areas').addEventListener('change', setupProtectionAreasVisibility);
+        document.getElementById('no_protection_areas').addEventListener('change', setupProtectionAreasVisibility);
+    });
+    
+    // Función para mostrar/ocultar áreas de protección
+    function setupProtectionAreasVisibility() {
+        const hasAreas = document.getElementById('has_protection_areas').checked;
+        const noAreas = document.getElementById('no_protection_areas').checked;
+        const areasContainer = document.getElementById('protection_areas_container');
+        const addAreaBtn = document.getElementById('add_area_btn');
+        
+        if (hasAreas) {
+            areasContainer.style.display = 'block';
+            addAreaBtn.style.display = 'block';
+            document.getElementById('no_protection_areas').checked = false;
+        } else if (noAreas) {
+            areasContainer.style.display = 'none';
+            addAreaBtn.style.display = 'none';
+            document.getElementById('has_protection_areas').checked = false;
+        }
+    }
+    
+    // Función para añadir una nueva área de protección
+    function addProtectionArea() {
+        areaCounter++;
+        const newAreaId = areaCounter;
+        
+        const newArea = document.createElement('div');
+        newArea.className = 'protection-area';
+        newArea.id = 'area_' + newAreaId;
+        
+        newArea.innerHTML = `
+            <h3><span class="area-counter">${newAreaId}</span>ÁREA DE PROTECCIÓN</h3>
+            <button type="button" class="remove-area-btn" onclick="removeArea(${newAreaId})">Eliminar</button>
+            
+            <div class="field-container">
+                <span class="field-label">Tipo de área de protección:</span>
+                <select id="protection_type_${newAreaId}">
+                    <option value=""> </option>
+                    <option value="nacientes">Nacientes o fuentes de agua</option>
+                    <option value="riberas">Fajas marginales o riberas de ríos y quebradas</option>
+                    <option value="humedales">Humedales o áreas inundables</option>
+                    <option value="pendientes">Áreas con pendientes muy pronunciadas (mayor a 45°)</option>
+                    <option value="bosque">Bosque primario o en regeneración natural</option>
+                    <option value="fauna">Área de refugio de fauna silvestre</option>
+                    <option value="otro">Otro tipo</option>
+                </select>
+            </div>
+            
+            <div class="field-container">
+                <span class="field-label">Si marcó "Otro tipo", especifique:</span>
+                <input type="text" id="protection_other_${newAreaId}">
+            </div>
+            
+            <div class="field-container">
+                <span class="field-label">Extensión aproximada (hectáreas):</span>
+                <input type="number" id="protection_area_${newAreaId}" step="0.01" min="0">
+            </div>
+            
+            <div class="field-container">
+                <span class="field-label">Descripción del área de protección:</span>
+                <textarea id="protection_description_${newAreaId}" placeholder="Describa las características y la importancia de conservación de esta área..."></textarea>
+            </div>
+            
+            <div class="field-container">
+                <span class="field-label">Coordenadas UTM WGS84 de los vértices del área de protección:</span>
+                <table class="coordinates-table" id="coordinates_table_${newAreaId}">
+                    <thead>
+                        <tr>
+                            <th>Vértice</th>
+                            <th>Este (X)</th>
+                            <th>Norte (Y)</th>
+                            <th>Zona UTM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                            <td>
+                                <select>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                            <td>
+                                <select>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                            <td>
+                                <select>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+                            <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+                            <td>
+                                <select>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="add-row-btn" onclick="addCoordinateRow(${newAreaId})">+ Añadir vértice</button>
+            </div>
+        `;
+        
+        document.getElementById('protection_areas_container').appendChild(newArea);
+    }
+    
+    // Función para eliminar un área de protección
+    function removeArea(areaId) {
+        if (confirm('¿Está seguro que desea eliminar esta área de protección?')) {
+            const areaToRemove = document.getElementById('area_' + areaId);
+            areaToRemove.remove();
+            
+            // Reorganizar los números de las áreas restantes
+            const areas = document.querySelectorAll('.protection-area');
+            areas.forEach((area, index) => {
+                const counter = area.querySelector('.area-counter');
+                if (counter) {
+                    counter.textContent = index + 1;
+                }
+            });
+            
+            // Actualizar el contador si es necesario
+            if (areas.length === 0) {
+                areaCounter = 0;
+            }
+        }
+    }
+    
+    // Función para añadir una fila de coordenadas a una tabla
+    function addCoordinateRow(areaId) {
+        const table = document.getElementById('coordinates_table_' + areaId);
+        const tbody = table.querySelector('tbody');
+        const rowCount = tbody.rows.length;
+        
+        const newRow = tbody.insertRow();
+        newRow.innerHTML = `
+            <td>${rowCount + 1}</td>
+            <td><input type="number" step="0.01" placeholder="Ej: 345678.45"></td>
+            <td><input type="number" step="0.01" placeholder="Ej: 8765432.12"></td>
+            <td>
+                <select>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                </select>
+            </td>
+        `;
+    }
+</script>
+</body>
+</html>
