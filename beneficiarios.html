@@ -571,6 +571,68 @@
     .is-invalid + .invalid-feedback {
       display: block;
     }
+
+	   .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal .card {
+      width: 500px;
+      max-width: 90%;
+    }
+
+    .modal .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal .card-header button {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--gray);
+    }
+
+    .modal .card-header button:hover {
+      color: var(--dark);
+    }
+	  /* File upload */
+    .file-upload {
+      border: 2px dashed #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+    }
+    
+    .file-upload:hover {
+      border-color: var(--primary);
+    }
+    
+    .file-upload i {
+      font-size: 28px;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    
+    .file-upload p {
+      margin: 0;
+      color: var(--gray);
+    }
   </style>
 </head>
 <body>
