@@ -3,11 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Gestión CUSAF - Formulario de Solicitud</title>
+  <title>Sistema CUSAF - Datos Agrícolas-Pecuarios</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-  <!-- Leaflet para mapas -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     :root {
       --primary: #2E7D32;
@@ -54,7 +51,7 @@
       margin-bottom: 20px;
     }
     
-    .sidebar-header h2 {
+    .sidebar-header h3 {
       font-size: 20px;
       font-weight: 600;
     }
@@ -104,35 +101,6 @@
     .page-title {
       font-size: 24px;
       color: var(--dark);
-    }
-    
-    .breadcrumb {
-      display: flex;
-      list-style: none;
-      background-color: #fff;
-      padding: 8px 16px;
-      border-radius: 4px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    }
-    
-    .breadcrumb-item {
-      display: flex;
-      align-items: center;
-    }
-    
-    .breadcrumb-item + .breadcrumb-item::before {
-      content: "/";
-      padding: 0 8px;
-      color: var(--gray);
-    }
-    
-    .breadcrumb-item a {
-      color: var(--primary);
-      text-decoration: none;
-    }
-    
-    .breadcrumb-item.active {
-      color: var(--gray);
     }
     
     /* Cards */
@@ -197,6 +165,7 @@
       padding-right: 10px;
       padding-left: 10px;
       flex: 1;
+      min-width: 200px;
     }
     
     /* Buttons */
@@ -229,21 +198,6 @@
     
     .btn-secondary:hover {
       background-color: #616161;
-    }
-    
-    .btn-success {
-      background-color: var(--secondary);
-      color: white;
-    }
-    
-    .btn-warning {
-      background-color: var(--warning);
-      color: white;
-    }
-    
-    .btn-danger {
-      background-color: var(--danger);
-      color: white;
     }
     
     /* Tabs */
@@ -341,31 +295,8 @@
       font-weight: 500;
     }
     
-    /* Activities section */
-    .activities-section {
-      margin-top: 20px;
-      padding: 20px;
-      background-color: white;
-      border-radius: 8px;
-      border: 1px solid #eee;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    }
-
-    .activities-section h4 {
-      color: var(--dark);
-      margin-bottom: 15px;
-      font-size: 16px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .activities-section h4 i {
-      color: var(--primary);
-    }
-	
-	 .section-header {
+    /* Sections */
+    .section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -393,50 +324,28 @@
       transform: rotate(-90deg);
     }
 
-    /* Species list */
-    .species-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 10px;
+    /* Checkbox and Radio */
+    .checkbox-group, .radio-group {
+      margin-top: 5px;
     }
-
-    .species-item {
-      background-color: var(--light-gray);
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 8px 12px;
+    
+    .checkbox-item, .radio-item {
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 14px;
-    }
-
-    .species-item i {
-      color: var(--danger);
-      cursor: pointer;
-      font-size: 12px;
-    }
-
-    .add-species {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .add-species input {
-      flex: 1;
-    }
-
-    .add-species button {
-      padding: 10px 12px;
     }
     
+    .checkbox-item input, .radio-item input {
+      margin-right: 8px;
+    }
+    
+    /* Required field indicator */
     .required::after {
-      content: ' (*)';
+      content: ' *';
       color: var(--danger);
     }
     
+    /* Alert */
     .alert {
       padding: 12px 15px;
       border-radius: 4px;
@@ -451,6 +360,30 @@
       color: #0D47A1;
       border-left: 4px solid #2196F3;
     }
+    
+    /* Map container */
+    .map-container {
+      height: 300px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #ddd;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+      }
+      
+      .form-col {
+        min-width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -461,113 +394,108 @@
         <i class="fas fa-leaf"></i>
         <h3>SISTEMA CUSAF</h3>
       </div>
-      <ul class="nav-menu">
+       <ul class="nav-menu">
         <li class="nav-item">
           <a href="index.html" class="nav-link">
             <i class="fas fa-tachometer-alt"></i>
             <span>Inicio</span>
           </a>
         </li>
-        <li class="nav-item ">
+        <li class="nav-item">
           <a href="prime.html" class="nav-link">
             <i class="fas fa-map-marked-alt"></i>
             <span>Registro Áreas Potenciales</span>
           </a>
         </li>
-                
-          <a href="beneficiarios.html" class="nav-link active" onclick="toggleSubmenu('beneficiarios-menu')">
+        <li class="nav-item">
+          <a href="beneficiarios.html" class="nav-link active">
             <i class="fas fa-users"></i>
             <span>Registro Potenciales Beneficiarios</span>
           </a>
-                    
-            <li class="nav-item">
-              <a href="#" class="nav-link" onclick="showSection('listado-section')">
-                <i class="fas fa-list"></i>
-                <span>Listado</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link" onclick="showSection('reportes-section')">
-                <i class="fas fa-chart-bar"></i>
-                <span>Reportes</span>
-              </a>
-            </li>
-                        
-      
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-list"></i>
+            <span>Listado</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-chart-bar"></i>
+            <span>Reportes</span>
+          </a>
+        </li>
       </ul>
     </div>
     
     <!-- Main Content -->
     <div class="main-content">
       <div class="page-header">
-       
+        <h1 class="page-title">Registro de Potenciales Beneficiarios</h1>
       </div>
-      
-      <div class="card">
+       <div class="card">
         <div class="card-body">
-             <div class="process-steps">
-              <div class="step active">
-                <div class="step-icon"><i class="fas fa-male"></i></div>
-                <div class="step-title">Presentación posibles Beneficiarios</div>
-              </div>
-              <div class="step">
-                <div class="step-icon"><i class="fas fa-tree"></i></div>
-                <div class="step-title">Trabajo de Campo</div>
-              </div>
-              <div class="step">
-                <div class="step-icon"><i class="fas fa-pencil"></i></div>
-                <div class="step-title">Elaboración del informe Tecnico</div>
-              </div>
-              <div class="step">
-                <div class="step-icon"><i class="fas fa-check"></i></div>
-                <div class="step-title">Otorgamiento del Derecho</div>
-              </div>
-              <div class="step">
-                <div class="step-icon"><i class="fas fa-gavel"></i></div>
-                <div class="step-title">Recursos Administrativos</div>
-              </div>
-              <div class="step">
-                <div class="step-icon"><i class="fas fa-handshake"></i></div>
-                <div class="step-title">Suscripcion del contrato</div>
-              </div>
+          <div class="process-steps">
+            <div class="step active">
+              <div class="step-icon"><i class="fas fa-male"></i></div>
+              <div class="step-title">Presentación posibles Beneficiarios</div>
             </div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-tree"></i></div>
+              <div class="step-title">Trabajo de Campo</div>
+            </div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-pencil"></i></div>
+              <div class="step-title">Elaboración del informe Tecnico</div>
+            </div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-check"></i></div>
+              <div class="step-title">Otorgamiento del Derecho</div>
+            </div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-gavel"></i></div>
+              <div class="step-title">Recursos Administrativos</div>
+            </div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-handshake"></i></div>
+              <div class="step-title">Suscripcion del contrato</div>
+            </div>
+          </div>
           
-          <div class="alert alert-info">
+         <div class="alert alert-info">
             <i class="fas fa-info-circle"></i>
-            Complete toda la información agrícola y pecuaria solicitada. Los campos marcados con (*) son obligatorios.
+            Complete toda la informacion solicitada. Los campos marcados con(*)son obligatorios.
           </div>
         </div>
       </div>
       
       <div class="card">
         <div class="card-body">
-         <div class="tabs" id="formTabs">
-			 
-           <a href="beneficiarios.html"><div class="tab-item active" data-tab="tab1"><i class="fas fa-user"></i>Datos Generales</div></a>
-           <a href="potencialesbeneficiarios_socioeconomico.html"><div class="tab-item active" data-tab="tab2"><i class="fas fa-money-bill-wave"></i> Datos Socioeconómicos</div></a>
-           <a href="potencialesbeneficiarios_datosagricolas.html"><div class="tab-item active" data-tab="tab3"><i class="fas fa-tractor"></i> Datos Agrícola-Pecuaria</div></a>
-		   <a href="potencialesbeneficiarios_division.html"><div class="tab-item " data-tab="tab1"><i class="fas fa-map-marked-alt"></i>Division del Área</div></a>
-           <a href="potencialesbeneficiarios_documentos.html"><div class="tab-item" data-tab="tab4"><i class="fas fa-file-alt"></i> Documentos-Requisitos</div></a>
+          <div class="tabs">
+            <a href="datos-generales.html" class="tab-item active"><i class="fas fa-user"></i> Datos Generales</a>
+            <a href="datos-socioeconomicos.html" class="tab-item active"><i class="fas fa-money-bill-wave"></i> Socioeconómicos</a>
+            <a href="#" class="tab-item active"><i class="fas fa-tractor"></i> Agrícola-Pecuario</a>
+          
           </div>
           
-          <div id="tab3" class="tab-content active">
-            <form>
-              <!-- Sección de datos agrícolas -->
-             <div class="section-header" )">
-                <h3><i class="fas fa-seedling"></i> Actividades Agricolas</h3>
-              
+          <form id="formAgricolaPecuario">
+            <!-- Sección 1: Información Básica de la Unidad Productiva -->
+            <div class="section-header">
+              <h3><i class="fas fa-info-circle"></i> Información Básica de la Unidad Productiva</h3>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label required">Nombre de la unidad productiva</label>
+                  <input type="text" class="form-control" name="nombre_unidad" placeholder="Ej. Finca 'Los Alamos'" required>
+                </div>
               </div>
-                  <div class="form-row">
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label required">Nombre de la unidad productiva</label>
-                      <input type="text" class="form-control" name="nombre_unidad" placeholder="Ej. Finca 'Los Alamos'">
-                    </div>
-                  </div>
-                  <div class="form-col">
-                       <div class="form-group">
-                <label class="required">Tipo de Productor:</label>
-                <select name="tipo_productor" class="form-control" required onchange="toggleOtherField(this, 'otro_tipo_productor')">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label required">Tipo de productor</label>
+                  <select class="form-control" name="tipo_productor" required onchange="toggleOtherField(this, 'otro_tipo_productor')">
                     <option value="">Seleccione...</option>
                     <option value="Agricultor">Agricultor</option>
                     <option value="Ganadero">Ganadero</option>
@@ -576,22 +504,20 @@
                     <option value="Apicultor">Apicultor</option>
                     <option value="Forestal">Forestal</option>
                     <option value="otro">Otro</option>
-                </select>
-                <div id="otro_tipo_productor" class="form-control">
-                    <label>Especifique otro tipo:</label>
-                    <input type="text" name="otro_tipo_productor_text" class="form-control">
+                  </select>
                 </div>
+                <div id="otro_tipo_productor" class="form-group" style="display:none;">
+                  <label class="form-label">Especifique otro tipo</label>
+                  <input type="text" class="form-control" name="otro_tipo_productor">
+                </div>
+              </div>
             </div>
-                  </div>
-                </div>
-				
-				
-				
-				    <div class="form-row">
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label required">Tipo de tenencia</label>
-                      <select class="form-control" name="tenencia" required onchange="toggleOtherField(this, 'detalle_tenencia')">
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label required">Tipo de tenencia</label>
+                  <select class="form-control" name="tenencia" required onchange="toggleOtherField(this, 'detalle_tenencia')">
                     <option value="">Seleccione...</option>
                     <option value="Propio con título">Propio con título</option>
                     <option value="Propio sin título">Propio sin título</option>
@@ -601,449 +527,1442 @@
                     <option value="Posesión">Posesión</option>
                     <option value="Cesión en uso">Cesión en uso</option>
                     <option value="otro">Otro</option>
-                </select>
-				   <div id="detalle_tenencia" class="form-control">
-                    <div class="form-group">
-                        <label>Detalles de tenencia:</label>
-                        <textarea class="form-control" name="detalle_tenencia_text" rows="2"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Años en la propiedad:</label>
-                        <input class="form-control" type="number" name="anos_propiedad" min="0">
-                    </div>
-                </div>
-                    </div>
-                  </div>
-                
-                </div>
-				
-				
-		  <div class="form-row">
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label required">Uso actual de la tierra (marque todos los que correspondan):</label>
-                       <div class="form-control">
-                    <input type="checkbox" name="uso_agricola" value="1"> Agrícola<br>
-                    <input type="checkbox" name="uso_ganadero" value="1"> Ganadero<br>
-                    <input type="checkbox" name="uso_forestal" value="1"> Forestal<br>
-                    <input type="checkbox" name="uso_descanso" value="1"> Descanso/barbecho<br>
-                    <input type="checkbox" name="uso_otros" value="1" onclick="toggleOtherField(this, 'otros_usos')"> Otros
-                    <div id="otros_usos" class="other-field">
-                        <label>Especifique otros usos:</label>
-                        <textarea class="form-control" name="otros_usos_text" rows="2"></textarea>
-                    </div>
-                </div>
-                    </div>
-                  </div>
-                 
-                </div>
-				
-				
-				
-				
-				
-                <div class="form-row">
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label required">Área Total (ha)</label>
-                     <input class="form-control" type="number" name="area_total" step="0.01" min="0" required>
-                    </div>
-                  </div>
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label required">Área cultivable (ha)</label>
-                      <input type="number" class="form-control" name="area_cultivada" step="0.01" min="0" required>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="form-row">
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label required">Cultivos Principales</label>
-                      <select class="form-control" name="cultivo_principal" id="cultivo_principal" required>
-                        <option value="">Seleccione</option>
-                        <option value="cafe">Café</option>
-                        <option value="cacao">Cacao</option>
-                        <option value="coca">Coca</option>
-                        <option value="yuca">Yuca</option>
-                        <option value="platano">Plátano</option>
-                        <option value="maiz">Maíz</option>
-                        <option value="arroz">Arroz</option>
-                        <option value="frijol">Frijol</option>
-                        <option value="otro">Otros</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label">Otros cultivos (especificar)</label>
-                      <input type="text" class="form-control" name="otros_cultivos" id="otros_cultivos">
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="form-row">
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label required">Sistema de producción</label>
-                      <select class="form-control" name="sistema_produccion" required>
-                        <option value="">Seleccione</option>
-                        <option value="tradicional">Tradicional</option>
-                        <option value="tecnificado">Tecnificado</option>
-                        <option value="semi_tecnificado">Semi-tecnificado</option>
-                        <option value="agroecologico">Agroecológico</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label required">Sistema de riego</label>
-                      <select class="form-control" name="sistema_riego" required>
-                        <option value="">Seleccione</option>
-                        <option value="secano">Secano (lluvia)</option>
-                        <option value="gravedad">Gravedad</option>
-                        <option value="aspersion">Aspersión</option>
-                        <option value="goteo">Goteo</option>
-                        <option value="ninguno">No tiene</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="form-row">
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label required">Destino de la producción</label>
-                      <select class="form-control" name="destino_produccion" required>
-                        <option value="">Seleccione</option>
-                        <option value="autoconsumo">Autoconsumo</option>
-                        <option value="venta_local">Venta local</option>
-                        <option value="venta_regional">Venta regional</option>
-                        <option value="exportacion">Exportación</option>
-                        <option value="mixto">Mixto (consumo y venta)</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label">Rendimiento promedio (kg/ha)</label>
-                      <input type="number" class="form-control" name="rendimiento_promedio" min="0">
-                    </div>
-                  </div>
+                  </select>
                 </div>
               </div>
-              
-              <!-- Sección de datos pecuarios -->
-              <div class="section-header" )">
-                <h3><i class="fas fa-horse"></i> Actividades Pecuarias</h3>
-              
-              </div>
-                
-                <div class="form-row">
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label required">¿Realiza actividad pecuaria?</label>
-                      <select class="form-control" name="realiza_actividad_pecuaria" id="actividad_pecuaria" required>
-                        <option value="">Seleccione</option>
-                        <option value="si">Sí</option>
-                        <option value="no">No</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label">Área destinada a ganadería (hectáreas)</label>
-                      <input type="number" class="form-control" name="area_ganaderia" step="0.01" min="0">
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="form-row">
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label">Tipo de ganado principal</label>
-                      <select class="form-control" name="tipo_ganado_principal" id="tipo_ganado">
-                        <option value="">Seleccione</option>
-                        <option value="vacuno">Vacuno</option>
-                        <option value="ovino">Ovino</option>
-                        <option value="caprino">Caprino</option>
-                        <option value="porcino">Porcino</option>
-                        <option value="aves">Aves</option>
-                        <option value="cuyes">Cuyes</option>
-                        <option value="otro">Otro</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label">Número de cabezas</label>
-                      <input type="number" class="form-control" name="numero_cabezas" min="0">
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="form-row">
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label">Sistema de manejo</label>
-                      <select class="form-control" name="sistema_manejo">
-                        <option value="">Seleccione</option>
-                        <option value="extensivo">Extensivo</option>
-                        <option value="intensivo">Intensivo</option>
-                        <option value="semi_intensivo">Semi-intensivo</option>
-                        <option value="estabulado">Estabulado</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label">Finalidad principal</label>
-                      <select class="form-control" name="finalidad_principal">
-                        <option value="">Seleccione</option>
-                        <option value="carne">Carne</option>
-                        <option value="leche">Leche</option>
-                        <option value="doble_proposito">Doble propósito</option>
-                        <option value="cria">Cría</option>
-                        <option value="trabajo">Trabajo</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              
-              
-              <!-- Sección de sistemas agroforestales -->
-               <div class="section-header" )">
-                <h3><i class="fas fa-tree"></i> Sistemas Agroforestales</h3>
-              
-              </div>
-                
-                <div class="form-row">
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label required">¿Tiene sistema agroforestal?</label>
-                      <select class="form-control" name="tiene_sistema_agroforestal" id="sistema_agroforestal" required>
-                        <option value="">Seleccione</option>
-                        <option value="si">Sí</option>
-                        <option value="no">No</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label">Área con sistema agroforestal (hectáreas)</label>
-                      <input type="number" class="form-control" name="area_agroforestal" step="0.01" min="0">
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="form-row">
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label">Tipo de sistema agroforestal</label>
-                      <select class="form-control" name="tipo_sistema_agroforestal">
-                        <option value="">Seleccione</option>
-                        <option value="agrosilvicola">Agrosilvícola (cultivos y árboles)</option>
-                        <option value="silvopastoril">Silvopastoril (árboles y ganado)</option>
-                        <option value="agrosilvopastoril">Agrosilvopastoril (cultivos, árboles y ganado)</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label">Especies maderables principales</label>
-                      <select class="form-control" name="especies_maderables" id="especies_maderables">
-                        <option value="">Seleccione</option>
-                        <option value="caoba">Caoba</option>
-                        <option value="cedro">Cedro</option>
-                        <option value="tornillo">Tornillo</option>
-                        <option value="lupuna">Lupuna</option>
-                        <option value="eucalipto">Eucalipto</option>
-                        <option value="pino">Pino</option>
-                        <option value="aliso">Aliso</option>
-                        <option value="otro">Otros</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                
+              <div class="form-col">
                 <div class="form-group">
-                  <label class="form-label">Otras especies forestales (especifique)</label>
-                  <input type="text" class="form-control" name="otras_especies_forestales">
-                </div>
-                
-                <div class="form-group">
-                  <label class="form-label">Describa el arreglo agroforestal</label>
-                  <textarea class="form-control" name="descripcion_arreglo" rows="3" placeholder="Describa cómo se distribuyen los cultivos, árboles y/o ganado en su sistema agroforestal"></textarea>
-                </div>
-              
-              <!-- Información adicional -->
-               <div class="section-header" )">
-                <h3><i class="fas fa-info-circle"></i> Información Adicional</h3>
-              
-              </div>
-                
-                <div class="form-row">
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label">¿Recibe asistencia técnica?</label>
-                      <select class="form-control" name="recibe_asistencia_tecnica">
-                        <option value="">Seleccione</option>
-                        <option value="si">Sí</option>
-                        <option value="no">No</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-col">
-                    <div class="form-group">
-                      <label class="form-label">Institución que brinda asistencia</label>
-                      <input type="text" class="form-control" name="institucion_asistencia">
-                    </div>
-                  </div>
-                </div>
-			 <div class="form-row">
-                <div class="form-col" style="text-align: left;">
-                  <a href="potencialesbeneficiarios_socioeconomico.html"><button type="button" class="btn btn-secondary" onclick="showTab('tab1')">Anterior</button></a>
-                </div>
-                <div class="form-col" style="text-align: right;">
-                  <a href="potencialesbeneficiarios_division.html"><button type="button" class="btn btn-primary" onclick="showTab('tab3')">Guardar y Siguiente</button></a>
+                  <label class="form-label required">Años en la propiedad</label>
+                  <input type="number" class="form-control" name="anos_propiedad" min="0" required>
                 </div>
               </div>
-              </div>
-				
-                
-
             </div>
-           
-				  </div>
-                   </div>	
-				   </div>	
- <script>
-        // Función para mostrar/ocultar campos "Otro"
-        function toggleOtherField(selectElement, fieldId) {
-            const otherField = document.getElementById(fieldId);
-            if ((selectElement.value === 'otro' || selectElement.value === 'Si' || 
-                (selectElement.type === 'checkbox' && selectElement.checked)) && 
-                selectElement.value !== 'No') {
-                otherField.style.display = 'block';
-            } else {
-                otherField.style.display = 'none';
-                if (selectElement.type !== 'checkbox') {
-                    const inputs = otherField.querySelectorAll('input, textarea, select');
-                    inputs.forEach(input => {
-                        if (input.type !== 'checkbox' && input.type !== 'radio') {
-                            input.value = '';
-                        } else {
-                            input.checked = false;
-                        }
-                    });
-                }
-            }
+            
+            <div id="detalle_tenencia" class="form-group" style="display:none;">
+              <label class="form-label">Detalles adicionales de tenencia</label>
+              <textarea class="form-control" name="detalle_tenencia" rows="2"></textarea>
+            </div>
+            
+            <!-- Sección 2: Uso de la Tierra -->
+            <div class="section-header">
+              <h3><i class="fas fa-map"></i> Uso de la Tierra</h3>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label required">Uso actual de la tierra</label>
+                  <div class="checkbox-group">
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="uso_agricola" name="uso_tierra[]" value="Agrícola">
+                      <label for="uso_agricola">Agrícola</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="uso_ganadero" name="uso_tierra[]" value="Ganadero">
+                      <label for="uso_ganadero">Ganadero</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="uso_forestal" name="uso_tierra[]" value="Forestal">
+                      <label for="uso_forestal">Forestal</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="uso_descanso" name="uso_tierra[]" value="Descanso/barbecho">
+                      <label for="uso_descanso">Descanso/barbecho</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="uso_otros" name="uso_tierra[]" value="Otros" onclick="toggleOtherField(this, 'otros_usos')">
+                      <label for="uso_otros">Otros</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label required">Área total (ha)</label>
+                  <input type="number" class="form-control" name="area_total" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label required">Área cultivable (ha)</label>
+                  <input type="number" class="form-control" name="area_cultivable" step="0.01" min="0" required>
+                </div>
+              </div>
+            </div>
+            
+            <div id="otros_usos" class="form-group" style="display:none;">
+              <label class="form-label">Especifique otros usos</label>
+              <textarea class="form-control" name="otros_usos" rows="2"></textarea>
+            </div>
+            
+            <!-- Sección 3: División de la Parcela -->
+            <div class="section-header">
+              <h3><i class="fas fa-border-all"></i> División de la Parcela</h3>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label required">¿Cómo divide su parcela?</label>
+                  <select class="form-control" name="division_parcela" required>
+                    <option value="">Seleccione...</option>
+                    <option value="Lotes fijos">Lotes fijos (mismas áreas cada año)</option>
+                    <option value="Rotación">Rotación de cultivos</option>
+                    <option value="Asociación">Asociación de cultivos</option>
+                    <option value="Mixto">Sistema mixto</option>
+                    <option value="otro">Otro</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Número de lotes o divisiones</label>
+                  <input type="number" class="form-control" name="numero_lotes" min="1">
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Descripción de la división</label>
+              <textarea class="form-control" name="descripcion_division" rows="3" placeholder="Describa cómo organiza su parcela (cultivos por lote, rotaciones, etc.)"></textarea>
+            </div>
+            
+            <!-- Sección 4: Características del Suelo -->
+            <div class="section-header">
+              <h3><i class="fas fa-mountain"></i> Características del Suelo</h3>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label required">Tipo de suelo predominante</label>
+                  <select class="form-control" name="tipo_suelo" required>
+                    <option value="">Seleccione...</option>
+                    <option value="Arenoso">Arenoso</option>
+                    <option value="Arcilloso">Arcilloso</option>
+                    <option value="Limoso">Limoso</option>
+                    <option value="Franco">Franco</option>
+                    <option value="Franco-arenoso">Franco-arenoso</option>
+                    <option value="Franco-arcilloso">Franco-arcilloso</option>
+                    <option value="Orgánico">Orgánico</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Color del suelo</label>
+                  <select class="form-control" name="color_suelo">
+                    <option value="">Seleccione...</option>
+                    <option value="Negro">Negro</option>
+                    <option value="Gris">Gris</option>
+                    <option value="Marrón">Marrón</option>
+                    <option value="Rojo">Rojo</option>
+                    <option value="Amarillo">Amarillo</option>
+                    <option value="Blanco">Blanco</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Profundidad efectiva del suelo</label>
+                  <select class="form-control" name="profundidad_suelo">
+                    <option value="">Seleccione...</option>
+                    <option value="Superficial (<30 cm)">Superficial (&lt;30 cm)</option>
+                    <option value="Moderadamente profundo (30-60 cm)">Moderadamente profundo (30-60 cm)</option>
+                    <option value="Profundo (>60 cm)">Profundo (&gt;60 cm)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Pendiente del terreno</label>
+                  <select class="form-control" name="pendiente_terreno">
+                    <option value="">Seleccione...</option>
+                    <option value="Plano (0-2%)">Plano (0-2%)</option>
+                    <option value="Suave (2-5%)">Suave (2-5%)</option>
+                    <option value="Moderada (5-10%)">Moderada (5-10%)</option>
+                    <option value="Fuerte (10-20%)">Fuerte (10-20%)</option>
+                    <option value="Muy fuerte (>20%)">Muy fuerte (&gt;20%)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Problemas de suelo identificados (marque todos los que correspondan)</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="problema_erosion" name="problemas_suelo[]" value="Erosión">
+                  <label for="problema_erosion">Erosión</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="problema_compactacion" name="problemas_suelo[]" value="Compactación">
+                  <label for="problema_compactacion">Compactación</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="problema_acidez" name="problemas_suelo[]" value="Acidez">
+                  <label for="problema_acidez">Acidez</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="problema_salinidad" name="problemas_suelo[]" value="Salinidad">
+                  <label for="problema_salinidad">Salinidad</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="problema_baja_fertilidad" name="problemas_suelo[]" value="Baja fertilidad">
+                  <label for="problema_baja_fertilidad">Baja fertilidad</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="problema_ninguno" name="problemas_suelo[]" value="Ninguno">
+                  <label for="problema_ninguno">Ninguno</label>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Sección 5: Recursos Hídricos -->
+            <div class="section-header">
+              <h3><i class="fas fa-tint"></i> Recursos Hídricos</h3>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label required">Fuentes de agua disponibles</label>
+                  <div class="checkbox-group">
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="fuente_rio" name="fuentes_agua[]" value="Río">
+                      <label for="fuente_rio">Río</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="fuente_quebrada" name="fuentes_agua[]" value="Quebrada">
+                      <label for="fuente_quebrada">Quebrada</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="fuente_manantial" name="fuentes_agua[]" value="Manantial">
+                      <label for="fuente_manantial">Manantial</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="fuente_pozo" name="fuentes_agua[]" value="Pozo">
+                      <label for="fuente_pozo">Pozo</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="fuente_lluvia" name="fuentes_agua[]" value="Lluvia">
+                      <label for="fuente_lluvia">Lluvia</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="fuente_otros" name="fuentes_agua[]" value="Otros" onclick="toggleOtherField(this, 'otras_fuentes_agua')">
+                      <label for="fuente_otros">Otros</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label required">Sistema de riego</label>
+                  <select class="form-control" name="sistema_riego" required>
+                    <option value="">Seleccione...</option>
+                    <option value="Gravedad">Gravedad</option>
+                    <option value="Aspersión">Aspersión</option>
+                    <option value="Goteo">Goteo</option>
+                    <option value="Secano">Secano (lluvia)</option>
+                    <option value="Ninguno">No tiene</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Disponibilidad de agua</label>
+                  <select class="form-control" name="disponibilidad_agua">
+                    <option value="">Seleccione...</option>
+                    <option value="Todo el año">Todo el año</option>
+                    <option value="Estacional">Estacional</option>
+                    <option value="Escasa">Escasa</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div id="otras_fuentes_agua" class="form-group" style="display:none;">
+              <label class="form-label">Especifique otras fuentes de agua</label>
+              <textarea class="form-control" name="otras_fuentes_agua" rows="2"></textarea>
+            </div>
+            
+            <!-- Sección 6: Actividades Agrícolas -->
+            <div class="section-header">
+              <h3><i class="fas fa-seedling"></i> Actividades Agrícolas</h3>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label required">Cultivos principales</label>
+                  <select class="form-control" name="cultivo_principal" id="cultivo_principal" required>
+                    <option value="">Seleccione...</option>
+                    <option value="Café">Café</option>
+                    <option value="Cacao">Cacao</option>
+                    <option value="Maíz">Maíz</option>
+                    <option value="Arroz">Arroz</option>
+                    <option value="Papa">Papa</option>
+                    <option value="Yuca">Yuca</option>
+                    <option value="Plátano">Plátano</option>
+                    <option value="Frijol">Frijol</option>
+                    <option value="Hortalizas">Hortalizas</option>
+                    <option value="Frutales">Frutales</option>
+                    <option value="otro">Otros</option>
+                  </select>
+                </div>
+                <div id="otros_cultivos_container" class="form-group" style="display:none;">
+                  <label class="form-label">Especifique otros cultivos</label>
+                  <input type="text" class="form-control" name="otros_cultivos">
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Área destinada al cultivo principal (ha)</label>
+                  <input type="number" class="form-control" name="area_cultivo_principal" step="0.01" min="0">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Variedad o tipo de cultivo principal</label>
+                  <input type="text" class="form-control" name="variedad_cultivo_principal" placeholder="Ej. Café arábica, maíz amarillo, etc.">
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Otros cultivos secundarios</label>
+              <textarea class="form-control" name="cultivos_secundarios" rows="3" placeholder="Liste otros cultivos que tenga en menor proporción"></textarea>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label required">Sistema de producción</label>
+                  <select class="form-control" name="sistema_produccion" required>
+                    <option value="">Seleccione...</option>
+                    <option value="Tradicional">Tradicional</option>
+                    <option value="Tecnificado">Tecnificado</option>
+                    <option value="Semi-tecnificado">Semi-tecnificado</option>
+                    <option value="Agroecológico">Agroecológico</option>
+                    <option value="Orgánico">Orgánico</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label required">Destino de la producción</label>
+                  <select class="form-control" name="destino_produccion" required>
+                    <option value="">Seleccione...</option>
+                    <option value="Autoconsumo">Autoconsumo</option>
+                    <option value="Venta local">Venta local</option>
+                    <option value="Venta regional">Venta regional</option>
+                    <option value="Exportación">Exportación</option>
+                    <option value="Mixto">Mixto (consumo y venta)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Rendimiento promedio (kg/ha)</label>
+                  <input type="number" class="form-control" name="rendimiento_promedio" min="0">
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Manejo de plagas y enfermedades</label>
+                  <select class="form-control" name="manejo_plagas">
+                    <option value="">Seleccione...</option>
+                    <option value="Químico">Químico</option>
+                    <option value="Biológico">Biológico</option>
+                    <option value="Cultural">Cultural</option>
+                    <option value="Integrado">Integrado</option>
+                    <option value="Ninguno">Ninguno</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Sección 7: Actividades Pecuarias -->
+            <div class="section-header">
+              <h3><i class="fas fa-horse"></i> Actividades Pecuarias</h3>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label required">¿Realiza actividad pecuaria?</label>
+                  <select class="form-control" name="realiza_actividad_pecuaria" id="actividad_pecuaria" required onchange="togglePecuariaFields()">
+                    <option value="">Seleccione...</option>
+                    <option value="Si">Sí</option>
+                    <option value="No">No</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group" id="area_ganaderia_group" style="display:none;">
+                  <label class="form-label">Área destinada a ganadería (ha)</label>
+                  <input type="number" class="form-control" name="area_ganaderia" step="0.01" min="0">
+                </div>
+              </div>
+            </div>
+            
+            <div id="pecuaria_fields" style="display:none;">
+              <div class="form-row">
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label">Tipo de actividad pecuaria principal</label>
+                    <select class="form-control" name="tipo_actividad_pecuaria" id="tipo_actividad_pecuaria" onchange="togglePecuariaEspecifica()">
+                      <option value="">Seleccione...</option>
+                      <option value="Ganadería bovina">Ganadería bovina</option>
+                      <option value="Avicultura">Avicultura (aves)</option>
+                      <option value="Porcicultura">Porcicultura (cerdos)</option>
+                      <option value="Ovinos/Caprinos">Ovinos/Caprinos</option>
+                      <option value="Apicultura">Apicultura (abejas)</option>
+                      <option value="Piscicultura">Piscicultura (peces)</option>
+                      <option value="Cuyes">Crianza de cuyes</option>
+                      <option value="otro">Otro</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label">Número de cabezas o unidades</label>
+                    <input type="number" class="form-control" name="numero_cabezas" min="0">
+                  </div>
+                </div>
+              </div>
+              
+              <div id="pecuaria_especifica" style="display:none;">
+                <!-- Campos específicos para ganadería bovina -->
+                <div id="ganaderia_bovina_fields" style="display:none;">
+                  <div class="form-row">
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Raza principal del ganado</label>
+                        <input type="text" class="form-control" name="raza_ganado" placeholder="Ej. Brahman, Holstein, etc.">
+                      </div>
+                    </div>
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Tipo de producción</label>
+                        <select class="form-control" name="tipo_produccion_bovina">
+                          <option value="">Seleccione...</option>
+                          <option value="Carne">Carne</option>
+                          <option value="Leche">Leche</option>
+                          <option value="Doble propósito">Doble propósito</option>
+                          <option value="Cría">Cría</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Campos específicos para avicultura -->
+                <div id="avicultura_fields" style="display:none;">
+                  <div class="form-row">
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Tipo de aves</label>
+                        <select class="form-control" name="tipo_aves">
+                          <option value="">Seleccione...</option>
+                          <option value="Ponedoras">Ponedoras (huevo)</option>
+                          <option value="Engorde">Engorde (carne)</option>
+                          <option value="Mixto">Mixto</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Sistema de crianza</label>
+                        <select class="form-control" name="sistema_crianza_aves">
+                          <option value="">Seleccione...</option>
+                          <option value="Intensivo">Intensivo</option>
+                          <option value="Semi-intensivo">Semi-intensivo</option>
+                          <option value="Extensivo">Extensivo</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Campos específicos para apicultura -->
+                <div id="apicultura_fields" style="display:none;">
+                  <div class="form-row">
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Número de colmenas</label>
+                        <input type="number" class="form-control" name="numero_colmenas" min="0">
+                      </div>
+                    </div>
+                    <div class="form-col">
+                      <div class="form-group">
+                        <label class="form-label">Producción anual estimada (kg)</label>
+                        <input type="number" class="form-control" name="produccion_miel" min="0" step="0.1">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label">Sistema de manejo</label>
+                    <select class="form-control" name="sistema_manejo">
+                      <option value="">Seleccione...</option>
+                      <option value="Extensivo">Extensivo</option>
+                      <option value="Intensivo">Intensivo</option>
+                      <option value="Semi-intensivo">Semi-intensivo</option>
+                      <option value="Estabulado">Estabulado</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label">Alimentación principal</label>
+                    <select class="form-control" name="alimentacion_principal">
+                      <option value="">Seleccione...</option>
+                      <option value="Pastoreo">Pastoreo</option>
+                      <option value="Concentrado">Concentrado</option>
+                      <option value="Mixto">Mixto (pastoreo + concentrado)</option>
+                      <option value="Subproductos">Subproductos agrícolas</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Infraestructura pecuaria disponible</label>
+                <div class="checkbox-group">
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="infra_corrales" name="infraestructura_pecuaria[]" value="Corrales">
+                    <label for="infra_corrales">Corrales</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="infra_galpones" name="infraestructura_pecuaria[]" value="Galpones">
+                    <label for="infra_galpones">Galpones</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="infra_silos" name="infraestructura_pecuaria[]" value="Silos">
+                    <label for="infra_silos">Silos</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="infra_bebederos" name="infraestructura_pecuaria[]" value="Bebederos">
+                    <label for="infra_bebederos">Bebederos</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="infra_ordeño" name="infraestructura_pecuaria[]" value="Sala de ordeño">
+                    <label for="infra_ordeño">Sala de ordeño</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="infra_ninguno" name="infraestructura_pecuaria[]" value="Ninguno">
+                    <label for="infra_ninguno">Ninguno</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Sección 8: Sistemas Agroforestales -->
+            <div class="section-header">
+              <h3><i class="fas fa-tree"></i> Sistemas Agroforestales</h3>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label required">¿Tiene sistema agroforestal?</label>
+                  <select class="form-control" name="tiene_sistema_agroforestal" id="sistema_agroforestal" required onchange="toggleAgroforestalFields()">
+                    <option value="">Seleccione...</option>
+                    <option value="Si">Sí</option>
+                    <option value="No">No</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group" id="area_agroforestal_group" style="display:none;">
+                  <label class="form-label">Área con sistema agroforestal (ha)</label>
+                  <input type="number" class="form-control" name="area_agroforestal" step="0.01" min="0">
+                </div>
+              </div>
+            </div>
+            
+            <div id="agroforestal_fields" style="display:none;">
+              <div class="form-row">
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label">Tipo de sistema agroforestal</label>
+                    <select class="form-control" name="tipo_sistema_agroforestal">
+                      <option value="">Seleccione...</option>
+                      <option value="Agrosilvícola">Agrosilvícola (cultivos y árboles)</option>
+                      <option value="Silvopastoril">Silvopastoril (árboles y ganado)</option>
+                      <option value="Agrosilvopastoril">Agrosilvopastoril (cultivos, árboles y ganado)</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label">Especies maderables principales</label>
+                    <select class="form-control" name="especies_maderables" id="especies_maderables" onchange="toggleOtherField(this, 'otras_especies_maderables')">
+                      <option value="">Seleccione...</option>
+                      <option value="Caoba">Caoba</option>
+                      <option value="Cedro">Cedro</option>
+                      <option value="Tornillo">Tornillo</option>
+                      <option value="Lupuna">Lupuna</option>
+                      <option value="Eucalipto">Eucalipto</option>
+                      <option value="Pino">Pino</option>
+                      <option value="Aliso">Aliso</option>
+                      <option value="otro">Otros</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <div id="otras_especies_maderables" class="form-group" style="display:none;">
+                <label class="form-label">Otras especies maderables (especifique)</label>
+                <input type="text" class="form-control" name="otras_especies_maderables">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Especies no maderables en el sistema</label>
+                <input type="text" class="form-control" name="especies_no_maderables" placeholder="Ej. café, cacao, plátano, etc.">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Describa el arreglo agroforestal</label>
+                <textarea class="form-control" name="descripcion_arreglo" rows="3" placeholder="Describa cómo se distribuyen los cultivos, árboles y/o ganado en su sistema agroforestal"></textarea>
+              </div>
+            </div>
+            
+            <!-- Sección 9: Asistencia Técnica y Programas -->
+            <div class="section-header">
+              <h3><i class="fas fa-hands-helping"></i> Asistencia Técnica y Programas</h3>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">¿Recibe asistencia técnica?</label>
+                  <select class="form-control" name="recibe_asistencia_tecnica" id="recibe_asistencia" onchange="toggleAsistenciaFields()">
+                    <option value="">Seleccione...</option>
+                    <option value="Si">Sí</option>
+                    <option value="No">No</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Frecuencia de asistencia técnica</label>
+                  <select class="form-control" name="frecuencia_asistencia" id="frecuencia_asistencia" style="display:none;">
+                    <option value="">Seleccione...</option>
+                    <option value="Semanal">Semanal</option>
+                    <option value="Quincenal">Quincenal</option>
+                    <option value="Mensual">Mensual</option>
+                    <option value="Trimestral">Trimestral</option>
+                    <option value="Esporádica">Esporádica</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div id="asistencia_fields" style="display:none;">
+              <div class="form-row">
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label">Institución que brinda asistencia</label>
+                    <select class="form-control" name="institucion_asistencia" id="institucion_asistencia" onchange="toggleOtherField(this, 'otra_institucion_asistencia')">
+                      <option value="">Seleccione...</option>
+                      <option value="Gobierno Regional">Gobierno Regional</option>
+                      <option value="Municipalidad">Municipalidad</option>
+                      <option value="SENASA">SENASA</option>
+                      <option value="AGRORURAL">AGRORURAL</option>
+                      <option value="ONG">ONG</option>
+                      <option value="Cooperativa">Cooperativa</option>
+                      <option value="Empresa Privada">Empresa Privada</option>
+                      <option value="Universidad">Universidad</option>
+                      <option value="otro">Otra</option>
+                    </select>
+                  </div>
+                  <div id="otra_institucion_asistencia" class="form-group" style="display:none;">
+                    <label class="form-label">Especifique otra institución</label>
+                    <input type="text" class="form-control" name="otra_institucion_asistencia">
+                  </div>
+                </div>
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label">Tipo de asistencia recibida</label>
+                    <div class="checkbox-group">
+                      <div class="checkbox-item">
+                        <input type="checkbox" id="asistencia_tecnica" name="tipo_asistencia[]" value="Técnica">
+                        <label for="asistencia_tecnica">Técnica</label>
+                      </div>
+                      <div class="checkbox-item">
+                        <input type="checkbox" id="asistencia_financiera" name="tipo_asistencia[]" value="Financiera">
+                        <label for="asistencia_financiera">Financiera</label>
+                      </div>
+                      <div class="checkbox-item">
+                        <input type="checkbox" id="asistencia_comercial" name="tipo_asistencia[]" value="Comercial">
+                        <label for="asistencia_comercial">Comercial</label>
+                      </div>
+                      <div class="checkbox-item">
+                        <input type="checkbox" id="asistencia_capacitacion" name="tipo_asistencia[]" value="Capacitación">
+                        <label for="asistencia_capacitacion">Capacitación</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Temas principales de asistencia</label>
+                <textarea class="form-control" name="temas_asistencia" rows="2" placeholder="Describa los principales temas que cubre la asistencia técnica"></textarea>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">¿Participa en algún programa de apoyo?</label>
+                  <select class="form-control" name="participa_programa" id="participa_programa" onchange="toggleProgramaFields()">
+                    <option value="">Seleccione...</option>
+                    <option value="Si">Sí</option>
+                    <option value="No">No</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group" id="nombre_programa_group" style="display:none;">
+                  <label class="form-label">Nombre del programa</label>
+                  <input type="text" class="form-control" name="nombre_programa">
+                </div>
+              </div>
+            </div>
+            
+            <div id="programa_fields" style="display:none;">
+              <div class="form-row">
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label">Tipo de apoyo recibido</label>
+                    <div class="checkbox-group">
+                      <div class="checkbox-item">
+                        <input type="checkbox" id="apoyo_insumos" name="tipo_apoyo[]" value="Insumos">
+                        <label for="apoyo_insumos">Insumos</label>
+                      </div>
+                      <div class="checkbox-item">
+                        <input type="checkbox" id="apoyo_equipos" name="tipo_apoyo[]" value="Equipos">
+                        <label for="apoyo_equipos">Equipos</label>
+                      </div>
+                      <div class="checkbox-item">
+                        <input type="checkbox" id="apoyo_financiero" name="tipo_apoyo[]" value="Financiero">
+                        <label for="apoyo_financiero">Financiero</label>
+                      </div>
+                      <div class="checkbox-item">
+                        <input type="checkbox" id="apoyo_capacitacion" name="tipo_apoyo[]" value="Capacitación">
+                        <label for="apoyo_capacitacion">Capacitación</label>
+                      </div>
+                      <div class="checkbox-item">
+                        <input type="checkbox" id="apoyo_tecnico" name="tipo_apoyo[]" value="Técnico">
+                        <label for="apoyo_tecnico">Técnico</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-col">
+                  <div class="form-group">
+                    <label class="form-label">Duración del programa</label>
+                    <select class="form-control" name="duracion_programa">
+                      <option value="">Seleccione...</option>
+                      <option value="Menos de 6 meses">Menos de 6 meses</option>
+                      <option value="6 meses a 1 año">6 meses a 1 año</option>
+                      <option value="1 a 2 años">1 a 2 años</option>
+                      <option value="Más de 2 años">Más de 2 años</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Sección 10: Información Adicional -->
+            <div class="section-header">
+              <h3><i class="fas fa-info-circle"></i> Información Adicional</h3>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Principales limitantes para la producción</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="limitante_clima" name="limitantes_produccion[]" value="Clima">
+                  <label for="limitante_clima">Clima</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="limitante_plagas" name="limitantes_produccion[]" value="Plagas/enfermedades">
+                  <label for="limitante_plagas">Plagas/enfermedades</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="limitante_agua" name="limitantes_produccion[]" value="Acceso al agua">
+                  <label for="limitante_agua">Acceso al agua</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="limitante_mercado" name="limitantes_produccion[]" value="Acceso a mercados">
+                  <label for="limitante_mercado">Acceso a mercados</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="limitante_financiamiento" name="limitantes_produccion[]" value="Financiamiento">
+                  <label for="limitante_financiamiento">Financiamiento</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="limitante_mano_obra" name="limitantes_produccion[]" value="Mano de obra">
+                  <label for="limitante_mano_obra">Mano de obra</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="limitante_otros" name="limitantes_produccion[]" value="Otros" onclick="toggleOtherField(this, 'otros_limitantes')">
+                  <label for="limitante_otros">Otros</label>
+                </div>
+              </div>
+              <div id="otros_limitantes" class="form-group" style="display:none; margin-top: 10px;">
+                <label class="form-label">Especifique otros limitantes</label>
+                <textarea class="form-control" name="otros_limitantes" rows="2"></textarea>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Necesidades de capacitación</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="capacitacion_tecnicas" name="necesidades_capacitacion[]" value="Técnicas de producción">
+                  <label for="capacitacion_tecnicas">Técnicas de producción</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="capacitacion_manejo" name="necesidades_capacitacion[]" value="Manejo poscosecha">
+                  <label for="capacitacion_manejo">Manejo poscosecha</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="capacitacion_riego" name="necesidades_capacitacion[]" value="Sistemas de riego">
+                  <label for="capacitacion_riego">Sistemas de riego</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="capacitacion_mercado" name="necesidades_capacitacion[]" value="Comercialización">
+                  <label for="capacitacion_mercado">Comercialización</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="capacitacion_finanzas" name="necesidades_capacitacion[]" value="Gestión financiera">
+                  <label for="capacitacion_finanzas">Gestión financiera</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="capacitacion_otros" name="necesidades_capacitacion[]" value="Otros" onclick="toggleOtherField(this, 'otros_capacitacion')">
+                  <label for="capacitacion_otros">Otros</label>
+                </div>
+              </div>
+              <div id="otros_capacitacion" class="form-group" style="display:none; margin-top: 10px;">
+                <label class="form-label">Especifique otras necesidades</label>
+                <textarea class="form-control" name="otros_capacitacion" rows="2"></textarea>
+              </div>
+            </div>
+            
+            <!-- Sección 11: Maquinaria y Equipos -->
+            <div class="section-header">
+              <h3><i class="fas fa-tractor"></i> Maquinaria y Equipos Agrícolas</h3>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Maquinaria y equipos disponibles</label>
+              <div class="checkbox-group" style="column-count: 3;">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="maq_tractor" name="maquinaria[]" value="Tractor">
+                  <label for="maq_tractor">Tractor</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="maq_arado" name="maquinaria[]" value="Arado">
+                  <label for="maq_arado">Arado</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="maq_sembradora" name="maquinaria[]" value="Sembradora">
+                  <label for="maq_sembradora">Sembradora</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="maq_cosechadora" name="maquinaria[]" value="Cosechadora">
+                  <label for="maq_cosechadora">Cosechadora</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="maq_pulverizador" name="maquinaria[]" value="Pulverizador">
+                  <label for="maq_pulverizador">Pulverizador</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="maq_riego" name="maquinaria[]" value="Sistema de riego">
+                  <label for="maq_riego">Sistema de riego</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="maq_otros" name="maquinaria[]" value="Otros" onclick="toggleOtherField(this, 'otra_maquinaria')">
+                  <label for="maq_otros">Otros</label>
+                </div>
+              </div>
+              <div id="otra_maquinaria" class="form-group" style="display:none;">
+                <label class="form-label">Especifique otra maquinaria</label>
+                <input type="text" class="form-control" name="otra_maquinaria">
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">¿Cómo adquiere la maquinaria?</label>
+                  <select class="form-control" name="adquisicion_maquinaria">
+                    <option value="">Seleccione...</option>
+                    <option value="Propia">Propia</option>
+                    <option value="Alquilada">Alquilada</option>
+                    <option value="Cooperativa">Cooperativa/comunal</option>
+                    <option value="Programa">Programa gubernamental</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Estado de la maquinaria</label>
+                  <select class="form-control" name="estado_maquinaria">
+                    <option value="">Seleccione...</option>
+                    <option value="Excelente">Excelente</option>
+                    <option value="Bueno">Bueno</option>
+                    <option value="Regular">Regular</option>
+                    <option value="Malo">Malo</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Sección 12: Manejo Postcosecha -->
+            <div class="section-header">
+              <h3><i class="fas fa-boxes"></i> Manejo Postcosecha</h3>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Instalaciones para almacenamiento</label>
+                  <div class="checkbox-group">
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="almacen_silos" name="almacenamiento[]" value="Silos">
+                      <label for="almacen_silos">Silos</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="almacen_galpon" name="almacenamiento[]" value="Galpón">
+                      <label for="almacen_galpon">Galpón</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="almacen_bodega" name="almacenamiento[]" value="Bodega">
+                      <label for="almacen_bodega">Bodega</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="almacen_refrigerado" name="almacenamiento[]" value="Cuarto refrigerado">
+                      <label for="almacen_refrigerado">Cuarto refrigerado</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="almacen_ninguno" name="almacenamiento[]" value="Ninguno">
+                      <label for="almacen_ninguno">Ninguno</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Métodos de conservación postcosecha</label>
+                  <div class="checkbox-group">
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="conservacion_secado" name="conservacion[]" value="Secado">
+                      <label for="conservacion_secado">Secado</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="conservacion_refrigeracion" name="conservacion[]" value="Refrigeración">
+                      <label for="conservacion_refrigeracion">Refrigeración</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="conservacion_ahumado" name="conservacion[]" value="Ahumado">
+                      <label for="conservacion_ahumado">Ahumado</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="conservacion_ninguno" name="conservacion[]" value="Ninguno">
+                      <label for="conservacion_ninguno">Ninguno</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Problemas principales en postcosecha</label>
+              <textarea class="form-control" name="problemas_postcosecha" rows="2" placeholder="Describa los principales problemas que enfrenta después de la cosecha"></textarea>
+            </div>
+            
+            <!-- Sección 13: Comercialización -->
+            <div class="section-header">
+              <h3><i class="fas fa-shopping-cart"></i> Comercialización</h3>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Canales de comercialización</label>
+                  <div class="checkbox-group">
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="canal_mercado_local" name="canales_comercializacion[]" value="Mercado local">
+                      <label for="canal_mercado_local">Mercado local</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="canal_intermediarios" name="canales_comercializacion[]" value="Intermediarios">
+                      <label for="canal_intermediarios">Intermediarios</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="canal_ferias" name="canales_comercializacion[]" value="Ferias agrícolas">
+                      <label for="canal_ferias">Ferias agrícolas</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="canal_exportacion" name="canales_comercializacion[]" value="Exportación">
+                      <label for="canal_exportacion">Exportación</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="canal_otros" name="canales_comercializacion[]" value="Otros" onclick="toggleOtherField(this, 'otros_canales')">
+                      <label for="canal_otros">Otros</label>
+                    </div>
+                  </div>
+                  <div id="otros_canales" class="form-group" style="display:none;">
+                    <label class="form-label">Especifique otros canales</label>
+                    <input type="text" class="form-control" name="otros_canales">
+                  </div>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Forma de venta principal</label>
+                  <select class="form-control" name="forma_venta">
+                    <option value="">Seleccione...</option>
+                    <option value="Al por mayor">Al por mayor</option>
+                    <option value="Al detal">Al detal</option>
+                    <option value="Contrato">Contrato con comprador</option>
+                    <option value="Cooperativa">A través de cooperativa</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Precio promedio de venta (por unidad)</label>
+                  <input type="text" class="form-control" name="precio_venta" placeholder="Ej. S/ 2.50 por kg">
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Principales dificultades en comercialización</label>
+              <textarea class="form-control" name="dificultades_comercializacion" rows="2" placeholder="Describa las principales dificultades que enfrenta para vender sus productos"></textarea>
+            </div>
+            
+            <!-- Sección 14: Sostenibilidad Ambiental -->
+            <div class="section-header">
+              <h3><i class="fas fa-leaf"></i> Sostenibilidad Ambiental</h3>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Prácticas sostenibles implementadas</label>
+                  <div class="checkbox-group">
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="practica_rotacion" name="practicas_sostenibles[]" value="Rotación de cultivos">
+                      <label for="practica_rotacion">Rotación de cultivos</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="practica_abono" name="practicas_sostenibles[]" value="Abono orgánico">
+                      <label for="practica_abono">Abono orgánico</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="practica_riego" name="practicas_sostenibles[]" value="Riego eficiente">
+                      <label for="practica_riego">Riego eficiente</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="practica_agroforestal" name="practicas_sostenibles[]" value="Sistemas agroforestales">
+                      <label for="practica_agroforestal">Sistemas agroforestales</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" id="practica_ninguna" name="practicas_sostenibles[]" value="Ninguna">
+                      <label for="practica_ninguna">Ninguna</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">Manejo de residuos agrícolas</label>
+                  <select class="form-control" name="manejo_residuos">
+                    <option value="">Seleccione...</option>
+                    <option value="Compostaje">Compostaje</option>
+                    <option value="Quema">Quema controlada</option>
+                    <option value="Enterramiento">Enterramiento</option>
+                    <option value="Abandono">Abandono en campo</option>
+                    <option value="Otro">Otro</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Uso de agroquímicos</label>
+                  <select class="form-control" name="uso_agroquimicos">
+                    <option value="">Seleccione...</option>
+                    <option value="Frecuente">Frecuente</option>
+                    <option value="Ocasional">Ocasional</option>
+                    <option value="Nunca">Nunca</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Sección 15: Necesidades y Expectativas -->
+            <div class="section-header">
+              <h3><i class="fas fa-lightbulb"></i> Necesidades y Expectativas</h3>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Principales necesidades para mejorar su producción</label>
+              <div class="checkbox-group" style="column-count: 2;">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="necesidad_capacitacion" name="necesidades[]" value="Capacitación técnica">
+                  <label for="necesidad_capacitacion">Capacitación técnica</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="necesidad_financiamiento" name="necesidades[]" value="Financiamiento">
+                  <label for="necesidad_financiamiento">Financiamiento</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="necesidad_maquinaria" name="necesidades[]" value="Maquinaria/equipos">
+                  <label for="necesidad_maquinaria">Maquinaria/equipos</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="necesidad_riego" name="necesidades[]" value="Sistemas de riego">
+                  <label for="necesidad_riego">Sistemas de riego</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="necesidad_mercados" name="necesidades[]" value="Acceso a mercados">
+                  <label for="necesidad_mercados">Acceso a mercados</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="necesidad_otros" name="necesidades[]" value="Otros" onclick="toggleOtherField(this, 'otras_necesidades')">
+                  <label for="necesidad_otros">Otros</label>
+                </div>
+              </div>
+              <div id="otras_necesidades" class="form-group" style="display:none;">
+                <label class="form-label">Especifique otras necesidades</label>
+                <input type="text" class="form-control" name="otras_necesidades">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Expectativas con respecto a programas de apoyo</label>
+              <textarea class="form-control" name="expectativas_programas" rows="2" placeholder="Describa qué espera de los programas de apoyo agrícola"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">¿Estaría dispuesto a participar en programas de capacitación?</label>
+              <select class="form-control" name="dispuesto_capacitacion">
+                <option value="">Seleccione...</option>
+                <option value="Si">Sí</option>
+                <option value="No">No</option>
+                <option value="Tal vez">Tal vez, dependiendo del tema</option>
+              </select>
+            </div>
+            
+            <!-- Botones de navegación -->
+            <div class="form-row" style="margin-top: 30px;">
+              <div class="form-col" style="text-align: left;">
+                <a href="potencialesbeneficiarios_socioeconomico.html" class="btn btn-secondary">
+                  <i class="fas fa-arrow-left"></i> Anterior
+                </a>
+              </div>
+              <div class="form-col" style="text-align: right;">
+                <a href="potencialesbeneficiarios_campo.html"> <button type="submit" class="btn btn-primary">
+                  Guardar y Continuar <i class="fas fa-arrow-right"></i></a>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Función para mostrar/ocultar campos "Otro"
+    function toggleOtherField(selectElement, fieldId) {
+      const otherField = document.getElementById(fieldId);
+      let shouldShow = false;
+      
+      if (selectElement.type === 'select-one') {
+        shouldShow = selectElement.value === 'otro' || selectElement.value === 'Si';
+      } else if (selectElement.type === 'checkbox') {
+        shouldShow = selectElement.checked && (selectElement.value === 'Otros' || selectElement.value === 'otro' || selectElement.value === 'Otro');
+      }
+      
+      if (shouldShow) {
+        otherField.style.display = 'block';
+      } else {
+        otherField.style.display = 'none';
+        // Limpiar el campo cuando se oculta
+        const input = otherField.querySelector('input, textarea, select');
+        if (input) {
+          input.value = '';
         }
-
-        // Calcular edad automáticamente
-        document.getElementsByName('fecha_nacimiento')[0].addEventListener('change', function() {
-            const fechaNacimiento = new Date(this.value);
-            const hoy = new Date();
-            let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
-            const mes = hoy.getMonth() - fechaNacimiento.getMonth();
-            
-            if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
-                edad--;
-            }
-            
-            document.getElementById('edad_calculada').value = edad >= 0 ? edad : '';
-        });
-
-        // Funciones para cargar provincias y distritos (ejemplo simplificado)
-        function loadProvincias(departamento) {
-            const provinciaSelect = document.getElementById('provincia');
-            provinciaSelect.innerHTML = '<option value="">Seleccione...</option>';
-            
-            // En una implementación real, esto haría una llamada AJAX o usaría datos predefinidos
-            if (departamento === 'Lima') {
-                addOption(provinciaSelect, 'Lima', 'Lima');
-                addOption(provinciaSelect, 'Huarochirí', 'Huarochirí');
-                addOption(provinciaSelect, 'Cañete', 'Cañete');
-                addOption(provinciaSelect, 'Barranca', 'Barranca');
-                addOption(provinciaSelect, 'Cajatambo', 'Cajatambo');
-            } else if (departamento === 'Cusco') {
-                addOption(provinciaSelect, 'Cusco', 'Cusco');
-                addOption(provinciaSelect, 'Quispicanchi', 'Quispicanchi');
-                addOption(provinciaSelect, 'Canchis', 'Canchis');
-                addOption(provinciaSelect, 'Espinar', 'Espinar');
-                addOption(provinciaSelect, 'La Convención', 'La Convención');
-            }
-            // Agregar más opciones según departamento
-            
-            // Limpiar distritos
-            document.getElementById('distrito').innerHTML = '<option value="">Seleccione...</option>';
-        }
-
-        function loadDistritos(provincia) {
-            const distritoSelect = document.getElementById('distrito');
-            distritoSelect.innerHTML = '<option value="">Seleccione...</option>';
-            
-            // En una implementación real, esto haría una llamada AJAX o usaría datos predefinidos
-            if (provincia === 'Lima') {
-                addOption(distritoSelect, 'Lima', 'Lima');
-                addOption(distritoSelect, 'Ancón', 'Ancón');
-                addOption(distritoSelect, 'Ate', 'Ate');
-                addOption(distritoSelect, 'Barranco', 'Barranco');
-                addOption(distritoSelect, 'Breña', 'Breña');
-            } else if (provincia === 'Huarochirí') {
-                addOption(distritoSelect, 'Matucana', 'Matucana');
-                addOption(distritoSelect, 'San Mateo', 'San Mateo');
-                addOption(distritoSelect, 'Chicla', 'Chicla');
-                addOption(distritoSelect, 'Laraos', 'Laraos');
-                addOption(distritoSelect, 'Huachupampa', 'Huachupampa');
-            }
-            // Agregar más opciones según provincia
-        }
-
-        function addOption(selectElement, value, text) {
-            const option = document.createElement('option');
-            option.value = value;
-            option.text = text;
-            selectElement.add(option);
-        }
-
-        // Manejar el envío del formulario
-        document.getElementById('formCusaf').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Validar campos requeridos
-            let valid = true;
-            const requiredFields = this.querySelectorAll('[required]');
-            
-            requiredFields.forEach(field => {
-                if (!field.value) {
-                    field.style.borderColor = 'red';
-                    valid = false;
-                } else {
-                    field.style.borderColor = '#ddd';
-                }
-            });
-            
-            if (valid) {
-                alert('Formulario enviado correctamente');
-                // Aquí iría el código para procesar el formulario (AJAX, etc.)
-                // this.submit();
-            } else {
-                alert('Por favor complete todos los campos requeridos marcados con *');
-            }
-        });
-
-        // Restablecer bordes al modificar campos
-        const inputs = document.querySelectorAll('input, select, textarea');
+      }
+    }
+    
+    // Función para mostrar/ocultar campos de actividad pecuaria
+    function togglePecuariaFields() {
+      const actividadPecuaria = document.getElementById('actividad_pecuaria');
+      const pecuariaFields = document.getElementById('pecuaria_fields');
+      const areaGanaderiaGroup = document.getElementById('area_ganaderia_group');
+      
+      if (actividadPecuaria.value === 'Si') {
+        pecuariaFields.style.display = 'block';
+        areaGanaderiaGroup.style.display = 'block';
+      } else {
+        pecuariaFields.style.display = 'none';
+        areaGanaderiaGroup.style.display = 'none';
+        
+        // Limpiar campos
+        const inputs = pecuariaFields.querySelectorAll('input, select, textarea');
         inputs.forEach(input => {
-            input.addEventListener('change', function() {
-                if (this.hasAttribute('required') && this.value) {
-                    this.style.borderColor = '#ddd';
-                }
-            });
+          if (input.type !== 'checkbox' && input.type !== 'radio') {
+            input.value = '';
+          } else {
+            input.checked = false;
+          }
         });
-    </script>
-    </body>				   
-			 
-	</html>		  
+      }
+    }
+    
+    // Función para mostrar campos específicos de cada tipo de actividad pecuaria
+    function togglePecuariaEspecifica() {
+      const tipoActividad = document.getElementById('tipo_actividad_pecuaria');
+      const pecuariaEspecifica = document.getElementById('pecuaria_especifica');
+      
+      // Ocultar todos los campos específicos primero
+      document.getElementById('ganaderia_bovina_fields').style.display = 'none';
+      document.getElementById('avicultura_fields').style.display = 'none';
+      document.getElementById('apicultura_fields').style.display = 'none';
+      
+      if (tipoActividad.value) {
+        pecuariaEspecifica.style.display = 'block';
+        
+        // Mostrar campos según el tipo seleccionado
+        if (tipoActividad.value === 'Ganadería bovina') {
+          document.getElementById('ganaderia_bovina_fields').style.display = 'block';
+        } else if (tipoActividad.value === 'Avicultura') {
+          document.getElementById('avicultura_fields').style.display = 'block';
+        } else if (tipoActividad.value === 'Apicultura') {
+          document.getElementById('apicultura_fields').style.display = 'block';
+        }
+      } else {
+        pecuariaEspecifica.style.display = 'none';
+      }
+    }
+    
+    // Función para mostrar/ocultar campos de sistema agroforestal
+    function toggleAgroforestalFields() {
+      const sistemaAgroforestal = document.getElementById('sistema_agroforestal');
+      const agroforestalFields = document.getElementById('agroforestal_fields');
+      const areaAgroforestalGroup = document.getElementById('area_agroforestal_group');
+      
+      if (sistemaAgroforestal.value === 'Si') {
+        agroforestalFields.style.display = 'block';
+        areaAgroforestalGroup.style.display = 'block';
+      } else {
+        agroforestalFields.style.display = 'none';
+        areaAgroforestalGroup.style.display = 'none';
+        
+        // Limpiar campos
+        const inputs = agroforestalFields.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+          if (input.type !== 'checkbox' && input.type !== 'radio') {
+            input.value = '';
+          } else {
+            input.checked = false;
+          }
+        });
+      }
+    }
+    
+    // Función para mostrar campos de asistencia técnica
+    function toggleAsistenciaFields() {
+      const recibeAsistencia = document.getElementById('recibe_asistencia');
+      const asistenciaFields = document.getElementById('asistencia_fields');
+      const frecuenciaAsistencia = document.getElementById('frecuencia_asistencia');
+      
+      if (recibeAsistencia.value === 'Si') {
+        asistenciaFields.style.display = 'block';
+        frecuenciaAsistencia.style.display = 'block';
+      } else {
+        asistenciaFields.style.display = 'none';
+        frecuenciaAsistencia.style.display = 'none';
+        
+        // Limpiar campos
+        const inputs = asistenciaFields.querySelectorAll('input, select, textarea, checkbox');
+        inputs.forEach(input => {
+          if (input.type !== 'checkbox' && input.type !== 'radio') {
+            input.value = '';
+          } else {
+            input.checked = false;
+          }
+        });
+      }
+    }
+    
+    // Función para mostrar campos de programas de apoyo
+    function toggleProgramaFields() {
+      const participaPrograma = document.getElementById('participa_programa');
+      const programaFields = document.getElementById('programa_fields');
+      const nombreProgramaGroup = document.getElementById('nombre_programa_group');
+      
+      if (participaPrograma.value === 'Si') {
+        programaFields.style.display = 'block';
+        nombreProgramaGroup.style.display = 'block';
+      } else {
+        programaFields.style.display = 'none';
+        nombreProgramaGroup.style.display = 'none';
+        
+        // Limpiar campos
+        const inputs = programaFields.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+          if (input.type !== 'checkbox' && input.type !== 'radio') {
+            input.value = '';
+          } else {
+            input.checked = false;
+          }
+        });
+      }
+    }
+    
+    // Mostrar campo para otros cultivos si se selecciona "Otros"
+    document.getElementById('cultivo_principal').addEventListener('change', function() {
+      const otrosCultivosContainer = document.getElementById('otros_cultivos_container');
+      if (this.value === 'otro') {
+        otrosCultivosContainer.style.display = 'block';
+      } else {
+        otrosCultivosContainer.style.display = 'none';
+        document.getElementsByName('otros_cultivos')[0].value = '';
+      }
+    });
+    
+    // Manejar el colapso/expansión de secciones
+    document.querySelectorAll('.section-header').forEach(header => {
+      header.addEventListener('click', function() {
+        const sectionContent = this.nextElementSibling;
+        const icon = this.querySelector('.fas');
+        
+        if (sectionContent.style.display === 'none') {
+          sectionContent.style.display = 'block';
+          this.classList.remove('collapsed');
+          icon.classList.remove('fa-chevron-down');
+          icon.classList.add('fa-chevron-up');
+        } else {
+          sectionContent.style.display = 'none';
+          this.classList.add('collapsed');
+          icon.classList.remove('fa-chevron-up');
+          icon.classList.add('fa-chevron-down');
+        }
+      });
+      
+      // Inicializar secciones como expandidas
+      const sectionContent = header.nextElementSibling;
+      const icon = header.querySelector('.fas');
+      sectionContent.style.display = 'block';
+      header.classList.remove('collapsed');
+      icon.classList.remove('fa-chevron-down');
+      icon.classList.add('fa-chevron-up');
+    });
+    
+    // Validación del formulario al enviar
+    document.getElementById('formAgricolaPecuario').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      let valid = true;
+      const requiredFields = this.querySelectorAll('[required]');
+      
+      requiredFields.forEach(field => {
+        if (!field.value) {
+          field.style.borderColor = 'red';
+          valid = false;
+        } else {
+          field.style.borderColor = '#ddd';
+        }
+      });
+      
+      // Validar checkboxes requeridos
+      const requiredCheckboxes = this.querySelectorAll('input[type="checkbox"][required]');
+      let atLeastOneChecked = false;
+      requiredCheckboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+          atLeastOneChecked = true;
+        }
+      });
+      
+      if (requiredCheckboxes.length > 0 && !atLeastOneChecked) {
+        alert('Debe seleccionar al menos una opción en los campos de selección múltiple requeridos');
+        valid = false;
+      }
+      
+      if (valid) {
+        alert('Formulario enviado correctamente');
+        // Aquí iría el código para procesar el formulario (AJAX, etc.)
+        // this.submit();
+      } else {
+        alert('Por favor complete todos los campos requeridos marcados con *');
+      }
+    });
+    
+    // Restablecer bordes al modificar campos
+    const inputs = document.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+      input.addEventListener('change', function() {
+        if (this.hasAttribute('required') && this.value) {
+          this.style.borderColor = '#ddd';
+        }
+      });
+    });
+    
+    // Inicializar campos condicionales
+    document.addEventListener('DOMContentLoaded', function() {
+      // Activar campos según selecciones iniciales
+      togglePecuariaFields();
+      toggleAgroforestalFields();
+      toggleAsistenciaFields();
+      toggleProgramaFields();
+      
+      // Configurar eventos para campos dinámicos
+      document.getElementById('tipo_actividad_pecuaria').addEventListener('change', togglePecuariaEspecifica);
+      document.getElementById('recibe_asistencia').addEventListener('change', toggleAsistenciaFields);
+      document.getElementById('participa_programa').addEventListener('change', toggleProgramaFields);
+      document.getElementById('institucion_asistencia').addEventListener('change', function() {
+        toggleOtherField(this, 'otra_institucion_asistencia');
+      });
+      
+      // Configurar eventos para checkboxes que muestran campos "otros"
+      document.querySelectorAll('input[type="checkbox"][onclick*="toggleOtherField"]').forEach(checkbox => {
+        checkbox.addEventListener('click', function() {
+          toggleOtherField(this, this.getAttribute('onclick').match(/toggleOtherField\(.*?,\s*'([^']+)'/)[1]);
+        });
+      });
+      
+      // Configurar eventos para selects que muestran campos "otros"
+      document.querySelectorAll('select[onchange*="toggleOtherField"]').forEach(select => {
+        select.addEventListener('change', function() {
+          toggleOtherField(this, this.getAttribute('onchange').match(/toggleOtherField\(.*?,\s*'([^']+)'/)[1]);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
