@@ -730,36 +730,24 @@
       </div>
       <ul class="nav-menu">
         <li class="nav-item">
-          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\inicio.html" class="nav-link">
+          <a href="index.html" class="nav-link">
             <i class="fas fa-tachometer-alt"></i>
             <span>Inicio</span>
           </a>
         </li>
         <li class="nav-item ">
-          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\prime.html" class="nav-link">
+          <a href="prime.html" class="nav-link">
             <i class="fas fa-map-marked-alt"></i>
             <span>Registro Áreas Potenciales</span>
           </a>
         </li>
                 
-          <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\beneficiarios.html" class="nav-link active" onclick="toggleSubmenu('beneficiarios-menu')">
+          <a href="beneficiarios.html" class="nav-link active" onclick="toggleSubmenu('beneficiarios-menu')">
             <i class="fas fa-users"></i>
             <span>Registro Potenciales Beneficiarios</span>
           </a>
                     
-            <li class="nav-item">
-              <a href="#" class="nav-link" onclick="showSection('listado-section')">
-                <i class="fas fa-list"></i>
-                <span>Listado</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link" onclick="showSection('reportes-section')">
-                <i class="fas fa-chart-bar"></i>
-                <span>Reportes</span>
-              </a>
-            </li>
-                        
+         
       
       </ul>
     </div>
@@ -774,25 +762,25 @@
               <div class="step-icon"><i class="fas fa-male"></i></div>
               <div class="step-title">Presentación posibles Beneficiarios</div>
             </div>
-            <div class="step ">
+            <div class="step completed">
               <div class="step-icon"><i class="fas fa-tree"></i></div>
               <div class="step-title">Trabajo de Campo</div>
             </div>
-            <div class="step ">
-              <div class="step-icon"><i class="fas fa-pencil"></i></div>
-              <div class="step-title">Elaboración del informe Tecnico</div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-pencil-alt"></i></div>
+              <div class="step-title">Elaboración del informe Técnico</div>
             </div>
-            <div class="step ">
+            <div class="step">
               <div class="step-icon"><i class="fas fa-check"></i></div>
               <div class="step-title">Otorgamiento del Derecho</div>
             </div>
-            <div class="step ">
+            <div class="step">
               <div class="step-icon"><i class="fas fa-gavel"></i></div>
               <div class="step-title">Recursos Administrativos</div>
             </div>
-            <div class="step ">
+            <div class="step">
               <div class="step-icon"><i class="fas fa-handshake"></i></div>
-              <div class="step-title">Suscripcion del contrato</div>
+              <div class="step-title">Suscripción del contrato</div>
             </div>
           </div>
           
@@ -810,18 +798,25 @@
               <div class="progress-fill" id="progressFill" style="width: 60%"></div>
             </div>
           </div>
+		
         </div>
       </div>
       
       <div class="card">
         <div class="card-body">
-         <div class="tabs" id="formTabs">
-			 
-           <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\beneficiarios.html"><div class="tab-item active" data-tab="tab1"><i class="fas fa-user"></i>Datos Generales</div></a>
-           <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_socioeconomico.html"><div class="tab-item active" data-tab="tab2"><i class="fas fa-money-bill-wave"></i> Datos Socioeconómicos</div></a>
-           <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_datosagricolas.html"><div class="tab-item active" data-tab="tab3"><i class="fas fa-tractor"></i> Datos Agrícola-Pecuaria</div></a>
-		   <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_ubicacion.html"><div class="tab-item active" data-tab="tab1"><i class="fas fa-map-marked-alt"></i>Division del Área</div></a>
-           <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_documentos.html"><div class="tab-item active" data-tab="tab4"><i class="fas fa-file-alt"></i> Documentos-Requisitos</div></a>
+          <div class="tabs" id="formTabs">
+            <a href="potencialesbeneficiarios_campo.html" class="tab-item active">
+              <i class="fa-solid fa-person-walking-arrow-right"></i> Información trabajo de campo
+            </a>
+            <a href="potencialesbeneficiarios_estado.html" class="tab-item active">
+              <i class="fa-solid fa-person-arrow-down-to-line"></i> Estados del Área
+            </a>
+            <a href="potencialesbeneficiarios_division.html" class="tab-item active">
+              <i class="fas fa-map-marked-alt"></i> Ubicación del predio
+            </a>
+            <a href="potencialesbeneficiarios_documentos.html" class="tab-item active">
+              <i class="fas fa-file"></i> Presentación documental
+            </a>
           </div>
           
           <div id="tab5" class="tab-content active">
@@ -874,7 +869,7 @@
               <div class="document-card">
               <div class="document-header">
 			  
-                  <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\doc\3constanciaposecion.html"><button class="file-action-btn view" title="Descargar Anexo">
+                  <a href="3constanciaposecion.html"><button class="file-action-btn view" title="Descargar Anexo">
                     <i class="fas fa-file"></i></a>
                   </button> <h3 class="document-title">Constancia de posesión de autoridad local</h3>
                   <span class="document-status status-complete"><i class="fas fa-check-circle"></i> Completo</span>
@@ -922,7 +917,7 @@
                 <div class="document-header">
                     <div class="document-header">
 			  
-                  <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\doc\7plano.html"><button class="file-action-btn view" title="Descargar Anexo">
+                  <a href="7plano.html"><button class="file-action-btn view" title="Descargar Anexo">
                     <i class="fas fa-file"></i></a>
                   </button> <h3 class="document-title">Croquis con ubicación y tabla de coordenadas geográficas</h3>
                   <span class="document-status status-complete"><i class="fas fa-check-circle"></i> Completo</span>
@@ -971,7 +966,7 @@
                 <div class="document-header">
                     <div class="document-header">
 			  
-                  <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\doc\8-9colindancia.html"><button class="file-action-btn view" title="Descargar Anexo">
+                  <a href="8-9colindancia.html"><button class="file-action-btn view" title="Descargar Anexo">
                     <i class="fas fa-file"></i></a>
                   </button> <h3 class="document-title">Actas de colindancia</h3>
                   <span class="document-status status-complete"><i class="fas fa-check-circle"></i> Completo</span>
@@ -1023,7 +1018,7 @@
                   <div class="document-header">
                     <div class="document-header">
 			  
-                 <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\doc\5djcompromiso.html"><button class="file-action-btn view" title="Descargar Anexo">
+                 <a href="5djcompromiso.html"><button class="file-action-btn view" title="Descargar Anexo">
                     <i class="fas fa-file"></i></a>
                   </button> <h3 class="document-title">DJ respeto mantenimiento de bosques existentes</h3>
                   <span class="document-status status-complete"><i class="fas fa-check-circle"></i> Completo</span>
@@ -1073,7 +1068,7 @@
                        <div class="document-header">
                     <div class="document-header">
 			  
-                 <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\doc\14requisitos.html"><button class="file-action-btn view" title="Descargar Anexo">
+                 <a href="14requisitos.html"><button class="file-action-btn view" title="Descargar Anexo">
                     <i class="fas fa-file"></i></a>
                   </button> <h3 class="document-title">Formato entrega de requisitos</h3>
                   <span class="document-status status-complete"><i class="fas fa-check-circle"></i> Completo</span>
@@ -1121,7 +1116,7 @@
        <div class="document-header">
                     <div class="document-header">
 			  
-                 <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\doc\2penales.html"><button class="file-action-btn view" title="Descargar Anexo">
+                 <a href="2penales.html"><button class="file-action-btn view" title="Descargar Anexo">
                     <i class="fas fa-file"></i></a>
                   </button> <h3 class="document-title">DJ Antecedentes Penales</h3>
                   <span class="document-status status-complete"><i class="fas fa-check-circle"></i> Completo</span>
@@ -1169,7 +1164,7 @@
                  <div class="document-header">
                     <div class="document-header">
 			  
-                 <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\doc\12pacifica.html"><button class="file-action-btn view" title="Descargar Anexo">
+                 <a href="12pacifica.html"><button class="file-action-btn view" title="Descargar Anexo">
                     <i class="fas fa-file"></i></a>
                   </button> <h3 class="document-title">DJ Indicios de posesión pacífica</h3>
                   <span class="document-status status-complete"><i class="fas fa-check-circle"></i> Completo</span>
@@ -1266,10 +1261,10 @@ con sancion de inhabilitación, por haber incurrido en infracciones consideradas
             
             <div class="form-row"></div>
               <div class="form-col" style="text-align: left;">
-                <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_division.html"><button type="button" class="btn btn-secondary">Regresar</button></div></a>
+                <a href="potencialesbeneficiarios_division.html"><button type="button" class="btn btn-secondary">Regresar</button></div></a>
               </div>
               <div class="form-col" style="text-align: right;">
-                <a href="C:\Users\SERFOR\Desktop\sist cusaf\cusaf\potencialesbeneficiarios_campo.html"><button type="button" class="btn btn-primary">Continuar</button></div></a>
+                <a href="potencialesbeneficiarios_informetecnico.html"><button type="button" class="btn btn-primary">Continuar</button></div></a>
               </div>
             </div>
           </div>
