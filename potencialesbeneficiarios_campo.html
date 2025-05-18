@@ -539,19 +539,18 @@
             <span>Inicio</span>
           </a>
         </li>
-        <li class="nav-item ">
+        <li class="nav-item">
           <a href="prime.html" class="nav-link">
             <i class="fas fa-map-marked-alt"></i>
             <span>Registro Áreas Potenciales</span>
           </a>
         </li>
-                
-          <a href="beneficiarios.html" class="nav-link active" onclick="toggleSubmenu('beneficiarios-menu')">
+        <li class="nav-item">
+          <a href="beneficiarios.html" class="nav-link active">
             <i class="fas fa-users"></i>
             <span>Registro Potenciales Beneficiarios</span>
           </a>
-                    
-            
+        </li>
       </ul>
     </div>
     
@@ -559,36 +558,36 @@
       <!-- Proceso de etapas -->
       <div class="card">
         <div class="card-body">
-       <div class="process-steps">
+          <div class="process-steps">
             <div class="step completed">
               <div class="step-icon"><i class="fas fa-male"></i></div>
               <div class="step-title">Presentación posibles Beneficiarios</div>
             </div>
-            <div class="step completed">
+            <div class="step active">
               <div class="step-icon"><i class="fas fa-tree"></i></div>
               <div class="step-title">Trabajo de Campo</div>
             </div>
-            <div class="step ">
-              <div class="step-icon"><i class="fas fa-pencil"></i></div>
-              <div class="step-title">Elaboración del informe Tecnico</div>
+            <div class="step">
+              <div class="step-icon"><i class="fas fa-pencil-alt"></i></div>
+              <div class="step-title">Elaboración del informe Técnico</div>
             </div>
-            <div class="step ">
+            <div class="step">
               <div class="step-icon"><i class="fas fa-check"></i></div>
               <div class="step-title">Otorgamiento del Derecho</div>
             </div>
-            <div class="step ">
+            <div class="step">
               <div class="step-icon"><i class="fas fa-gavel"></i></div>
               <div class="step-title">Recursos Administrativos</div>
             </div>
-            <div class="step ">
+            <div class="step">
               <div class="step-icon"><i class="fas fa-handshake"></i></div>
-              <div class="step-title">Suscripcion del contrato</div>
+              <div class="step-title">Suscripción del contrato</div>
             </div>
           </div>
           
           <div class="alert alert-info">
             <i class="fas fa-info-circle"></i>
-            Complete toda la información del trabajo de campo solicitada. Los campos marcados con (*) son obligatorios.
+            <div>Complete toda la información del trabajo de campo solicitada. Los campos marcados con (*) son obligatorios.</div>
           </div>
         </div>
       </div>
@@ -596,29 +595,38 @@
       <!-- Formulario principal -->
       <div class="card">
         <div class="card-body">
+          <!-- Tabs de navegación -->
           <div class="tabs" id="formTabs">
-
-            <a href="potencialesbeneficiarios_campo.html"><div class="tab-item active"><i class="fa-solid fa-person-walking-arrow-right"></i> Información trabajo de campo</div></a>
-            <a href="potencialesbeneficiarios_estado.html"><div class="tab-item active"><i class="fa-solid fa-person-arrow-down-to-line"></i> stados del Área</div></a>
-            <a href="potencialesbeneficiarios_division.html"><div class="tab-item"><i class="fas fa-map-marked-alt"></i> Ubicación del predio</div></a>
-	    <a href="potencialesbeneficiarios_documentos.html"><div class="tab-item"><i class="fas fa-file"></i> Presentación documental</div></a>
-
-		
-                    
+            <a href="potencialesbeneficiarios_campo.html" class="tab-item active">
+              <i class="fa-solid fa-person-walking-arrow-right"></i> Información trabajo de campo
+            </a>
+            <a href="potencialesbeneficiarios_estado.html" class="tab-item">
+              <i class="fa-solid fa-person-arrow-down-to-line"></i> Estados del Área
+            </a>
+            <a href="potencialesbeneficiarios_division.html" class="tab-item">
+              <i class="fas fa-map-marked-alt"></i> Ubicación del predio
+            </a>
+            <a href="potencialesbeneficiarios_documentos.html" class="tab-item">
+              <i class="fas fa-file"></i> Presentación documental
+            </a>
+          </div>
+          
           <form id="fieldVerificationForm">
-		  
-            <a href="anexo_actadecampo.html"><button class="file-action-btn view" title="Descargar Anexo">
-              <i class="fas fa-file"></i>
-            </button> <h4 class="document-title">Descargar Anexo Acta de Levantamiento De Informacion de Campo</h4></a><br>
-	
+            <!-- Descarga de anexo -->
+            <a href="anexo_actadecampo.html" class="file-action-link">
+              <button class="file-action-btn" title="Descargar Anexo">
+                <i class="fas fa-file"></i>
+              </button>
+              <h4 class="document-title">Descargar Anexo Acta de Levantamiento De Información de Campo</h4>
+            </a>
+            
             <!-- Sección 1: Coordinación y equipo -->
             <div class="form-section">
               <div class="section-header" onclick="toggleSection('coordinacionSection')">
                 <h3><i class="fas fa-users"></i> Coordinación y Equipo de Trabajo</h3>
-                
               </div>
               
-              <div class="" id="coordinacionSection">
+              <div id="coordinacionSection">
                 <div class="form-row">
                   <div class="form-col">
                     <div class="form-group">
@@ -639,9 +647,9 @@
                   <textarea class="form-control" rows="3" placeholder="Nombres y cargos de autoridades locales participantes" required></textarea>
                 </div>
                 
-                 <div class="form-group">
+                <div class="form-group">
                   <label class="form-label required">Equipo de verificación</label>
-                  <textarea class="form-control" rows="3" placeholder="Nombres y cargos del equipo de verificacion" required></textarea>
+                  <textarea class="form-control" rows="3" placeholder="Nombres y cargos del equipo de verificación" required></textarea>
                 </div>
               </div>
             </div>
@@ -650,12 +658,9 @@
             <div class="form-section">
               <div class="section-header" onclick="toggleSection('planificacionSection')">
                 <h3><i class="fas fa-calendar-alt"></i> Planificación de Inspecciones</h3>
-                
               </div>
               
-              <div class="" id="planificacionSection">
-         
-                
+              <div id="planificacionSection">
                 <div class="form-row">
                   <div class="form-col">
                     <div class="form-group">
@@ -677,27 +682,20 @@
             <div class="form-section">
               <div class="section-header" onclick="toggleSection('requisitosSection')">
                 <h3><i class="fas fa-clipboard-check"></i> Verificación de Requisitos - Documentos Recabados en Campo</h3>
-            
               </div>
               
-              <div class="" id="requisitosSection">
+              <div id="requisitosSection">
                 <div class="form-group">
-                  <label class="form-label"></label>
-                  <div class="form-row">
-                    <div class="form-col">
-                      <label class="form-label"><input type="checkbox"> Documentos presentados completos del potencial Beneficiario</label>
-                    </div>
-                   
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="docsCompletos"> 
+                    <label for="docsCompletos">Documentos presentados completos del potencial Beneficiario</label>
                   </div>
                 </div>
                 
                 <div class="form-group">
-                  
-                  <div class="form-row">
-                    <div class="form-col">
-                      <label class="form-label"><input type="checkbox" required> Posesión desde antes del 22/07/2011</label>
-                    </div>
-                   
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="posesion2011" required> 
+                    <label for="posesion2011">Posesión desde antes del 22/07/2011</label>
                   </div>
                 </div>
               </div>
@@ -707,10 +705,9 @@
             <div class="form-section">
               <div class="section-header" onclick="toggleSection('tecnicosSection')">
                 <h3><i class="fas fa-map-marked-alt"></i> Datos Técnicos del Área</h3>
-                
               </div>
               
-              <div class="" id="tecnicosSection">
+              <div id="tecnicosSection">
                 <div class="form-group">
                   <label class="form-label required">Coordenadas UTM del Polígono</label>
                   <textarea class="form-control" rows="5" placeholder="Ingrese las coordenadas UTM (datum WGS 84) que definen el polígono del área" required></textarea>
@@ -718,36 +715,19 @@
                 
                 <div class="form-group">
                   <label class="form-label required">Sistemas Agroforestales</label>
-                  <div class="inspection-points">
-                    <div class="inspection-item">
-                      <div class="inspection-checkbox">
-                        <input type="checkbox" id="saf1" class="form-control">
-                      </div>
-                      <div class="inspection-content">
-                        <div class="inspection-title">Actividades productivas</div>
-                        <div class="inspection-desc">Especies forestales y agropecuarias asociadas</div>
-                      </div>
-                    </div>
-                    
-                    <div class="inspection-item">
-                      <div class="inspection-checkbox">
-                        <input type="checkbox" id="saf2" class="form-control">
-                      </div>
-                      <div class="inspection-content">
-                        <div class="inspection-title">Bosque natural</div>
-                        <div class="inspection-desc">Remanente, secundario maduro, bosque obrero</div>
-                      </div>
-                    </div>
-                    
-                    <div class="inspection-item">
-                      <div class="inspection-checkbox">
-                        <input type="checkbox" id="saf3" class="form-control">
-                      </div>
-                      <div class="inspection-content">
-                        <div class="inspection-title">Plantaciones</div>
-                        <div class="inspection-desc">Que integran el sistema agroforestal</div>
-                      </div>
-                    </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="saf1" class="form-control">
+                    <label for="saf1">Actividades productivas - Especies forestales y agropecuarias asociadas</label>
+                  </div>
+                  
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="saf2" class="form-control">
+                    <label for="saf2">Bosque natural - Remanente, secundario maduro, bosque obrero</label>
+                  </div>
+                  
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="saf3" class="form-control">
+                    <label for="saf3">Plantaciones - Que integran el sistema agroforestal</label>
                   </div>
                 </div>
                 
@@ -760,13 +740,22 @@
                   <label class="form-label required">Linderos del Área</label>
                   <div class="form-row">
                     <div class="form-col">
-                      <label class="form-label"><input type="checkbox" required> Límites naturales</label>
+                      <div class="checkbox-item">
+                        <input type="checkbox" id="limites" required>
+                        <label for="limites">Límites naturales</label>
+                      </div>
                     </div>
                     <div class="form-col">
-                      <label class="form-label"><input type="checkbox" required> Hitos</label>
+                      <div class="checkbox-item">
+                        <input type="checkbox" id="hitos" required>
+                        <label for="hitos">Hitos</label>
+                      </div>
                     </div>
                     <div class="form-col">
-                      <label class="form-label"><input type="checkbox" required> Cercas o cercos vivos</label>
+                      <div class="checkbox-item">
+                        <input type="checkbox" id="cercas" required>
+                        <label for="cercas">Cercas o cercos vivos</label>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -777,10 +766,9 @@
             <div class="form-section">
               <div class="section-header" onclick="toggleSection('colindanciasSection')">
                 <h3><i class="fas fa-border-all"></i> Colindancias y Conflictos</h3>
-               
               </div>
               
-              <div class="" id="colindanciasSection">
+              <div id="colindanciasSection">
                 <div class="form-group">
                   <label class="form-label required">Colindancias Verificadas</label>
                   <textarea class="form-control" rows="3" placeholder="Describa las colindancias verificadas y su correspondencia con lo declarado" required></textarea>
@@ -806,10 +794,9 @@
             <div class="form-section">
               <div class="section-header" onclick="toggleSection('evidenciasSection')">
                 <h3><i class="fas fa-camera"></i> Evidencias y Documentación</h3>
-                
               </div>
               
-              <div class="" id="evidenciasSection">
+              <div id="evidenciasSection">
                 <div class="form-group">
                   <label class="form-label required">Acta de Inspección</label>
                   <div class="file-upload" id="actaUploadArea">
@@ -841,10 +828,9 @@
             <div class="form-section">
               <div class="section-header" onclick="toggleSection('conclusionesSection')">
                 <h3><i class="fas fa-clipboard-list"></i> Conclusiones y Recomendaciones</h3>
-                
               </div>
               
-              <div class="" id="conclusionesSection">
+              <div id="conclusionesSection">
                 <div class="form-row">
                   <div class="form-col">
                     <div class="form-group">
